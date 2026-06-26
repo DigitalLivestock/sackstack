@@ -234,6 +234,7 @@ function TripPlanner() {
                     <PersonChip
                       person={p}
                       droppable={activeDrag?.kind === 'bag-drag'}
+                      onEdit={(patch) => updatePerson(p.id, patch)}
                       onRemove={() => removePerson(p.id)}
                     />
                     <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
