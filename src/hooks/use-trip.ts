@@ -163,6 +163,15 @@ export function useTrip(tripId: string) {
     [update],
   );
 
+  const updatePerson = useCallback(
+    (id: string, patch: Partial<Person>) =>
+      update((t) => ({
+        ...t,
+        people: t.people.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      })),
+    [update],
+  );
+
   const removePerson = useCallback(
     (id: string) =>
       update((t) => ({
