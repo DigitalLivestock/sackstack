@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { MoreVertical, Trash2, User } from 'lucide-react';
+import { MoreVertical, Trash2, User, Pencil } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS } from '@/lib/bag-planner/types';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
+import { EditBagDialog } from './EditBagDialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,7 +25,9 @@ export function BagCard({
   activeDragItemId,
   onMoveItem,
   onRemoveItem,
+  onEditItem,
   onAssignCarrier,
+  onEditBag,
   onRemoveBag,
 }: {
   bag: Bag;
@@ -33,7 +37,9 @@ export function BagCard({
   activeDragItemId?: string;
   onMoveItem: (itemId: string, bagId: string | undefined) => void;
   onRemoveItem: (itemId: string) => void;
+  onEditItem: (itemId: string, patch: Partial<Item>) => void;
   onAssignCarrier: (personId: string | undefined) => void;
+  onEditBag: (patch: Partial<Bag>) => void;
   onRemoveBag: () => void;
 }) {
   // Droppable for items
@@ -54,9 +60,7 @@ export function BagCard({
     data: { kind: 'bag-drag', bagId: bag.id },
   });
 
-  const activeItem =
-    activeDragItemId ? items.concat().find(() => false) : undefined;
-  void activeItem;
+  const [editOpen, setEditOpen] = useState(false);
 
   // Determine if currently dragged item is allowed
   const currentTotal = items.reduce((sum, i) => sum + i.weightG, 0);
@@ -139,6 +143,11 @@ export function BagCard({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit bag
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onRemoveBag} className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Remove bag
@@ -156,16 +165,23 @@ export function BagCard({
           </div>
         ) : (
           items.map((item) => (
-            <ItemRow
+          <ItemRow
               key={item.id}
               item={item}
               bags={bags}
               onMove={(bagId) => onMoveItem(item.id, bagId)}
+              onEdit={(patch) => onEditItem(item.id, patch)}
               onRemove={() => onRemoveItem(item.id)}
             />
           ))
         )}
       </div>
+      <EditBagDialog
+        bag={bag}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSave={onEditBag}
+      />
     </div>
   );
 }

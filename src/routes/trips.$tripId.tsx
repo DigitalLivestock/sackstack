@@ -46,11 +46,14 @@ function TripPlanner() {
   const {
     trip,
     addBag,
+    updateBag,
     removeBag,
     addItem,
+    updateItem,
     moveItem,
     removeItem,
     addPerson,
+    updatePerson,
     removePerson,
     assignCarrier,
   } = useTrip(tripId);
@@ -231,6 +234,7 @@ function TripPlanner() {
                     <PersonChip
                       person={p}
                       droppable={activeDrag?.kind === 'bag-drag'}
+                      onEdit={(patch) => updatePerson(p.id, patch)}
                       onRemove={() => removePerson(p.id)}
                     />
                     <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
@@ -259,7 +263,7 @@ function TripPlanner() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {trip.bags.map((bag) => (
-                    <BagCard
+                  <BagCard
                       key={bag.id}
                       bag={bag}
                       items={itemsByBag.get(bag.id) ?? []}
@@ -270,7 +274,9 @@ function TripPlanner() {
                       }
                       onMoveItem={moveItem}
                       onRemoveItem={removeItem}
+                      onEditItem={updateItem}
                       onAssignCarrier={(pid) => assignCarrier(bag.id, pid)}
+                      onEditBag={(patch) => updateBag(bag.id, patch)}
                       onRemoveBag={() => removeBag(bag.id)}
                     />
                   ))}
@@ -286,6 +292,7 @@ function TripPlanner() {
                   addItem({ name, weightG, allowedBagTypes })
                 }
                 onMove={moveItem}
+                onEdit={updateItem}
                 onRemove={removeItem}
               />
             </aside>

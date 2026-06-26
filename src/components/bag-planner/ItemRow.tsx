@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, X } from 'lucide-react';
+import { GripVertical, X, Pencil } from 'lucide-react';
 import type { Item, Bag } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
@@ -13,22 +14,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { EditItemDialog } from './EditItemDialog';
 
 export function ItemRow({
   item,
   bags,
   onMove,
+  onEdit,
   onRemove,
 }: {
   item: Item;
   bags: Bag[];
   onMove: (bagId: string | undefined) => void;
+  onEdit: (patch: Partial<Item>) => void;
   onRemove: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `item:${item.id}`,
     data: { kind: 'item', itemId: item.id },
   });
+
+  const [editOpen, setEditOpen] = useState(false);
 
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
@@ -70,6 +76,11 @@ export function ItemRow({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Move to…</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit item
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => onMove(undefined)}>
             Unpacked
           </DropdownMenuItem>
@@ -94,6 +105,13 @@ export function ItemRow({
       >
         <X className="h-4 w-4" />
       </button>
+
+      <EditItemDialog
+        item={item}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSave={onEdit}
+      />
     </div>
   );
 }
