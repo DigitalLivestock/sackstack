@@ -262,7 +262,7 @@ function TripPlanner() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {trip.bags.map((bag) => (
-                    <BagCard
+                  <BagCard
                       key={bag.id}
                       bag={bag}
                       items={itemsByBag.get(bag.id) ?? []}
@@ -273,7 +273,9 @@ function TripPlanner() {
                       }
                       onMoveItem={moveItem}
                       onRemoveItem={removeItem}
+                      onEditItem={updateItem}
                       onAssignCarrier={(pid) => assignCarrier(bag.id, pid)}
+                      onEditBag={(patch) => updateBag(bag.id, patch)}
                       onRemoveBag={() => removeBag(bag.id)}
                     />
                   ))}
