@@ -176,6 +176,12 @@ export function BagCard({
           ))
         )}
       </div>
+      <EditBagDialog
+        bag={bag}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSave={onEditBag}
+      />
     </div>
   );
 }
