@@ -151,3 +151,57 @@ export function parseImport(
 
   return rawTrips.map((t) => parseTrip(t, { regenerateIds }));
 }
+
+export type ItemImport = { name: string; weightG: number; allowedBagTypes?: BagType[] };
+
+function parseWeight(v: unknown): number | null {
+  if (typeof v === 'number' && isFinite(v) && v >= 0) return v;
+  if (typeof v === 'string') {
+    const m = v.trim().match(/^(-?\d+(?:[.,]\d+)?)\s*(kg|g)?$/i);
+    if (m) {
+      const n = parseFloat(m[1].replace(',', '.'));
+      if (!isFinite(n) || n < 0) return null;
+      return (m[2]?.toLowerCase() === 'kg' ? n * 1000 : n);
+    }
+  }
+  return null;
+}
+
+export function parseItemsImport(text: string): ItemImport[] {
+  const data = JSON.parse(text);
+  let rawItems: unknown[];
+  if (Array.isArray(data)) rawItems = data;
+  else if (isObj(data) && Array.isArray((data as Record<string, unknown>).items)) {
+    rawItems = (data as { items: unknown[] }).items;
+  } else if (
+    isObj(data) &&
+    Array.isArray((data as Record<string, unknown>).trips)
+  ) {
+    rawItems = (data as { trips: unknown[] }).trips.flatMap((t) =>
+      isObj(t) && Array.isArray((t as Record<string, unknown>).items)
+        ? ((t as { items: unknown[] }).items)
+        : [],
+    );
+  } else {
+    throw new Error('Expected an array of items or { items: [...] }');
+  }
+
+  const out: ItemImport[] = [];
+  for (const raw of rawItems) {
+    if (!isObj(raw)) continue;
+    const name = typeof raw.name === 'string' ? raw.name.trim() : '';
+    if (!name) continue;
+    const w = parseWeight(raw.weightG ?? raw.weight);
+    if (w === null) continue;
+    const allowed = Array.isArray(raw.allowedBagTypes)
+      ? (raw.allowedBagTypes.filter((t) => BAG_TYPES.includes(t as BagType)) as BagType[])
+      : undefined;
+    out.push({
+      name,
+      weightG: w,
+      allowedBagTypes: allowed && allowed.length ? allowed : undefined,
+    });
+  }
+  if (!out.length) throw new Error('No valid items found');
+  return out;
+}
