@@ -292,6 +292,13 @@ function TripPlanner() {
             </div>
           </section>
 
+          <ItemFilterBar
+            filter={itemFilter}
+            sort={itemSort}
+            onFilter={setItemFilter}
+            onSort={setItemSort}
+          />
+
           {/* Bags + Unpacked */}
           <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
             <section className="space-y-3">
