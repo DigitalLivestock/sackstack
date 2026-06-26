@@ -201,6 +201,7 @@ export function useTrip(tripId: string) {
     moveItem,
     removeItem,
     addPerson,
+    updatePerson,
     removePerson,
     assignCarrier,
   };
