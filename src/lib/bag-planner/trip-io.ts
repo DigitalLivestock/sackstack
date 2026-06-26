@@ -167,6 +167,21 @@ function parseWeight(v: unknown): number | null {
   return null;
 }
 
+export const ITEMS_IMPORT_TEMPLATE = [
+  { name: 'Sleeping bag', weightG: 1200 },
+  { name: 'Tent', weightG: '2.5kg' },
+  { name: 'Cooking kit', weightG: '450g' },
+  {
+    name: 'Toiletries bag',
+    weightG: 380,
+    allowedBagTypes: ['hand_luggage', 'personal'],
+  },
+];
+
+export function downloadTemplate() {
+  downloadJson('bagplanner-items-template', ITEMS_IMPORT_TEMPLATE);
+}
+
 export function parseItemsImport(text: string): ItemImport[] {
   const data = JSON.parse(text);
   let rawItems: unknown[];
