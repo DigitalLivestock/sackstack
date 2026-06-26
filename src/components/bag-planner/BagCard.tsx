@@ -143,6 +143,11 @@ export function BagCard({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit bag
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onRemoveBag} className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Remove bag
