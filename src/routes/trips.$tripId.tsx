@@ -46,11 +46,14 @@ function TripPlanner() {
   const {
     trip,
     addBag,
+    updateBag,
     removeBag,
     addItem,
+    updateItem,
     moveItem,
     removeItem,
     addPerson,
+    updatePerson,
     removePerson,
     assignCarrier,
   } = useTrip(tripId);
