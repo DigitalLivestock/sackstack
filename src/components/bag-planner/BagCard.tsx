@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { MoreVertical, Trash2, User } from 'lucide-react';
+import { MoreVertical, Trash2, User, Pencil } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS } from '@/lib/bag-planner/types';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
+import { EditBagDialog } from './EditBagDialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
