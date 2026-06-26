@@ -1,4 +1,4 @@
-import type { Bag, BagType, TravelType } from './types';
+import type { Bag, BagType, ItemSuggestion, TravelType } from './types';
 
 type PresetBag = { name: string; type: BagType; weightLimitG?: number };
 
@@ -31,11 +31,41 @@ export const TRAVEL_PRESETS: Record<TravelType, PresetBag[]> = {
 };
 
 export function buildPresetBags(travelType: TravelType): Bag[] {
-  return TRAVEL_PRESETS[travelType].map((b) => ({
-    id: crypto.randomUUID(),
-    ...b,
-  }));
+  const presets = TRAVEL_PRESETS[travelType] ?? [];
+  return presets.map((b) => ({ id: crypto.randomUUID(), ...b }));
 }
+
+export function buildBagsFromPresets(presets: PresetBag[]): Bag[] {
+  return presets.map((b) => ({ id: crypto.randomUUID(), ...b }));
+}
+
+export const TRAVEL_SUGGESTIONS: Record<TravelType, ItemSuggestion[]> = {
+  hiking: [
+    { name: 'Sovsäck', weightG: 1200, tags: ['Sovsaker'] },
+    { name: 'Vattenflaska', weightG: 600, tags: ['Mat'] },
+    { name: 'Pannlampa', weightG: 90, tags: ['Elektronik'] },
+  ],
+  normal: [
+    { name: 'Pass', weightG: 50, tags: ['Dokument'], allowedBagTypes: ['hand_luggage', 'personal'] },
+    { name: 'Laddare', weightG: 150, tags: ['Elektronik'] },
+    { name: 'Tandborste', weightG: 20, tags: ['Hygien'] },
+  ],
+  camping: [
+    { name: 'Tält', weightG: 3000, tags: ['Sovsaker'] },
+    { name: 'Stormkök', weightG: 450, tags: ['Mat'] },
+    { name: 'Sovkudde', weightG: 300, tags: ['Sovsaker'] },
+  ],
+  business: [
+    { name: 'Laptop', weightG: 1400, tags: ['Elektronik'], allowedBagTypes: ['laptop_bag', 'hand_luggage'] },
+    { name: 'Skjorta', weightG: 220, tags: ['Kläder'] },
+    { name: 'Notisblock', weightG: 180, tags: ['Dokument'] },
+  ],
+  beach: [
+    { name: 'Solkräm', weightG: 200, tags: ['Hygien'] },
+    { name: 'Badhandduk', weightG: 350, tags: ['Kläder'] },
+    { name: 'Solglasögon', weightG: 30, tags: ['Kläder'] },
+  ],
+};
 
 export const PERSON_COLORS = [
   '#ef4444',
