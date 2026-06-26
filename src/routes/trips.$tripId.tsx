@@ -87,6 +87,9 @@ function TripPlanner() {
     setHydrated(true);
   }, []);
 
+  const [itemFilter, setItemFilter] = useState<ItemFilter>('all');
+  const [itemSort, setItemSort] = useState<ItemSort>('manual');
+
   const itemsByBag = useMemo(() => {
     const map = new Map<string | undefined, NonNullable<typeof trip>['items']>();
     if (!trip) return map;
@@ -99,8 +102,11 @@ function TripPlanner() {
       arr.push(it);
       map.set(key, arr);
     });
+    for (const [k, arr] of map) {
+      map.set(k, applyItemFilterSort(arr, itemFilter, itemSort));
+    }
     return map;
-  }, [trip]);
+  }, [trip, itemFilter, itemSort]);
 
   if (!trip) {
     if (!hydrated) {
