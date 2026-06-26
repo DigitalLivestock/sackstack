@@ -10,8 +10,9 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
+import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
@@ -177,12 +178,26 @@ function TripPlanner() {
               {trip.items.length} items
             </div>
           </div>
-          <div className="shrink-0 text-right">
-            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
-              Total
-            </div>
-            <div className="text-sm font-semibold tabular-nums">
-              {formatWeight(totalWeight)}
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                downloadJson(`trip-${trip.name}`, buildExport([trip]));
+                toast.success('Trip exported');
+              }}
+              aria-label="Export trip to JSON"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
+            <div className="text-right">
+              <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Total
+              </div>
+              <div className="text-sm font-semibold tabular-nums">
+                {formatWeight(totalWeight)}
+              </div>
             </div>
           </div>
         </div>
