@@ -12,23 +12,30 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BAG_TYPE_LABELS, type BagType, type Item } from '@/lib/bag-planner/types';
 import { formatWeight, parseWeightInput } from '@/lib/bag-planner/format';
+import { TagPicker, TagBadges } from './TagPicker';
 
 const ALL_BAG_TYPES = Object.keys(BAG_TYPE_LABELS) as BagType[];
 
 export function EditItemDialog({
   item,
+  customTags,
   open,
   onOpenChange,
   onSave,
+  onAddCustomTag,
 }: {
   item: Item;
+  customTags: string[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (patch: Partial<Item>) => void;
+  onAddCustomTag?: (tag: string) => void;
 }) {
   const [name, setName] = useState(item.name);
   const [weight, setWeight] = useState(String(item.weightG));
   const [unit, setUnit] = useState<'g' | 'kg'>('g');
+  const [quantity, setQuantity] = useState(item.quantity);
+  const [tags, setTags] = useState<string[]>(item.tags);
   const [allowed, setAllowed] = useState<BagType[]>(item.allowedBagTypes ?? []);
 
   useEffect(() => {
@@ -36,6 +43,8 @@ export function EditItemDialog({
       setName(item.name);
       setWeight(String(item.weightG));
       setUnit('g');
+      setQuantity(item.quantity);
+      setTags(item.tags);
       setAllowed(item.allowedBagTypes ?? []);
     }
   }, [open, item]);
@@ -43,18 +52,19 @@ export function EditItemDialog({
   const submit = () => {
     if (!name.trim()) return;
     const grams = parseWeightInput(weight || '0', unit);
-    const patch: Partial<Item> = {
+    onSave({
       name: name.trim(),
       weightG: grams,
+      quantity: Math.max(1, Math.floor(quantity)),
+      tags,
       allowedBagTypes: allowed.length ? allowed : undefined,
-    };
-    onSave(patch);
+    });
     onOpenChange(false);
   };
 
   const toggleType = (type: BagType) => {
     setAllowed((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
     );
   };
 
@@ -74,34 +84,60 @@ export function EditItemDialog({
               autoFocus
             />
           </div>
-          <div className="space-y-1.5">
-            <Label>Weight</Label>
-            <div className="flex items-stretch overflow-hidden rounded-md border border-input">
-              <Input
-                type="number"
-                inputMode="decimal"
-                step="any"
-                min="0"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="rounded-none border-0 focus-visible:ring-0"
-              />
-              <button
-                type="button"
-                onClick={() => setUnit((u) => (u === 'g' ? 'kg' : 'g'))}
-                className="border-l border-input bg-muted px-3 text-xs font-medium hover:bg-accent"
-              >
-                {unit}
-              </button>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>Vikt per styck</Label>
+              <div className="flex items-stretch overflow-hidden rounded-md border border-input">
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  step="any"
+                  min="0"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
+                  className="rounded-none border-0 focus-visible:ring-0"
+                />
+                <button
+                  type="button"
+                  onClick={() => setUnit((u) => (u === 'g' ? 'kg' : 'g'))}
+                  className="border-l border-input bg-muted px-3 text-xs font-medium hover:bg-accent"
+                >
+                  {unit}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">Nu: {formatWeight(item.weightG)}</p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Current: {formatWeight(item.weightG)}
-            </p>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-item-qty">Antal</Label>
+              <Input
+                id="edit-item-qty"
+                type="number"
+                min="1"
+                step="1"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value || '1', 10))}
+              />
+              <p className="text-xs text-muted-foreground">
+                Totalt: {formatWeight(parseWeightInput(weight || '0', unit) * Math.max(1, quantity))}
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Taggar</Label>
+            <div className="flex items-center gap-2">
+              <TagPicker
+                selected={tags}
+                customTags={customTags}
+                onChange={setTags}
+                onAddCustomTag={onAddCustomTag}
+              />
+              <TagBadges tags={tags} onRemove={(t) => setTags(tags.filter((x) => x !== t))} />
+            </div>
           </div>
           <div className="space-y-2">
-            <Label>Allowed bag types</Label>
+            <Label>Tillåtna väsktyper</Label>
             <p className="text-xs text-muted-foreground">
-              Leave all unchecked to allow any bag.
+              Lämna alla omarkerade för att tillåta alla väskor.
             </p>
             <div className="grid grid-cols-2 gap-2">
               {ALL_BAG_TYPES.map((type) => (
@@ -121,9 +157,9 @@ export function EditItemDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            Avbryt
           </Button>
-          <Button onClick={submit}>Save</Button>
+          <Button onClick={submit}>Spara</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

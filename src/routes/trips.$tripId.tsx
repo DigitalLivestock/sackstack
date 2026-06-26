@@ -10,19 +10,20 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, ListChecks, Printer } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
-import { TRAVEL_TYPE_EMOJI, TRAVEL_TYPE_LABELS } from '@/lib/bag-planner/types';
+import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
+import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
 
 export const Route = createFileRoute('/trips/$tripId')({
   component: TripPlanner,
@@ -52,10 +53,16 @@ function TripPlanner() {
     updateItem,
     moveItem,
     removeItem,
+    toggleItemPacked,
+    setItemQuantity,
+    addCustomTag,
     addPerson,
     updatePerson,
     removePerson,
     assignCarrier,
+    addCustomTravelType,
+    removeCustomTravelType,
+    setTravelType,
   } = useTrip(tripId);
 
   const [activeDrag, setActiveDrag] = useState<
@@ -112,7 +119,8 @@ function TripPlanner() {
     );
   }
 
-  const totalWeight = trip.items.reduce((s, i) => s + i.weightG, 0);
+  const totalWeight = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+  const unassignedBags = trip.bags.filter((b) => !b.carrierId).length;
 
   const handleDragStart = (e: DragStartEvent) => {
     const data = e.active.data.current as
@@ -173,15 +181,31 @@ function TripPlanner() {
           </Button>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-lg">{TRAVEL_TYPE_EMOJI[trip.travelType]}</span>
+              <span className="text-lg">{travelTypeEmoji(trip)}</span>
               <h1 className="truncate text-base font-semibold sm:text-lg">{trip.name}</h1>
             </div>
             <div className="truncate text-xs text-muted-foreground">
-              {TRAVEL_TYPE_LABELS[trip.travelType]} · {trip.bags.length} bags ·{' '}
-              {trip.items.length} items
+              {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
+              {unassignedBags > 0 ? (
+                <span className="ml-2 text-orange-600">
+                  · {unassignedBags} utan bärare
+                </span>
+              ) : null}
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
+                <ListChecks className="h-4 w-4" />
+                <span className="hidden sm:inline">Packlista</span>
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/trips/$tripId/print" params={{ tripId: trip.id }}>
+                <Printer className="h-4 w-4" />
+                <span className="hidden sm:inline">Skriv ut</span>
+              </Link>
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -210,13 +234,21 @@ function TripPlanner() {
         <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
           {/* People */}
           <section className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 People
               </h2>
-              <span className="hidden text-xs text-muted-foreground md:block">
-                Drag a bag onto a person to assign carrier
-              </span>
+              <div className="flex items-center gap-2">
+                <CustomTravelTypeDialog
+                  trip={trip}
+                  onAdd={addCustomTravelType}
+                  onRemove={removeCustomTravelType}
+                  onSelect={setTravelType}
+                />
+                <span className="hidden text-xs text-muted-foreground md:block">
+                  Drag a bag onto a person
+                </span>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {trip.people.map((p) => {
@@ -226,7 +258,7 @@ function TripPlanner() {
                     s +
                     trip.items
                       .filter((i) => i.bagId === b.id)
-                      .reduce((ss, i) => ss + i.weightG, 0),
+                      .reduce((ss, i) => ss + itemWeight(i), 0),
                   0,
                 );
                 return (
@@ -238,7 +270,8 @@ function TripPlanner() {
                       onRemove={() => removePerson(p.id)}
                     />
                     <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
-                      {carries.length} bag{carries.length === 1 ? '' : 's'} · {formatWeight(w)}
+                      {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
+                      <span className="font-semibold text-foreground">{formatWeight(w)}</span>
                     </span>
                   </div>
                 );
@@ -263,18 +296,22 @@ function TripPlanner() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {trip.bags.map((bag) => (
-                  <BagCard
+                    <BagCard
                       key={bag.id}
                       bag={bag}
                       items={itemsByBag.get(bag.id) ?? []}
                       bags={trip.bags}
                       people={trip.people}
+                      customTags={trip.customTags}
                       activeDragItemId={
                         activeDrag?.kind === 'item' ? activeDrag.itemId : undefined
                       }
                       onMoveItem={moveItem}
                       onRemoveItem={removeItem}
                       onEditItem={updateItem}
+                      onTogglePacked={(id) => toggleItemPacked(id)}
+                      onSetQuantity={setItemQuantity}
+                      onAddCustomTag={addCustomTag}
                       onAssignCarrier={(pid) => assignCarrier(bag.id, pid)}
                       onEditBag={(patch) => updateBag(bag.id, patch)}
                       onRemoveBag={() => removeBag(bag.id)}
@@ -288,12 +325,14 @@ function TripPlanner() {
               <UnpackedTray
                 items={itemsByBag.get(undefined) ?? []}
                 bags={trip.bags}
-                onAdd={(name, weightG, allowedBagTypes) =>
-                  addItem({ name, weightG, allowedBagTypes })
-                }
+                trip={trip}
+                onAdd={addItem}
                 onMove={moveItem}
                 onEdit={updateItem}
                 onRemove={removeItem}
+                onTogglePacked={(id) => toggleItemPacked(id)}
+                onSetQuantity={setItemQuantity}
+                onAddCustomTag={addCustomTag}
               />
             </aside>
           </div>
@@ -308,7 +347,7 @@ function TripPlanner() {
                   <div className="rounded-md border border-foreground bg-card px-3 py-2 text-sm shadow-lg">
                     <span className="font-medium">{item.name}</span>
                     <span className="ml-2 text-muted-foreground tabular-nums">
-                      {formatWeight(item.weightG)}
+                      {formatWeight(itemWeight(item))}
                     </span>
                   </div>
                 );

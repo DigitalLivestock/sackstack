@@ -1,4 +1,4 @@
-import type { Trip, TravelType, BagType } from './types';
+import type { Trip, TravelType, BagType, Item } from './types';
 
 const TRAVEL_TYPES: TravelType[] = ['hiking', 'normal', 'camping', 'business', 'beach'];
 const BAG_TYPES: BagType[] = [
@@ -17,7 +17,7 @@ const BAG_TYPES: BagType[] = [
 
 export type TripExport = {
   format: 'bagplanner.trip';
-  version: 1;
+  version: 2;
   exportedAt: number;
   trips: Trip[];
 };
@@ -25,7 +25,7 @@ export type TripExport = {
 export function buildExport(trips: Trip[]): TripExport {
   return {
     format: 'bagplanner.trip',
-    version: 1,
+    version: 2,
     exportedAt: Date.now(),
     trips,
   };
@@ -54,12 +54,16 @@ function newId() {
     : Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
+function parseTags(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  return v.filter((x): x is string => typeof x === 'string' && !!x.trim()).map((s) => s.trim());
+}
+
 function parseTrip(raw: unknown, opts: { regenerateIds: boolean }): Trip {
   if (!isObj(raw)) throw new Error('Trip is not an object');
   const name = typeof raw.name === 'string' ? raw.name : 'Imported trip';
-  const travelType = TRAVEL_TYPES.includes(raw.travelType as TravelType)
-    ? (raw.travelType as TravelType)
-    : 'normal';
+  const travelType =
+    typeof raw.travelType === 'string' ? raw.travelType : 'normal';
   const createdAt = typeof raw.createdAt === 'number' ? raw.createdAt : Date.now();
 
   const peopleIdMap = new Map<string, string>();
@@ -107,6 +111,10 @@ function parseTrip(raw: unknown, opts: { regenerateIds: boolean }): Trip {
         const allowed = Array.isArray(it.allowedBagTypes)
           ? (it.allowedBagTypes.filter((t) => BAG_TYPES.includes(t as BagType)) as BagType[])
           : undefined;
+        const quantity =
+          typeof it.quantity === 'number' && it.quantity > 0 ? Math.floor(it.quantity) : 1;
+        const packed = !!it.packed;
+        const tags = parseTags(it.tags);
         return [
           {
             id,
@@ -114,19 +122,82 @@ function parseTrip(raw: unknown, opts: { regenerateIds: boolean }): Trip {
             weightG,
             bagId,
             allowedBagTypes: allowed && allowed.length ? allowed : undefined,
+            quantity,
+            packed,
+            tags,
+          } satisfies Item,
+        ];
+      })
+    : [];
+
+  const customTags = parseTags(raw.customTags);
+  const customTravelTypes = Array.isArray(raw.customTravelTypes)
+    ? raw.customTravelTypes.flatMap((c) => {
+        if (!isObj(c) || typeof c.name !== 'string') return [];
+        const bagPresets = Array.isArray(c.bagPresets)
+          ? c.bagPresets.flatMap((bp) => {
+              if (!isObj(bp) || typeof bp.name !== 'string') return [];
+              const type = BAG_TYPES.includes(bp.type as BagType)
+                ? (bp.type as BagType)
+                : 'backpack';
+              return [
+                {
+                  name: bp.name,
+                  type,
+                  weightLimitG:
+                    typeof bp.weightLimitG === 'number' ? bp.weightLimitG : undefined,
+                },
+              ];
+            })
+          : [];
+        const itemSuggestions = Array.isArray(c.itemSuggestions)
+          ? c.itemSuggestions.flatMap((s) => {
+              if (!isObj(s) || typeof s.name !== 'string') return [];
+              const w = typeof s.weightG === 'number' ? s.weightG : 0;
+              return [
+                {
+                  name: s.name,
+                  weightG: w,
+                  tags: parseTags(s.tags),
+                  allowedBagTypes: Array.isArray(s.allowedBagTypes)
+                    ? (s.allowedBagTypes.filter((t) =>
+                        BAG_TYPES.includes(t as BagType),
+                      ) as BagType[])
+                    : undefined,
+                },
+              ];
+            })
+          : [];
+        return [
+          {
+            id: opts.regenerateIds || typeof c.id !== 'string' ? newId() : c.id,
+            name: c.name,
+            emoji: typeof c.emoji === 'string' ? c.emoji : undefined,
+            bagPresets,
+            itemSuggestions,
           },
         ];
       })
     : [];
 
+  // Validate built-in travelType or fall back to keeping the custom string id;
+  // if neither matches we accept the string anyway (custom types may have been imported).
+  const finalTravelType =
+    TRAVEL_TYPES.includes(travelType as TravelType) ||
+    customTravelTypes.some((c) => c.id === travelType)
+      ? travelType
+      : 'normal';
+
   return {
     id: opts.regenerateIds || typeof raw.id !== 'string' ? newId() : (raw.id as string),
     name,
-    travelType,
+    travelType: finalTravelType,
     createdAt,
     people,
     bags,
     items,
+    customTags,
+    customTravelTypes,
   };
 }
 
@@ -137,7 +208,6 @@ export function parseImport(
   const data = JSON.parse(text);
   const regenerateIds = opts.regenerateIds ?? true;
 
-  // Accept: { trips: [...] }, single Trip, or array of Trip
   let rawTrips: unknown[];
   if (isObj(data) && Array.isArray((data as Record<string, unknown>).trips)) {
     rawTrips = (data as { trips: unknown[] }).trips;
@@ -152,7 +222,15 @@ export function parseImport(
   return rawTrips.map((t) => parseTrip(t, { regenerateIds }));
 }
 
-export type ItemImport = { name: string; weightG: number; allowedBagTypes?: BagType[] };
+export type ItemImport = {
+  name: string;
+  weightG: number;
+  hasWeight: boolean;
+  quantity: number;
+  packed: boolean;
+  tags: string[];
+  allowedBagTypes?: BagType[];
+};
 
 function parseWeight(v: unknown): number | null {
   if (typeof v === 'number' && isFinite(v) && v >= 0) return v;
@@ -161,19 +239,22 @@ function parseWeight(v: unknown): number | null {
     if (m) {
       const n = parseFloat(m[1].replace(',', '.'));
       if (!isFinite(n) || n < 0) return null;
-      return (m[2]?.toLowerCase() === 'kg' ? n * 1000 : n);
+      return m[2]?.toLowerCase() === 'kg' ? n * 1000 : n;
     }
   }
   return null;
 }
 
 export const ITEMS_IMPORT_TEMPLATE = [
-  { name: 'Sleeping bag', weightG: 1200 },
-  { name: 'Tent', weightG: '2.5kg' },
+  { name: 'Sleeping bag', weightG: 1200, quantity: 1, tags: ['Sovsaker'] },
+  { name: 'Tent', weightG: '2.5kg', tags: ['Sovsaker'] },
   { name: 'Cooking kit', weightG: '450g' },
+  { name: 'Socks', weightG: 80, quantity: 3, tags: ['Kläder'] },
+  { name: 'Item without weight' },
   {
     name: 'Toiletries bag',
     weightG: 380,
+    tags: ['Hygien'],
     allowedBagTypes: ['hand_luggage', 'personal'],
   },
 ];
@@ -194,7 +275,7 @@ export function parseItemsImport(text: string): ItemImport[] {
   ) {
     rawItems = (data as { trips: unknown[] }).trips.flatMap((t) =>
       isObj(t) && Array.isArray((t as Record<string, unknown>).items)
-        ? ((t as { items: unknown[] }).items)
+        ? (t as { items: unknown[] }).items
         : [],
     );
   } else {
@@ -206,13 +287,19 @@ export function parseItemsImport(text: string): ItemImport[] {
     if (!isObj(raw)) continue;
     const name = typeof raw.name === 'string' ? raw.name.trim() : '';
     if (!name) continue;
-    const w = parseWeight(raw.weightG ?? raw.weight) ?? 0;
+    const parsed = parseWeight(raw.weightG ?? raw.weight);
     const allowed = Array.isArray(raw.allowedBagTypes)
       ? (raw.allowedBagTypes.filter((t) => BAG_TYPES.includes(t as BagType)) as BagType[])
       : undefined;
+    const quantity =
+      typeof raw.quantity === 'number' && raw.quantity > 0 ? Math.floor(raw.quantity) : 1;
     out.push({
       name,
-      weightG: w,
+      weightG: parsed ?? 0,
+      hasWeight: parsed !== null,
+      quantity,
+      packed: !!raw.packed,
+      tags: parseTags(raw.tags),
       allowedBagTypes: allowed && allowed.length ? allowed : undefined,
     });
   }

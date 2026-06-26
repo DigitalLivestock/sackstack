@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TripsNewRouteImport } from './routes/trips.new'
 import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
+import { Route as TripsTripIdPrintRouteImport } from './routes/trips.$tripId.print'
+import { Route as TripsTripIdChecklistRouteImport } from './routes/trips.$tripId.checklist'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,34 +30,66 @@ const TripsTripIdRoute = TripsTripIdRouteImport.update({
   path: '/trips/$tripId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TripsTripIdPrintRoute = TripsTripIdPrintRouteImport.update({
+  id: '/print',
+  path: '/print',
+  getParentRoute: () => TripsTripIdRoute,
+} as any)
+const TripsTripIdChecklistRoute = TripsTripIdChecklistRouteImport.update({
+  id: '/checklist',
+  path: '/checklist',
+  getParentRoute: () => TripsTripIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
+  '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
+  '/trips/$tripId/print': typeof TripsTripIdPrintRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
+  '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
+  '/trips/$tripId/print': typeof TripsTripIdPrintRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
+  '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
+  '/trips/$tripId/print': typeof TripsTripIdPrintRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/trips/$tripId' | '/trips/new'
+  fullPaths:
+    | '/'
+    | '/trips/$tripId'
+    | '/trips/new'
+    | '/trips/$tripId/checklist'
+    | '/trips/$tripId/print'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/trips/$tripId' | '/trips/new'
-  id: '__root__' | '/' | '/trips/$tripId' | '/trips/new'
+  to:
+    | '/'
+    | '/trips/$tripId'
+    | '/trips/new'
+    | '/trips/$tripId/checklist'
+    | '/trips/$tripId/print'
+  id:
+    | '__root__'
+    | '/'
+    | '/trips/$tripId'
+    | '/trips/new'
+    | '/trips/$tripId/checklist'
+    | '/trips/$tripId/print'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  TripsTripIdRoute: typeof TripsTripIdRoute
+  TripsTripIdRoute: typeof TripsTripIdRouteWithChildren
   TripsNewRoute: typeof TripsNewRoute
 }
 
@@ -82,12 +116,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TripsTripIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trips/$tripId/print': {
+      id: '/trips/$tripId/print'
+      path: '/print'
+      fullPath: '/trips/$tripId/print'
+      preLoaderRoute: typeof TripsTripIdPrintRouteImport
+      parentRoute: typeof TripsTripIdRoute
+    }
+    '/trips/$tripId/checklist': {
+      id: '/trips/$tripId/checklist'
+      path: '/checklist'
+      fullPath: '/trips/$tripId/checklist'
+      preLoaderRoute: typeof TripsTripIdChecklistRouteImport
+      parentRoute: typeof TripsTripIdRoute
+    }
   }
 }
 
+interface TripsTripIdRouteChildren {
+  TripsTripIdChecklistRoute: typeof TripsTripIdChecklistRoute
+  TripsTripIdPrintRoute: typeof TripsTripIdPrintRoute
+}
+
+const TripsTripIdRouteChildren: TripsTripIdRouteChildren = {
+  TripsTripIdChecklistRoute: TripsTripIdChecklistRoute,
+  TripsTripIdPrintRoute: TripsTripIdPrintRoute,
+}
+
+const TripsTripIdRouteWithChildren = TripsTripIdRoute._addFileChildren(
+  TripsTripIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  TripsTripIdRoute: TripsTripIdRoute,
+  TripsTripIdRoute: TripsTripIdRouteWithChildren,
   TripsNewRoute: TripsNewRoute,
 }
 export const routeTree = rootRouteImport

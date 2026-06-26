@@ -29,16 +29,36 @@ export type Item = {
   weightG: number;
   bagId?: string;
   allowedBagTypes?: BagType[];
+  quantity: number;
+  packed: boolean;
+  tags: string[];
+};
+
+export type ItemSuggestion = {
+  name: string;
+  weightG: number;
+  tags?: string[];
+  allowedBagTypes?: BagType[];
+};
+
+export type CustomTravelType = {
+  id: string;
+  name: string;
+  emoji?: string;
+  bagPresets: { name: string; type: BagType; weightLimitG?: number }[];
+  itemSuggestions: ItemSuggestion[];
 };
 
 export type Trip = {
   id: string;
   name: string;
-  travelType: TravelType;
+  travelType: TravelType | string; // built-in id or custom id
   people: Person[];
   bags: Bag[];
   items: Item[];
   createdAt: number;
+  customTags: string[];
+  customTravelTypes: CustomTravelType[];
 };
 
 export const BAG_TYPE_LABELS: Record<BagType, string> = {
@@ -70,3 +90,30 @@ export const TRAVEL_TYPE_EMOJI: Record<TravelType, string> = {
   business: '💼',
   beach: '🏖️',
 };
+
+export const GLOBAL_TAGS = [
+  'Kläder',
+  'Elektronik',
+  'Hygien',
+  'Mat',
+  'Sovsaker',
+  'Dokument',
+  'Verktyg',
+  'Första hjälpen',
+];
+
+export function itemWeight(i: Pick<Item, 'weightG' | 'quantity'>): number {
+  return i.weightG * Math.max(1, i.quantity ?? 1);
+}
+
+export function travelTypeLabel(trip: Pick<Trip, 'travelType' | 'customTravelTypes'>): string {
+  const t = trip.travelType as TravelType;
+  if (t in TRAVEL_TYPE_LABELS) return TRAVEL_TYPE_LABELS[t];
+  return trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.name ?? 'Custom';
+}
+
+export function travelTypeEmoji(trip: Pick<Trip, 'travelType' | 'customTravelTypes'>): string {
+  const t = trip.travelType as TravelType;
+  if (t in TRAVEL_TYPE_EMOJI) return TRAVEL_TYPE_EMOJI[t];
+  return trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.emoji ?? '🎒';
+}

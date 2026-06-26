@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
-import { TRAVEL_TYPE_EMOJI, TRAVEL_TYPE_LABELS } from '@/lib/bag-planner/types';
+import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
 
@@ -124,7 +124,7 @@ function TripsIndex() {
               .slice()
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((trip) => {
-                const total = trip.items.reduce((s, i) => s + i.weightG, 0);
+                const total = trip.items.reduce((s, i) => s + itemWeight(i), 0);
                 return (
                   <div
                     key={trip.id}
@@ -135,12 +135,12 @@ function TripsIndex() {
                       params={{ tripId: trip.id }}
                       className="block"
                     >
-                      <div className="text-2xl">{TRAVEL_TYPE_EMOJI[trip.travelType]}</div>
+                      <div className="text-2xl">{travelTypeEmoji(trip)}</div>
                       <div className="mt-3 truncate text-base font-semibold">
                         {trip.name}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {TRAVEL_TYPE_LABELS[trip.travelType]}
+                        {travelTypeLabel(trip)}
                       </div>
                       <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
                         <span>{trip.bags.length} bags</span>

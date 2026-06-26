@@ -1,87 +1,42 @@
-# Bag Planner — Phase 1 Plan
+## Plan: Packlista, taggar, antal, förslag, utskrift
 
-Build a responsive **web app** for planning bag weights on a trip. Desktop gets rich drag-and-drop; mobile gets touch-friendly menus. No backend, no auth yet — all data in `localStorage`. Code is structured so a future Capacitor wrap (Android/iOS) is a drop-in step.
+### 1. Datamodell (`src/lib/bag-planner/types.ts`)
+- `Item`: lägg till `quantity: number` (default 1), `packed: boolean` (default false), `tags: string[]`.
+- `Trip`: lägg till `customTags: string[]` (egna taggar per trip) och `customTravelTypes: CustomTravelType[]`.
+- Ny typ `CustomTravelType { id, name, bagPresets: BagType[], itemSuggestions: ItemSuggestion[] }`.
+- Ny typ `ItemSuggestion { name, weightG, tags?, allowedBagTypes? }`.
+- All viktsummering (bagg-vikt, weight bar, totalvikt per person) använder `weightG * quantity`.
 
-## Scope (Phase 1, web only)
+### 2. Presets (`src/lib/bag-planner/presets.ts`)
+- `GLOBAL_TAGS`: Kläder, Elektronik, Hygien, Mat, Sovsaker, Dokument, Verktyg, Första hjälpen.
+- `TRAVEL_SUGGESTIONS`: 3 förslag per inbyggd resetyp (Hiking, Normal, Camping, Business, Beach) med namn, vikt, taggar.
 
-- Create trips, pick a travel type, get a starter set of bags.
-- Add people, assign each bag to a person (carrier).
-- Add items with weight; move them between bags or "unpacked".
-- Live total weight per bag with a weight bar + soft limit.
-- Bag-type restrictions (e.g. hand luggage disallows certain items).
-- Works offline via `localStorage`.
+### 3. Hook (`src/hooks/use-trip.ts`)
+- Nya actions: `setItemQuantity`, `toggleItemPacked`, `setItemTags`, `addCustomTag`, `removeCustomTag`, `addCustomTravelType`, `updateCustomTravelType`, `removeCustomTravelType`.
+- Hjälpare: `getPersonTotalWeight(tripId, personId)`, `getBagWeight(bag)` (båda kvantitetsmedvetna).
 
-## Interaction model
+### 4. UI-komponenter
+- **`ItemRow.tsx`**: kryssruta (packed), quantity stepper (− 1 +), tagg-badges, "Vikt saknas"-badge (orange) när `weightG === 0`. Edit-dialogen får quantity-fält och tagg-väljare.
+- **`BagCard.tsx`**: tydlig varningsbadge ("Ingen bärare") på bag utan `carrierId` — orange ram + ikon i header.
+- **`TagPicker.tsx`** (ny): multi-select över globala + trip-egna taggar, "+ Skapa tagg" inline.
+- **`SuggestionsPopover.tsx`** (ny): knapp "Förslag" i UnpackedTray som öppnar popover med 3+ förslag per resetyp (inkl. egna). Klick → lägger till i Unpacked.
+- **`CustomTravelTypeDialog.tsx`** (ny): hantera trip-egna resetyper (namn, bag-presets, item-förslag). Nås från trip-header.
+- **`ImportItemsDialog.tsx`** (ny från tidigare plan): förhandsgranskning före import, "Vikt saknas"-badge på rader utan vikt, redigerbara fält + radera-knapp.
 
-- **Desktop (≥768px):** drag items between bags and the "Unpacked" tray. Drop zones highlight; disallowed bags show a red "not allowed" state during drag. Drag a bag onto a person chip to assign carrier.
-- **Mobile / touch:** tap an item → "Move to…" menu listing allowed bags. Tap a bag → "Assign to…" menu listing people. (Drag-and-drop libs we use also support touch, but menus stay as the primary mobile path so it never feels fiddly.)
-- Library: `@dnd-kit/core` + `@dnd-kit/sortable` (works for mouse, touch, keyboard; accessible).
+### 5. Packlista-vy
+- **Inline checkboxar** i alla ItemRow (bag + Unpacked).
+- **Ny route `/trips/$tripId/checklist`**: grupperad vy (per bag / per person / per tagg — togglebar), kryssrutor, progress-bar ("12/34 packat"), filter på tagg.
+- **Utskriftsvy `/trips/$tripId/print`**: ren A4-layout, dolda kontroller, `@media print`-stilar, "Skriv ut"-knapp som triggar `window.print()`. Visar bagg, bärare, items med antal + vikt + taggar + kryssruta-glyf.
 
-## Portability strategy
+### 6. Trip-header (`src/routes/trips.$tripId.tsx`)
+- Nya knappar: **Packlista**, **Skriv ut**, **Förslag**, **Egna resetyper**.
+- Totalvikt per person visas i PersonChip (tooltip eller liten siffra under namnet).
 
-- Pure React + TypeScript, storage isolated behind one `useTrip` hook.
-- Responsive down to 360px; menu-based mobile path means no desktop-only blockers when wrapped with Capacitor later.
-- No browser-only APIs beyond `localStorage` (later swappable for `@capacitor/preferences` or cloud).
+### 7. Import/Export (`src/lib/bag-planner/trip-io.ts`)
+- Trip-export inkluderar `customTags`, `customTravelTypes`, och per item: `quantity`, `packed`, `tags`.
+- `parseItemsImport`: accepterar `tags`, `quantity`, `packed` i objekten; uppdatera template med exempel.
+- Bakåtkompatibel parse: saknade fält får defaults.
 
-## Data model
-
-```ts
-type TravelType = 'hiking' | 'normal' | 'camping' | 'business' | 'beach';
-type BagType = 'backpack' | 'daypack' | 'suitcase' | 'hand_luggage'
-             | 'personal' | 'roof_box' | 'cooler' | 'tent_bag'
-             | 'laptop_bag' | 'beach_bag' | 'hip_belt';
-
-type Person = { id: string; name: string; color: string };
-type Bag = {
-  id: string; name: string; type: BagType;
-  carrierId?: string;
-  weightLimitG?: number;
-};
-type Item = {
-  id: string; name: string; weightG: number;
-  bagId?: string;              // undefined = unpacked
-  allowedBagTypes?: BagType[];
-};
-type Trip = {
-  id: string; name: string; travelType: TravelType;
-  people: Person[]; bags: Bag[]; items: Item[];
-  createdAt: number;
-};
-```
-
-## State
-
-`useTrip(tripId)` hook, persisted to `localStorage` key `bagplanner:trips`.
-Actions: `addBag`, `updateBag`, `removeBag`, `addItem`, `updateItem`, `moveItem`, `removeItem`, `addPerson`, `removePerson`, `assignCarrier`.
-
-## Travel-type presets
-
-- Hiking: Backpack, Daypack, Hip belt
-- Normal: Suitcase, Hand luggage, Personal item
-- Camping: Roof box, Cooler, Tent bag, Backpack
-- Business: Carry-on, Laptop bag
-- Beach: Suitcase, Beach bag, Hand luggage
-
-## Routes
-
-- `/` — list trips + "New trip" CTA
-- `/trips/new` — name + travel type picker
-- `/trips/$tripId` — main planner
-
-## Planner layout
-
-- Mobile: single column — People strip → Bags → Unpacked tray.
-- ≥768px: two columns — Bags grid left, Unpacked tray right (sticky); People strip on top. Drag enabled.
-
-## Components
-
-`TripCard`, `TravelTypePicker`, `PersonChip` (drop target for bag assignment), `AddPersonDialog`, `BagCard` (droppable), `WeightBar`, `ItemRow` (draggable), `AddItemForm`, `AddBagDialog`, `UnpackedTray` (droppable), `AssignCarrierMenu`, `MoveToBagMenu`.
-
-## Design
-
-Clean, app-like, restrained. Color-coded people. Weight bars turn amber/red near/over limit. 44px tap targets. Visible drop-zone highlights, disallowed-target shake on desktop drop.
-
-## Later phases (not now)
-
-- Phase 2: Enable Lovable Cloud, email auth, migrate `useTrip` to server functions + DB with RLS, real multi-user collaboration.
-- Phase 3: Wrap with Capacitor for Android + iOS.
+### Filer
+**Nya:** `src/components/bag-planner/TagPicker.tsx`, `SuggestionsPopover.tsx`, `CustomTravelTypeDialog.tsx`, `ImportItemsDialog.tsx`, `routes/trips.$tripId.checklist.tsx`, `routes/trips.$tripId.print.tsx`.
+**Edit:** `types.ts`, `presets.ts`, `trip-io.ts`, `use-trip.ts`, `ItemRow.tsx`, `EditItemDialog.tsx`, `BagCard.tsx`, `UnpackedTray.tsx`, `PersonChip.tsx`, `routes/trips.$tripId.tsx`.
