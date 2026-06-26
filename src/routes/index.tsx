@@ -28,13 +28,36 @@ export const Route = createFileRoute('/')({
 });
 
 function TripsIndex() {
-  const { trips, deleteTrip } = useTrips();
+  const { trips, deleteTrip, importTrips } = useTrips();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleExportAll = () => {
+    if (!trips.length) {
+      toast.error('No trips to export');
+      return;
+    }
+    downloadJson('bag-planner-trips', buildExport(trips));
+    toast.success(`Exported ${trips.length} trip${trips.length === 1 ? '' : 's'}`);
+  };
+
+  const handleImportFile = async (file: File) => {
+    try {
+      const text = await file.text();
+      const parsed = parseImport(text, { regenerateIds: true });
+      const added = importTrips(parsed);
+      if (added === 0) toast.message('No new trips to import');
+      else toast.success(`Imported ${added} trip${added === 1 ? '' : 's'}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Invalid JSON file');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
+      <Toaster position="top-center" richColors />
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-4">
+        <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-4">
           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-foreground text-background">
             <Luggage className="h-5 w-5" />
           </div>
@@ -44,9 +67,38 @@ function TripsIndex() {
               Plan and balance the weight of your bags before a trip.
             </p>
           </div>
-          <Button onClick={() => navigate({ to: '/trips/new' })}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handleImportFile(f);
+              e.target.value = '';
+            }}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label="Import trips from JSON"
+          >
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">Import</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportAll}
+            aria-label="Export all trips to JSON"
+          >
+            <Download className="h-4 w-4" />
+            <span className="hidden sm:inline">Export</span>
+          </Button>
+          <Button size="sm" onClick={() => navigate({ to: '/trips/new' })}>
             <Plus className="h-4 w-4" />
-            New trip
+            <span className="hidden sm:inline">New trip</span>
           </Button>
         </div>
       </header>
