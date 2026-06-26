@@ -60,9 +60,7 @@ export function BagCard({
     data: { kind: 'bag-drag', bagId: bag.id },
   });
 
-  const activeItem =
-    activeDragItemId ? items.concat().find(() => false) : undefined;
-  void activeItem;
+  const [editOpen, setEditOpen] = useState(false);
 
   // Determine if currently dragged item is allowed
   const currentTotal = items.reduce((sum, i) => sum + i.weightG, 0);
