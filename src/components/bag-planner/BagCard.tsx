@@ -165,11 +165,12 @@ export function BagCard({
           </div>
         ) : (
           items.map((item) => (
-            <ItemRow
+          <ItemRow
               key={item.id}
               item={item}
               bags={bags}
               onMove={(bagId) => onMoveItem(item.id, bagId)}
+              onEdit={(patch) => onEditItem(item.id, patch)}
               onRemove={() => onRemoveItem(item.id)}
             />
           ))
