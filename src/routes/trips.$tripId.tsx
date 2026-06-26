@@ -10,8 +10,9 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
+import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
