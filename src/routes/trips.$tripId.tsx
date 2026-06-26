@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -66,9 +66,8 @@ function TripPlanner() {
   );
 
   const [hydrated, setHydrated] = useState(false);
-  // Mark hydrated on mount so we don't flash "not found" during SSR/initial hydration.
-  useMemo(() => {
-    if (typeof window !== 'undefined') setHydrated(true);
+  useEffect(() => {
+    setHydrated(true);
   }, []);
 
   const itemsByBag = useMemo(() => {
