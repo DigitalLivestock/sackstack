@@ -20,11 +20,13 @@ export function ItemRow({
   item,
   bags,
   onMove,
+  onEdit,
   onRemove,
 }: {
   item: Item;
   bags: Bag[];
   onMove: (bagId: string | undefined) => void;
+  onEdit: (patch: Partial<Item>) => void;
   onRemove: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
