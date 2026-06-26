@@ -76,6 +76,11 @@ export function ItemRow({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Move to…</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit item
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => onMove(undefined)}>
             Unpacked
           </DropdownMenuItem>
