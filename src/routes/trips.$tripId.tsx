@@ -24,6 +24,12 @@ import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
 import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
+import {
+  ItemFilterBar,
+  applyItemFilterSort,
+  type ItemFilter,
+  type ItemSort,
+} from '@/components/bag-planner/ItemFilterBar';
 
 export const Route = createFileRoute('/trips/$tripId')({
   component: TripPlanner,
@@ -81,6 +87,9 @@ function TripPlanner() {
     setHydrated(true);
   }, []);
 
+  const [itemFilter, setItemFilter] = useState<ItemFilter>('all');
+  const [itemSort, setItemSort] = useState<ItemSort>('manual');
+
   const itemsByBag = useMemo(() => {
     const map = new Map<string | undefined, NonNullable<typeof trip>['items']>();
     if (!trip) return map;
@@ -93,8 +102,11 @@ function TripPlanner() {
       arr.push(it);
       map.set(key, arr);
     });
+    for (const [k, arr] of map) {
+      map.set(k, applyItemFilterSort(arr, itemFilter, itemSort));
+    }
     return map;
-  }, [trip]);
+  }, [trip, itemFilter, itemSort]);
 
   if (!trip) {
     if (!hydrated) {
@@ -279,6 +291,13 @@ function TripPlanner() {
               <AddPersonInline onAdd={addPerson} />
             </div>
           </section>
+
+          <ItemFilterBar
+            filter={itemFilter}
+            sort={itemSort}
+            onFilter={setItemFilter}
+            onSort={setItemSort}
+          />
 
           {/* Bags + Unpacked */}
           <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
