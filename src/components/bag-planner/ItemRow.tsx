@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, X } from 'lucide-react';
+import { GripVertical, X, Pencil } from 'lucide-react';
 import type { Item, Bag } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { EditItemDialog } from './EditItemDialog';
 
 export function ItemRow({
   item,
