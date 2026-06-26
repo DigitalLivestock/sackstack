@@ -1,8 +1,12 @@
+import { useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
+import { Upload } from 'lucide-react';
+import { toast } from 'sonner';
 import type { Bag, Item } from '@/lib/bag-planner/types';
 import { ItemRow } from './ItemRow';
 import { AddItemForm } from './AddItemForm';
 import { formatWeight } from '@/lib/bag-planner/format';
+import { parseItemsImport } from '@/lib/bag-planner/trip-io';
 
 export function UnpackedTray({
   items,
@@ -13,7 +17,7 @@ export function UnpackedTray({
 }: {
   items: Item[];
   bags: Bag[];
-  onAdd: (name: string, weightG: number) => void;
+  onAdd: (name: string, weightG: number, allowedBagTypes?: Item['allowedBagTypes']) => void;
   onMove: (itemId: string, bagId: string | undefined) => void;
   onRemove: (itemId: string) => void;
 }) {
@@ -21,8 +25,20 @@ export function UnpackedTray({
     id: 'unpacked',
     data: { kind: 'unpacked' },
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const total = items.reduce((s, i) => s + i.weightG, 0);
+
+  const handleImport = async (file: File) => {
+    try {
+      const text = await file.text();
+      const parsed = parseItemsImport(text);
+      parsed.forEach((it) => onAdd(it.name, it.weightG, it.allowedBagTypes));
+      toast.success(`Imported ${parsed.length} item${parsed.length === 1 ? '' : 's'}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Invalid JSON file');
+    }
+  };
 
   return (
     <div
@@ -31,11 +47,34 @@ export function UnpackedTray({
         isOver ? 'border-foreground ring-2 ring-foreground/10' : 'border-border'
       }`}
     >
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-2">
         <h2 className="text-base font-semibold">Unpacked</h2>
-        <span className="text-xs tabular-nums text-muted-foreground">
-          {items.length} · {formatWeight(total)}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs tabular-nums text-muted-foreground">
+            {items.length} · {formatWeight(total)}
+          </span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handleImport(f);
+              e.target.value = '';
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Import items from JSON"
+            title="Import items from JSON"
+          >
+            <Upload className="h-3.5 w-3.5" />
+            Import
+          </button>
+        </div>
       </div>
 
       <AddItemForm onAdd={onAdd} />

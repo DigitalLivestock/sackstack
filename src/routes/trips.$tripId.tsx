@@ -282,7 +282,9 @@ function TripPlanner() {
               <UnpackedTray
                 items={itemsByBag.get(undefined) ?? []}
                 bags={trip.bags}
-                onAdd={(name, weightG) => addItem({ name, weightG })}
+                onAdd={(name, weightG, allowedBagTypes) =>
+                  addItem({ name, weightG, allowedBagTypes })
+                }
                 onMove={moveItem}
                 onRemove={removeItem}
               />
