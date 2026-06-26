@@ -14,12 +14,14 @@ export function UnpackedTray({
   bags,
   onAdd,
   onMove,
+  onEdit,
   onRemove,
 }: {
   items: Item[];
   bags: Bag[];
   onAdd: (name: string, weightG: number, allowedBagTypes?: Item['allowedBagTypes']) => void;
   onMove: (itemId: string, bagId: string | undefined) => void;
+  onEdit: (itemId: string, patch: Partial<Item>) => void;
   onRemove: (itemId: string) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({
