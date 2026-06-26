@@ -59,7 +59,17 @@ export function useTrips() {
     emit();
   }, []);
 
-  return { trips, createTrip, deleteTrip };
+  const importTrips = useCallback((incoming: Trip[]): number => {
+    if (!incoming.length) return 0;
+    const all = loadAll();
+    const existing = new Set(all.map((t) => t.id));
+    const merged = incoming.filter((t) => !existing.has(t.id));
+    saveAll([...all, ...merged]);
+    emit();
+    return merged.length;
+  }, []);
+
+  return { trips, createTrip, deleteTrip, importTrips };
 }
 
 export function useTrip(tripId: string) {
