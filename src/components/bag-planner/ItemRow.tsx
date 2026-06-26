@@ -98,6 +98,13 @@ export function ItemRow({
       >
         <X className="h-4 w-4" />
       </button>
+
+      <EditItemDialog
+        item={item}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSave={onEdit}
+      />
     </div>
   );
 }
