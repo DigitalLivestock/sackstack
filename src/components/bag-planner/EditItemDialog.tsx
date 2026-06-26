@@ -37,6 +37,7 @@ export function EditItemDialog({
   const [quantity, setQuantity] = useState(item.quantity);
   const [tags, setTags] = useState<string[]>(item.tags);
   const [allowed, setAllowed] = useState<BagType[]>(item.allowedBagTypes ?? []);
+  const [packed, setPacked] = useState(item.packed);
 
   useEffect(() => {
     if (open) {
@@ -46,6 +47,7 @@ export function EditItemDialog({
       setQuantity(item.quantity);
       setTags(item.tags);
       setAllowed(item.allowedBagTypes ?? []);
+      setPacked(item.packed);
     }
   }, [open, item]);
 
@@ -58,6 +60,7 @@ export function EditItemDialog({
       quantity: Math.max(1, Math.floor(quantity)),
       tags,
       allowedBagTypes: allowed.length ? allowed : undefined,
+      packed,
     });
     onOpenChange(false);
   };
