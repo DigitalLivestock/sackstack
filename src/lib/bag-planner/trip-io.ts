@@ -206,8 +206,7 @@ export function parseItemsImport(text: string): ItemImport[] {
     if (!isObj(raw)) continue;
     const name = typeof raw.name === 'string' ? raw.name.trim() : '';
     if (!name) continue;
-    const w = parseWeight(raw.weightG ?? raw.weight);
-    if (w === null) continue;
+    const w = parseWeight(raw.weightG ?? raw.weight) ?? 0;
     const allowed = Array.isArray(raw.allowedBagTypes)
       ? (raw.allowedBagTypes.filter((t) => BAG_TYPES.includes(t as BagType)) as BagType[])
       : undefined;
