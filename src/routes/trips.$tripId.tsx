@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import {
   DndContext,
@@ -65,13 +65,20 @@ function TripPlanner() {
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
   );
 
+  const [hydrated, setHydrated] = useState(false);
+  // Mark hydrated on mount so we don't flash "not found" during SSR/initial hydration.
+  useMemo(() => {
+    if (typeof window !== 'undefined') setHydrated(true);
+  }, []);
+
   const itemsByBag = useMemo(() => {
-    const map = new Map<string | undefined, typeof trip extends undefined ? never : NonNullable<typeof trip>['items']>();
+    const map = new Map<string | undefined, NonNullable<typeof trip>['items']>();
     if (!trip) return map;
     map.set(undefined, []);
     trip.bags.forEach((b) => map.set(b.id, []));
     trip.items.forEach((it) => {
-      const key = it.bagId && trip.bags.some((b) => b.id === it.bagId) ? it.bagId : undefined;
+      const key =
+        it.bagId && trip.bags.some((b) => b.id === it.bagId) ? it.bagId : undefined;
       const arr = map.get(key) ?? [];
       arr.push(it);
       map.set(key, arr);
@@ -79,9 +86,27 @@ function TripPlanner() {
     return map;
   }, [trip]);
 
-  if (trip === undefined) {
-    // Could be still hydrating from localStorage
-    throw notFound();
+  if (!trip) {
+    if (!hydrated) {
+      return (
+        <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+          Loading…
+        </div>
+      );
+    }
+    return (
+      <div className="grid min-h-screen place-items-center px-4 text-center">
+        <div>
+          <h1 className="text-xl font-semibold">Trip not found</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            It may have been deleted on this device.
+          </p>
+          <Button asChild className="mt-4">
+            <Link to="/">Back to trips</Link>
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const totalWeight = trip.items.reduce((s, i) => s + i.weightG, 0);
