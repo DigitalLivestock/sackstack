@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { Upload } from 'lucide-react';
+import { Upload, FileDown } from 'lucide-react';
+import { downloadTemplate } from '@/lib/bag-planner/trip-io';
 import { toast } from 'sonner';
 import type { Bag, Item } from '@/lib/bag-planner/types';
 import { ItemRow } from './ItemRow';
@@ -73,6 +74,16 @@ export function UnpackedTray({
           >
             <Upload className="h-3.5 w-3.5" />
             Import
+          </button>
+          <button
+            type="button"
+            onClick={downloadTemplate}
+            className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Download JSON import template"
+            title="Download JSON import template"
+          >
+            <FileDown className="h-3.5 w-3.5" />
+            Template
           </button>
         </div>
       </div>
