@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, X, Pencil, Minus, Plus, AlertTriangle } from 'lucide-react';
+import {
+  GripVertical,
+  X,
+  Pencil,
+  Minus,
+  Plus,
+  AlertTriangle,
+  ChevronDown,
+  Check,
+} from 'lucide-react';
 import type { Item, Bag } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, itemWeight } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,10 +61,14 @@ export function ItemRow({
   });
 
   const [editOpen, setEditOpen] = useState(false);
+  const [qtyOpen, setQtyOpen] = useState(false);
   const missingWeight = item.weightG === 0;
 
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
+
+  // suppress unused warning – packed status is now toggled in the checklist view
+  void onTogglePacked;
 
   return (
     <div
@@ -60,121 +77,164 @@ export function ItemRow({
         transform: draggable ? CSS.Translate.toString(transform) : undefined,
         opacity: isDragging ? 0.4 : 1,
       }}
-      className={`group flex items-center gap-2 rounded-md border bg-card px-2 py-2 ${
+      className={`group rounded-lg border bg-card transition-colors hover:border-foreground/40 ${
         missingWeight ? 'border-orange-500/50' : 'border-border'
-      } ${item.packed ? 'opacity-60' : ''}`}
+      } ${item.packed ? 'opacity-70' : ''}`}
     >
-      {onTogglePacked ? (
-        <Checkbox
-          checked={item.packed}
-          onCheckedChange={() => onTogglePacked()}
-          aria-label={`Mark ${item.name} as packed`}
-        />
-      ) : null}
-      {draggable ? (
+      {/* Header: name + status icons + actions */}
+      <div className="flex items-start gap-1.5 px-3 pt-2.5">
+        {draggable ? (
+          <button
+            {...listeners}
+            {...attributes}
+            className="mt-0.5 hidden touch-none cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing md:block"
+            aria-label="Drag"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+        ) : null}
+
         <button
-          {...listeners}
-          {...attributes}
-          className="hidden touch-none cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing md:block"
-          aria-label="Drag"
+          type="button"
+          onClick={() => setEditOpen(true)}
+          className="min-w-0 flex-1 text-left"
+          aria-label={`Edit ${item.name}`}
         >
-          <GripVertical className="h-4 w-4" />
-        </button>
-      ) : null}
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
-          <span className={`truncate text-sm font-medium ${item.packed ? 'line-through' : ''}`}>
-            {item.name}
-          </span>
-          {missingWeight ? (
-            <span className="inline-flex items-center gap-0.5 rounded bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-medium text-orange-600">
-              <AlertTriangle className="h-3 w-3" />
-              Vikt saknas
+          <div className="flex items-center gap-1.5">
+            {item.packed ? (
+              <Check
+                className="h-3.5 w-3.5 shrink-0 text-green-600"
+                aria-label="Packat"
+              />
+            ) : null}
+            <span
+              className={`block truncate text-base font-semibold leading-tight ${
+                item.packed ? 'line-through' : ''
+              }`}
+              title={item.name}
+            >
+              {item.name}
             </span>
+            {missingWeight ? (
+              <AlertTriangle
+                className="h-3.5 w-3.5 shrink-0 text-orange-500"
+                aria-label="Vikt saknas"
+              />
+            ) : null}
+          </div>
+        </button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Move
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit item
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Move to…</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onMove(undefined)}>
+              Unpacked
+            </DropdownMenuItem>
+            {bags.map((b) => (
+              <DropdownMenuItem
+                key={b.id}
+                disabled={!allowed(b) || b.id === item.bagId}
+                onClick={() => onMove(b.id)}
+              >
+                {b.name}
+                {!allowed(b) ? (
+                  <span className="ml-auto text-xs text-destructive">blocked</span>
+                ) : null}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          className="mt-1 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+          aria-label="Remove item"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Meta row: tags + restrictions + qty + weight */}
+      <div className="flex items-end justify-between gap-2 px-3 pb-2 pt-1">
+        <div className="min-w-0 flex-1">
+          {item.tags.length ? <TagBadges tags={item.tags} /> : null}
+          {item.allowedBagTypes ? (
+            <div className="mt-0.5 truncate text-[10px] text-muted-foreground">
+              only: {item.allowedBagTypes.map((t) => BAG_TYPE_LABELS[t]).join(', ')}
+            </div>
           ) : null}
         </div>
-        {item.tags.length ? (
-          <div className="mt-0.5">
-            <TagBadges tags={item.tags} />
-          </div>
-        ) : null}
-        {item.allowedBagTypes ? (
-          <div className="truncate text-[11px] text-muted-foreground">
-            only: {item.allowedBagTypes.map((t) => BAG_TYPE_LABELS[t]).join(', ')}
-          </div>
-        ) : null}
-      </div>
 
-      {onSetQuantity ? (
-        <div className="flex shrink-0 items-center gap-0.5">
-          <button
-            type="button"
-            onClick={() => onSetQuantity(Math.max(1, item.quantity - 1))}
-            className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-            aria-label="Decrease quantity"
-            disabled={item.quantity <= 1}
-          >
-            <Minus className="h-3 w-3" />
-          </button>
-          <span className="w-5 text-center text-xs font-medium tabular-nums">
-            {item.quantity}
-          </span>
-          <button
-            type="button"
-            onClick={() => onSetQuantity(item.quantity + 1)}
-            className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-            aria-label="Increase quantity"
-          >
-            <Plus className="h-3 w-3" />
-          </button>
+        <div className="flex shrink-0 items-center gap-2">
+          {onSetQuantity ? (
+            <Popover open={qtyOpen} onOpenChange={setQtyOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs tabular-nums text-muted-foreground hover:bg-muted hover:text-foreground"
+                  aria-label="Ändra antal"
+                >
+                  ×{item.quantity}
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-auto p-2">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => onSetQuantity(Math.max(1, item.quantity - 1))}
+                    disabled={item.quantity <= 1}
+                    aria-label="Minska"
+                  >
+                    <Minus className="h-3.5 w-3.5" />
+                  </Button>
+                  <span className="w-8 text-center text-sm font-medium tabular-nums">
+                    {item.quantity}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => onSetQuantity(item.quantity + 1)}
+                    aria-label="Öka"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          ) : null}
+
+          <div className="text-right text-sm font-medium tabular-nums">
+            {formatWeight(itemWeight(item))}
+            {item.quantity > 1 ? (
+              <div className="text-[10px] font-normal leading-none text-muted-foreground/70">
+                {formatWeight(item.weightG)} × {item.quantity}
+              </div>
+            ) : null}
+          </div>
         </div>
-      ) : null}
-
-      <div className="shrink-0 text-right text-sm tabular-nums text-muted-foreground">
-        {formatWeight(itemWeight(item))}
-        {item.quantity > 1 ? (
-          <div className="text-[10px] leading-none text-muted-foreground/70">
-            {formatWeight(item.weightG)} × {item.quantity}
-          </div>
-        ) : null}
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
-            Move
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit item
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Move to…</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => onMove(undefined)}>
-            Unpacked
-          </DropdownMenuItem>
-          {bags.map((b) => (
-            <DropdownMenuItem
-              key={b.id}
-              disabled={!allowed(b) || b.id === item.bagId}
-              onClick={() => onMove(b.id)}
-            >
-              {b.name}
-              {!allowed(b) ? (
-                <span className="ml-auto text-xs text-destructive">blocked</span>
-              ) : null}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <button
-        onClick={onRemove}
-        className="text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
-        aria-label="Remove item"
-      >
-        <X className="h-4 w-4" />
-      </button>
 
       <EditItemDialog
         item={item}
