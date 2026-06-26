@@ -25,7 +25,9 @@ export function BagCard({
   activeDragItemId,
   onMoveItem,
   onRemoveItem,
+  onEditItem,
   onAssignCarrier,
+  onEditBag,
   onRemoveBag,
 }: {
   bag: Bag;
@@ -35,7 +37,9 @@ export function BagCard({
   activeDragItemId?: string;
   onMoveItem: (itemId: string, bagId: string | undefined) => void;
   onRemoveItem: (itemId: string) => void;
+  onEditItem: (itemId: string, patch: Partial<Item>) => void;
   onAssignCarrier: (personId: string | undefined) => void;
+  onEditBag: (patch: Partial<Bag>) => void;
   onRemoveBag: () => void;
 }) {
   // Droppable for items
