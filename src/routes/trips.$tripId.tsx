@@ -24,6 +24,12 @@ import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
 import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
+import {
+  ItemFilterBar,
+  applyItemFilterSort,
+  type ItemFilter,
+  type ItemSort,
+} from '@/components/bag-planner/ItemFilterBar';
 
 export const Route = createFileRoute('/trips/$tripId')({
   component: TripPlanner,
