@@ -1,9 +1,12 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Luggage, Plus, Trash2 } from 'lucide-react';
+import { Download, Luggage, Plus, Trash2, Upload } from 'lucide-react';
+import { useRef } from 'react';
+import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
 import { TRAVEL_TYPE_EMOJI, TRAVEL_TYPE_LABELS } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
+import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
 
 export const Route = createFileRoute('/')({
   head: () => ({
