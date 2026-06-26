@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { Upload } from 'lucide-react';
+import { Upload, FileDown } from 'lucide-react';
+import { downloadTemplate } from '@/lib/bag-planner/trip-io';
 import { toast } from 'sonner';
 import type { Bag, Item } from '@/lib/bag-planner/types';
 import { ItemRow } from './ItemRow';
