@@ -104,6 +104,7 @@ export function UnpackedTray({
               item={item}
               bags={bags}
               onMove={(bagId) => onMove(item.id, bagId)}
+              onEdit={(patch) => onEdit(item.id, patch)}
               onRemove={() => onRemove(item.id)}
             />
           ))
