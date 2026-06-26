@@ -34,6 +34,8 @@ export function ItemRow({
     data: { kind: 'item', itemId: item.id },
   });
 
+  const [editOpen, setEditOpen] = useState(false);
+
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
 
