@@ -125,6 +125,13 @@ export function EditItemDialog({
               </p>
             </div>
           </div>
+          <label className="flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm">
+            <Checkbox
+              checked={packed}
+              onCheckedChange={(v) => setPacked(v === true)}
+            />
+            <span>Packat</span>
+          </label>
           <div className="space-y-1.5">
             <Label>Taggar</Label>
             <div className="flex items-center gap-2">
