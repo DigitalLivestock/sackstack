@@ -291,6 +291,7 @@ function TripPlanner() {
                   addItem({ name, weightG, allowedBagTypes })
                 }
                 onMove={moveItem}
+                onEdit={updateItem}
                 onRemove={removeItem}
               />
             </aside>
