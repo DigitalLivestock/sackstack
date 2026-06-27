@@ -34,24 +34,25 @@ export function EditBagDialog({
 }) {
   const [name, setName] = useState(bag.name);
   const [type, setType] = useState<BagType>(bag.type);
-  const [limit, setLimit] = useState(
-    bag.weightLimitG ? String((bag.weightLimitG / 1000).toFixed(2)).replace(/\.00$/, '') : ''
-  );
+  const fmtKg = (g?: number) =>
+    g ? String((g / 1000).toFixed(2)).replace(/\.00$/, '') : '';
+  const [limit, setLimit] = useState(fmtKg(bag.weightLimitG));
+  const [empty, setEmpty] = useState(fmtKg(bag.emptyWeightG));
 
   useEffect(() => {
     if (open) {
       setName(bag.name);
       setType(bag.type);
-      setLimit(
-        bag.weightLimitG ? String((bag.weightLimitG / 1000).toFixed(2)).replace(/\.00$/, '') : ''
-      );
+      setLimit(fmtKg(bag.weightLimitG));
+      setEmpty(fmtKg(bag.emptyWeightG));
     }
   }, [open, bag]);
 
   const submit = () => {
     if (!name.trim()) return;
     const limitG = limit ? parseWeightInput(limit, 'kg') : undefined;
-    onSave({ name: name.trim(), type, weightLimitG: limitG });
+    const emptyG = empty ? parseWeightInput(empty, 'kg') : undefined;
+    onSave({ name: name.trim(), type, weightLimitG: limitG, emptyWeightG: emptyG });
     onOpenChange(false);
   };
 
