@@ -128,7 +128,7 @@ export function ItemRow({
           </span>
         </button>
 
-        <div className="flex min-w-0 flex-1 items-center gap-1.5">
+        <div className="flex min-w-0 items-center gap-1.5">
           {item.tags.length ? <TagBadges tags={item.tags} /> : null}
           {item.allowedBagTypes ? (
             <span
