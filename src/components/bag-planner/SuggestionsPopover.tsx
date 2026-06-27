@@ -8,6 +8,7 @@ import {
 import type { Item, ItemSuggestion, Trip, TravelType } from '@/lib/bag-planner/types';
 import { TRAVEL_SUGGESTIONS } from '@/lib/bag-planner/presets';
 import { formatWeight } from '@/lib/bag-planner/format';
+import { loadCustomTravelTypes } from '@/hooks/use-custom-travel-types';
 
 const BUILTIN: TravelType[] = ['hiking', 'normal', 'camping', 'business', 'beach'];
 
@@ -21,9 +22,12 @@ export function SuggestionsPopover({
   const suggestions = useMemo<ItemSuggestion[]>(() => {
     const t = trip.travelType as TravelType;
     if (BUILTIN.includes(t)) return TRAVEL_SUGGESTIONS[t] ?? [];
-    const custom = trip.customTravelTypes.find((c) => c.id === trip.travelType);
-    return custom?.itemSuggestions ?? [];
+    const fromTrip = trip.customTravelTypes.find((c) => c.id === trip.travelType);
+    if (fromTrip?.itemSuggestions?.length) return fromTrip.itemSuggestions;
+    const fromGlobal = loadCustomTravelTypes().find((c) => c.id === trip.travelType);
+    return fromGlobal?.itemSuggestions ?? [];
   }, [trip]);
+
 
   return (
     <Popover>
