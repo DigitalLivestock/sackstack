@@ -56,6 +56,7 @@ export function AddItemForm({
           aria-label="Weight"
         />
         <UnitToggle unit={unit} onChange={setUnit} />
+        <span className="text-xs text-muted-foreground whitespace-nowrap">Qty</span>
         <Input
           type="number"
           min="1"
