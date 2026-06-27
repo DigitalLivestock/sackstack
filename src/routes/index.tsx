@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Download, Luggage, Plus, Trash2, Upload } from 'lucide-react';
+import { Download, Plus, Trash2, Upload } from 'lucide-react';
+import logoSvg from '@/assets/logo.svg';
 import { useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
@@ -58,9 +59,7 @@ function TripsIndex() {
       <Toaster position="top-center" richColors />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-4">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-foreground text-background">
-            <Luggage className="h-5 w-5" />
-          </div>
+          <img src={logoSvg} alt="Bag Planner" className="h-9 w-9 shrink-0 rounded-lg object-contain bg-foreground" />
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-lg font-semibold">Bag Planner</h1>
             <p className="truncate text-xs text-muted-foreground">
