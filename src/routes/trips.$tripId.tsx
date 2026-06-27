@@ -16,6 +16,7 @@ import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 import { buildShareUrl } from '@/lib/bag-planner/share-link';
 
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
@@ -24,6 +25,7 @@ import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
+import { SectionHeader } from '@/components/bag-planner/SectionHeader';
 
 
 export const Route = createFileRoute('/trips/$tripId')({
@@ -72,6 +74,11 @@ function TripPlanner() {
     | { kind: 'bag-drag'; bagId: string }
     | null
   >(null);
+
+  const [openCarriers, setOpenCarriers] = useState(true);
+  const [openSummary, setOpenSummary] = useState(true);
+  const [openBags, setOpenBags] = useState(true);
+  const [openUnpacked, setOpenUnpacked] = useState(true);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -175,34 +182,36 @@ function TripPlanner() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-3">
-          <div className="flex min-w-0 items-center gap-2 sm:flex-1 sm:gap-3">
-            <Button asChild variant="ghost" size="icon" className="shrink-0">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:px-4 sm:py-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <Button asChild variant="ghost" size="icon" className="h-9 w-9 shrink-0">
               <Link to="/" aria-label="Back to trips">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
+            <span className="shrink-0 text-xl leading-none" aria-hidden>
+              {travelTypeEmoji(trip)}
+            </span>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-lg shrink-0">{travelTypeEmoji(trip)}</span>
-                <h1 className="truncate text-base font-semibold sm:text-lg">{trip.name}</h1>
-              </div>
-              <div className="truncate text-xs text-muted-foreground">
+              <h1 className="truncate text-base font-semibold leading-tight sm:text-lg">
+                {trip.name}
+              </h1>
+              <div className="truncate text-[11px] text-muted-foreground sm:text-xs">
                 {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
                 {unassignedBags > 0 ? (
-                  <span className="ml-2 text-orange-600">
-                    · {unassignedBags} without carrier
+                  <span className="ml-1 text-orange-600">
+                    · {unassignedBags} w/o carrier
                   </span>
                 ) : null}
               </div>
             </div>
           </div>
-          <div className="flex shrink-0 items-center justify-end">
-            <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
+          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+            <div className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
               <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
                 <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
                   <ListChecks className="h-4 w-4" />
-                  <span className="hidden md:inline">Checklist</span>
+                  <span className="hidden sm:inline">Checklist</span>
                 </Link>
               </Button>
               <Button
@@ -217,7 +226,7 @@ function TripPlanner() {
                       try {
                         w.print();
                       } catch {
-                        /* noop — user can print manually */
+                        /* noop */
                       }
                     };
                     setTimeout(tryPrint, 800);
@@ -226,7 +235,7 @@ function TripPlanner() {
                 aria-label="Open print view"
               >
                 <Printer className="h-4 w-4" />
-                <span className="hidden md:inline">Print / PDF</span>
+                <span className="hidden sm:inline">Print / PDF</span>
               </Button>
               <Button
                 variant="ghost"
@@ -248,7 +257,7 @@ function TripPlanner() {
                 aria-label="Copy share link"
               >
                 <Share2 className="h-4 w-4" />
-                <span className="hidden md:inline">Share</span>
+                <span className="hidden sm:inline">Share</span>
               </Button>
               <Button
                 variant="ghost"
@@ -261,7 +270,7 @@ function TripPlanner() {
                 aria-label="Export trip to JSON"
               >
                 <Download className="h-4 w-4" />
-                <span className="hidden md:inline">Export</span>
+                <span className="hidden sm:inline">Export</span>
               </Button>
             </div>
           </div>
@@ -270,144 +279,160 @@ function TripPlanner() {
 
 
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <main className="mx-auto max-w-6xl space-y-6 px-3 py-4 sm:px-4 sm:py-6">
-          {/* Carriers */}
+        <main className="mx-auto max-w-6xl space-y-4 px-3 py-4 sm:space-y-6 sm:px-4 sm:py-6">
+          {/* Carriers + Summary */}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
-            <section className="space-y-2">
-              <div className="flex h-9 items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Carriers
-                </h2>
-                <AddPersonInline onAdd={addPerson} />
-              </div>
-              {trip.people.length === 0 ? (
-                <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
-                  No carriers yet. Add one to assign bags.
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center gap-2">
-                  {trip.people.map((p) => {
-                    const carries = trip.bags.filter((b) => b.carrierId === p.id);
-                    const w = carries.reduce(
-                      (s, b) =>
-                        s +
-                        bagEmptyWeight(b) +
-                        trip.items
-                          .filter((i) => i.bagId === b.id)
-                          .reduce((ss, i) => ss + itemWeight(i), 0),
-                      0,
-                    );
-                    return (
-                      <div key={p.id} className="flex flex-col items-start gap-0.5">
-                        <PersonChip
-                          person={p}
-                          droppable={activeDrag?.kind === 'bag-drag'}
-                          onEdit={(patch) => updatePerson(p.id, patch)}
-                          onRemove={() => removePerson(p.id)}
-                        />
-                        <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
-                          {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
-                          <span className="font-semibold text-foreground">{format(w)}</span>
+            <Collapsible open={openCarriers} onOpenChange={setOpenCarriers} asChild>
+              <section className="space-y-2">
+                <SectionHeader
+                  title="Carriers"
+                  count={trip.people.length}
+                  open={openCarriers}
+                  action={<AddPersonInline onAdd={addPerson} />}
+                />
+                <CollapsibleContent className="space-y-2">
+                  {trip.people.length === 0 ? (
+                    <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+                      No carriers yet. Add one to assign bags.
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {trip.people.map((p) => {
+                        const carries = trip.bags.filter((b) => b.carrierId === p.id);
+                        const w = carries.reduce(
+                          (s, b) =>
+                            s +
+                            bagEmptyWeight(b) +
+                            trip.items
+                              .filter((i) => i.bagId === b.id)
+                              .reduce((ss, i) => ss + itemWeight(i), 0),
+                          0,
+                        );
+                        return (
+                          <div key={p.id} className="flex flex-col items-start gap-0.5">
+                            <PersonChip
+                              person={p}
+                              droppable={activeDrag?.kind === 'bag-drag'}
+                              onEdit={(patch) => updatePerson(p.id, patch)}
+                              onRemove={() => removePerson(p.id)}
+                            />
+                            <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
+                              {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
+                              <span className="font-semibold text-foreground">{format(w)}</span>
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CollapsibleContent>
+              </section>
+            </Collapsible>
+
+            <Collapsible open={openSummary} onOpenChange={setOpenSummary} asChild>
+              <aside className="space-y-2">
+                <SectionHeader title="Trip Summary" open={openSummary} />
+                <CollapsibleContent>
+                  <div className="rounded-xl border border-border bg-card p-3">
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Items</span>
+                        <span className="font-medium">{trip.items.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Bags</span>
+                        <span className="font-medium">{trip.bags.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Carriers</span>
+                        <span className="font-medium">{trip.people.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Packed</span>
+                        <span className="font-medium">
+                          {trip.items.filter((i) => i.packed).length} / {trip.items.length}
                         </span>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
-
-            <aside className="space-y-3">
-              <div className="rounded-xl border border-border bg-card p-3">
-                <h3 className="text-sm font-semibold">Trip Summary</h3>
-                <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Items</span>
-                    <span className="font-medium">{trip.items.length}</span>
+                    </div>
+                    {unassignedBags > 0 && (
+                      <div className="mt-2 text-xs font-medium text-orange-600">
+                        {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Bags</span>
-                    <span className="font-medium">{trip.bags.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Carriers</span>
-                    <span className="font-medium">{trip.people.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Packed</span>
-                    <span className="font-medium">
-                      {trip.items.filter((i) => i.packed).length} / {trip.items.length}
-                    </span>
-                  </div>
-                </div>
-                {unassignedBags > 0 && (
-                  <div className="mt-2 text-xs font-medium text-orange-600">
-                    {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
-                  </div>
-                )}
-              </div>
-            </aside>
+                </CollapsibleContent>
+              </aside>
+            </Collapsible>
           </div>
 
           {/* Bags + Unpacked */}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
-            <section className="space-y-3">
-              <div className="flex h-9 items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Bags
-                </h2>
-                <AddBagDialog onAdd={addBag} />
-              </div>
-              {trip.bags.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center text-sm text-muted-foreground">
-                  No bags yet. Add one to start packing.
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {trip.bags.map((bag) => (
-                    <BagCard
-                      key={bag.id}
-                      bag={bag}
-                      items={itemsByBag.get(bag.id) ?? []}
-                      bags={trip.bags}
-                      people={trip.people}
-                      customTags={trip.customTags}
-                      activeDragItemId={
-                        activeDrag?.kind === 'item' ? activeDrag.itemId : undefined
-                      }
-                      onMoveItem={moveItem}
-                      onRemoveItem={removeItem}
-                      onEditItem={updateItem}
-                      onTogglePacked={(id) => toggleItemPacked(id)}
-                      onSetQuantity={setItemQuantity}
-                      onAddCustomTag={addCustomTag}
-                      onAssignCarrier={(pid) => assignCarrier(bag.id, pid)}
-                      onEditBag={(patch) => updateBag(bag.id, patch)}
-                      onRemoveBag={() => removeBag(bag.id)}
-                    />
-                  ))}
-                </div>
-              )}
-            </section>
+            <Collapsible open={openBags} onOpenChange={setOpenBags} asChild>
+              <section className="space-y-3">
+                <SectionHeader
+                  title="Bags"
+                  count={trip.bags.length}
+                  open={openBags}
+                  action={<AddBagDialog onAdd={addBag} />}
+                />
+                <CollapsibleContent className="space-y-3">
+                  {trip.bags.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-border bg-card px-4 py-10 text-center text-sm text-muted-foreground">
+                      No bags yet. Add one to start packing.
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      {trip.bags.map((bag) => (
+                        <BagCard
+                          key={bag.id}
+                          bag={bag}
+                          items={itemsByBag.get(bag.id) ?? []}
+                          bags={trip.bags}
+                          people={trip.people}
+                          customTags={trip.customTags}
+                          activeDragItemId={
+                            activeDrag?.kind === 'item' ? activeDrag.itemId : undefined
+                          }
+                          onMoveItem={moveItem}
+                          onRemoveItem={removeItem}
+                          onEditItem={updateItem}
+                          onTogglePacked={(id) => toggleItemPacked(id)}
+                          onSetQuantity={setItemQuantity}
+                          onAddCustomTag={addCustomTag}
+                          onAssignCarrier={(pid) => assignCarrier(bag.id, pid)}
+                          onEditBag={(patch) => updateBag(bag.id, patch)}
+                          onRemoveBag={() => removeBag(bag.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CollapsibleContent>
+              </section>
+            </Collapsible>
 
-            <aside className="space-y-3 md:sticky md:top-20 md:self-start">
-              <div className="flex h-9 items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Unpacked
-                </h2>
-              </div>
-              <UnpackedTray
-                items={itemsByBag.get(undefined) ?? []}
-                bags={trip.bags}
-                trip={trip}
-                onAdd={addItem}
-                onMove={moveItem}
-                onEdit={updateItem}
-                onRemove={removeItem}
-                onTogglePacked={(id) => toggleItemPacked(id)}
-                onSetQuantity={setItemQuantity}
-                onAddCustomTag={addCustomTag}
-              />
-            </aside>
+            <Collapsible open={openUnpacked} onOpenChange={setOpenUnpacked} asChild>
+              <aside className="space-y-3 md:sticky md:top-32 md:self-start">
+                <SectionHeader
+                  title="Unpacked"
+                  count={(itemsByBag.get(undefined) ?? []).length}
+                  open={openUnpacked}
+                />
+                <CollapsibleContent>
+                  <UnpackedTray
+                    items={itemsByBag.get(undefined) ?? []}
+                    bags={trip.bags}
+                    trip={trip}
+                    onAdd={addItem}
+                    onMove={moveItem}
+                    onEdit={updateItem}
+                    onRemove={removeItem}
+                    onTogglePacked={(id) => toggleItemPacked(id)}
+                    onSetQuantity={setItemQuantity}
+                    onAddCustomTag={addCustomTag}
+                  />
+                </CollapsibleContent>
+              </aside>
+            </Collapsible>
           </div>
 
         </main>
