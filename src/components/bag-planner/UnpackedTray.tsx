@@ -7,7 +7,7 @@ import type { Bag, Item, Trip } from '@/lib/bag-planner/types';
 import { itemWeight } from '@/lib/bag-planner/types';
 import { ItemRow } from './ItemRow';
 import { AddItemForm } from './AddItemForm';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { ImportItemsDialog } from './ImportItemsDialog';
 import { SuggestionsPopover } from './SuggestionsPopover';
 import {
@@ -50,6 +50,7 @@ export function UnpackedTray({
   const [filter, setFilter] = useState<ItemFilter>('all');
   const [sort, setSort] = useState<ItemSort>('manual');
   const visible = applyItemFilterSort(items, filter, sort);
+  const { format } = useDisplayUnit();
 
   const total = items.reduce((s, i) => s + itemWeight(i), 0);
 
@@ -74,7 +75,7 @@ export function UnpackedTray({
         <h2 className="text-base font-semibold">Unpacked</h2>
         <div className="flex items-center gap-2">
           <span className="text-xs tabular-nums text-muted-foreground">
-            {items.length} · {formatWeight(total)}
+            {items.length} · {format(total)}
           </span>
           <CompactItemFilterBar
             filter={filter}

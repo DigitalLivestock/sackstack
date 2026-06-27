@@ -68,6 +68,7 @@ export function ItemRow({
   const [editOpen, setEditOpen] = useState(false);
   const [qtyOpen, setQtyOpen] = useState(false);
   const missingWeight = item.weightG === 0;
+  const { format } = useDisplayUnit();
 
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
