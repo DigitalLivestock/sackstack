@@ -23,14 +23,14 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     showgrid="true"
+     showgrid="false"
      showguides="true"
      inkscape:zoom="2.0334082"
-     inkscape:cx="291.8745"
-     inkscape:cy="558.42207"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="1672"
+     inkscape:cx="188.10783"
+     inkscape:cy="104.01256"
+     inkscape:window-width="1680"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
@@ -47,7 +47,7 @@
        opacity="0.14901961"
        empspacing="5"
        enabled="true"
-       visible="true" />
+       visible="false" />
   </sodipodi:namedview>
   <defs
      id="defs1" />
@@ -101,48 +101,6 @@
        rx="0"
        ry="1.916" />
     <rect
-       style="fill:#a02c2c;stroke-width:0.118836"
-       id="rect3"
-       width="12.667027"
-       height="12.579173"
-       x="161.94817"
-       y="-88.317192"
-       rx="2.7744145"
-       transform="rotate(90.380518)" />
-    <circle
-       style="fill:#aa4400;stroke-width:0.363527"
-       id="path5"
-       cx="80.998566"
-       cy="154.71045"
-       r="6.3566914" />
-    <rect
-       style="fill:#aa0000;stroke-width:0.215691"
-       id="rect7-7"
-       width="7.1186299"
-       height="27.918941"
-       x="87.306175"
-       y="149.27119"
-       rx="2.4209669"
-       transform="matrix(0.9998296,-0.01845995,0.01255622,0.99992117,0,0)" />
-    <rect
-       style="fill:#ff6600;stroke-width:0.232341"
-       id="rect7-7-1"
-       width="8.2593498"
-       height="27.921337"
-       x="-76.656044"
-       y="-174.65152"
-       rx="2.808913"
-       transform="matrix(-0.99991277,-0.01320836,0.0175471,-0.99984604,0,0)" />
-    <rect
-       style="fill:#ff6600;stroke-width:0.131332"
-       id="rect7-7-1-6"
-       width="5.021059"
-       height="14.67486"
-       x="48.432323"
-       y="-186.78917"
-       rx="1.7076064"
-       transform="matrix(-0.64992305,0.76000002,-0.76061499,-0.64920323,0,0)" />
-    <rect
        style="fill:#d4aa00;stroke-width:0.264999"
        id="rect7"
        width="8.7179174"
@@ -150,15 +108,6 @@
        x="67.856621"
        y="132.13501"
        ry="1.916" />
-    <rect
-       style="fill:#ff6600;stroke-width:0.132485"
-       id="rect7-7-1-6-0"
-       width="5.0211916"
-       height="14.933498"
-       x="-182.52202"
-       y="-56.91436"
-       rx="1.7076514"
-       transform="matrix(-0.75592392,-0.65465947,0.65533207,-0.7553409,0,0)" />
     <rect
        style="fill:#008066;stroke-width:0.020801"
        id="rect1-8-1-2-0-1"
@@ -213,5 +162,29 @@
        x="102.22914"
        y="132.96429"
        ry="1.3860426" />
+    <rect
+       style="fill:#d45500;stroke-width:0.141496"
+       id="rect1-7"
+       width="44.23774"
+       height="26.934347"
+       x="65.654091"
+       y="148.99792"
+       ry="1.914451" />
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:12.8551px;line-height:0.6;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#008080;stroke-width:0.201177"
+       x="87.859077"
+       y="161.39159"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8551px;line-height:0.6;font-family:Stencil;-inkscape-font-specification:'Stencil, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#008080;stroke-width:0.201178"
+         x="87.859077"
+         y="161.39159">SACK</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8551px;line-height:0.6;font-family:Stencil;-inkscape-font-specification:'Stencil, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#008080;stroke-width:0.201178"
+         x="87.859077"
+         y="172.21124"
+         id="tspan2">STACK</tspan></text>
   </g>
 </svg>
