@@ -67,17 +67,42 @@ function PrintView() {
     <div className="min-h-screen bg-background text-foreground">
       <style>{`
         @page { size: A4; margin: 12mm; }
+        .print-running-header { display: none; }
         @media print {
+          @page { margin: 26mm 12mm 12mm 12mm; }
           html, body { background: white !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .no-print { display: none !important; }
+          .print-hide-on-print { display: none !important; }
           main { max-width: none !important; padding: 0 !important; }
           .page-break-avoid { break-inside: avoid; page-break-inside: avoid; }
           .print-box { border: 1px solid #999 !important; }
           .print-muted { color: #444 !important; }
           .print-bar-bg { background: #e5e5e5 !important; }
           .print-bar-fill { background: #333 !important; }
+          .print-running-header {
+            display: flex !important;
+            position: fixed;
+            top: -18mm;
+            left: 0;
+            right: 0;
+            height: 14mm;
+            align-items: center;
+            gap: 8px;
+            padding: 0 0 4px 0;
+            border-bottom: 1px solid #999;
+            color: #000;
+            font-size: 10pt;
+          }
+          .print-running-header img { height: 12mm; width: auto; }
         }
       `}</style>
+
+      <div className="print-running-header">
+        <img src={logoSvg} alt="Sack Stack" />
+        <span style={{ fontWeight: 600 }}>Sack Stack</span>
+        <span style={{ marginLeft: 'auto', color: '#444' }}>{trip.name}</span>
+      </div>
+
 
       <header className="no-print sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3">
