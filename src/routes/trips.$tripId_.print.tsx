@@ -96,11 +96,14 @@ function PrintView() {
       </header>
 
       <main className="mx-auto max-w-3xl space-y-5 px-6 py-6 print:px-0 print:py-0">
-        <div>
-          <h1 className="text-xl font-bold print:text-2xl">Packing list — {trip.name}</h1>
-          <p className="text-sm text-muted-foreground print:text-black print-muted">
-            {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items · Total {format(totalAll)}
-          </p>
+        <div className="flex items-center gap-4 border-b border-border pb-3">
+          <img src={logoSvg} alt="Sack Stack" className="h-16 w-auto shrink-0 object-contain" />
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl font-bold print:text-2xl">Packing list — {trip.name}</h1>
+            <p className="text-sm text-muted-foreground print:text-black print-muted">
+              {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items · Total {format(totalAll)}
+            </p>
+          </div>
         </div>
 
         {carriers.length > 0 && (
