@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTrips } from '@/hooks/use-trip';
+import { useCustomTravelTypes } from '@/hooks/use-custom-travel-types';
 import {
   TRAVEL_TYPE_EMOJI,
   TRAVEL_TYPE_LABELS,
   type TravelType,
 } from '@/lib/bag-planner/types';
 import { TRAVEL_PRESETS } from '@/lib/bag-planner/presets';
+import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCustomTravelTypesDialog';
 
 const TRAVEL_TYPES = Object.keys(TRAVEL_TYPE_LABELS) as TravelType[];
 
@@ -27,13 +29,14 @@ export const Route = createFileRoute('/trips/new')({
 function NewTrip() {
   const navigate = useNavigate();
   const { createTrip } = useTrips();
+  const { types: customTypes } = useCustomTravelTypes();
   const [name, setName] = useState('');
-  const [travelType, setTravelType] = useState<TravelType>('normal');
+  const [travelType, setTravelType] = useState<string>('normal');
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    const trip = createTrip(name.trim(), travelType);
+    const trip = createTrip(name.trim(), travelType as TravelType);
     navigate({ to: '/trips/$tripId', params: { tripId: trip.id } });
   };
 
@@ -46,7 +49,8 @@ function NewTrip() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h1 className="text-lg font-semibold">New trip</h1>
+          <h1 className="flex-1 text-lg font-semibold">New trip</h1>
+          <ManageCustomTravelTypesDialog />
         </div>
       </header>
 
@@ -87,7 +91,33 @@ function NewTrip() {
                   </button>
                 );
               })}
+              {customTypes.map((c) => {
+                const selected = travelType === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setTravelType(c.id)}
+                    className={`flex flex-col items-start gap-1 rounded-xl border p-4 text-left transition-all ${
+                      selected
+                        ? 'border-foreground bg-accent ring-2 ring-foreground/10'
+                        : 'border-border bg-card hover:border-foreground/30'
+                    }`}
+                  >
+                    <span className="text-2xl">{c.emoji ?? '🎒'}</span>
+                    <span className="font-medium">{c.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {c.bagPresets?.length ?? 0} starter bags · custom
+                    </span>
+                  </button>
+                );
+              })}
             </div>
+            {customTypes.length === 0 ? (
+              <p className="text-xs text-muted-foreground">
+                Need a different setup? Define your own travel type from the button above.
+              </p>
+            ) : null}
           </div>
 
           <div className="flex justify-end gap-2">
