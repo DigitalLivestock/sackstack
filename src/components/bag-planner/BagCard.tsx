@@ -175,6 +175,11 @@ export function BagCard({
       </div>
 
       <WeightBar current={currentTotal} limit={bag.weightLimitG} />
+      {empty > 0 ? (
+        <div className="-mt-1 text-[11px] tabular-nums text-muted-foreground">
+          Bag own weight: {(empty / 1000).toFixed(empty % 1000 === 0 ? 0 : 2)} kg
+        </div>
+      ) : null}
 
       <div className="flex flex-col gap-1.5">
         {items.length === 0 ? (
