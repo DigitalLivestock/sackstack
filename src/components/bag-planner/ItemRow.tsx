@@ -88,7 +88,18 @@ export function ItemRow({
     >
       {/* Single row: name · drag · tags · qty · weight · menu */}
       <div className="flex items-center gap-1.5 px-2.5 py-1.5">
-        {/* Name left of drag handle */}
+        {draggable ? (
+          <button
+            {...listeners}
+            {...attributes}
+            className="hidden shrink-0 touch-none cursor-grab text-muted-foreground/60 hover:text-foreground active:cursor-grabbing md:block"
+            aria-label="Drag"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GripVertical className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
+
         <button
           type="button"
           onClick={() => setEditOpen(true)}
@@ -116,18 +127,6 @@ export function ItemRow({
             {item.name}
           </span>
         </button>
-
-        {draggable ? (
-          <button
-            {...listeners}
-            {...attributes}
-            className="hidden touch-none cursor-grab text-muted-foreground/60 hover:text-foreground active:cursor-grabbing md:block"
-            aria-label="Drag"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <GripVertical className="h-3.5 w-3.5" />
-          </button>
-        ) : null}
 
         <div className="flex min-w-0 flex-1 items-center gap-1.5">
           {item.tags.length ? <TagBadges tags={item.tags} /> : null}
