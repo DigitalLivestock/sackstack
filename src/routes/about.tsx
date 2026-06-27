@@ -8,13 +8,13 @@ const APP_VERSION = "1.0.0";
 export const Route = createFileRoute('/about')({
   head: () => ({
     meta: [
-      { title: 'About — Bag Planner' },
+      { title: 'About — Sack Stack' },
       {
         name: 'description',
         content:
-          'Learn what Bag Planner does and how it helps you organize packing for any trip.',
+          'Learn what Sack Stack does and how it helps you organize packing for any trip.',
       },
-      { property: 'og:title', content: 'About — Bag Planner' },
+      { property: 'og:title', content: 'About — Sack Stack' },
       {
         property: 'og:description',
         content: 'Plan and balance packing weights for any trip, with any carrier.',
@@ -43,13 +43,13 @@ function AboutPage() {
           <div className="flex items-center gap-4">
             <img src={logoSvg} alt="" className="h-16 w-auto shrink-0 object-contain" />
             <div>
-              <h2 className="text-2xl font-bold text-foreground">Bag Planner</h2>
+              <h2 className="text-2xl font-bold text-foreground">Sack Stack</h2>
               <p className="text-sm text-muted-foreground">Version {APP_VERSION}</p>
             </div>
           </div>
 
           <p className="text-base leading-relaxed">
-            Bag Planner helps you organize and balance the weight of your bags before any trip.
+            Sack Stack helps you organize and balance the weight of your bags before any trip.
             Whether you are hiking, camping, or traveling with checked luggage, you can plan
             exactly what goes where and make sure no single bag — or carrier — ends up overloaded.
           </p>
