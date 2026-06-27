@@ -139,7 +139,7 @@ export function BagCard({
               No one
             </DropdownMenuItem>
             {people.length === 0 ? (
-              <DropdownMenuItem disabled>No people yet</DropdownMenuItem>
+              <DropdownMenuItem disabled>No carriers yet</DropdownMenuItem>
             ) : (
               people.map((p) => (
                 <DropdownMenuItem key={p.id} onClick={() => onAssignCarrier(p.id)}>

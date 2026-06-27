@@ -74,7 +74,7 @@ function PrintView() {
           </p>
           {trip.people.length ? (
             <p className="mt-1 text-sm">
-              <span className="font-semibold">People: </span>
+              <span className="font-semibold">Carriers: </span>
               {trip.people
                 .map((p) => {
                   const w = trip.bags
