@@ -16,8 +16,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TripsNewRouteImport } from './routes/trips.new'
 import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
-import { Route as TripsTripIdPrintRouteImport } from './routes/trips.$tripId.print'
-import { Route as TripsTripIdChecklistRouteImport } from './routes/trips.$tripId.checklist'
+import { Route as TripsTripIdPrintRouteImport } from './routes/trips.$tripId_.print'
+import { Route as TripsTripIdChecklistRouteImport } from './routes/trips.$tripId_.checklist'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -55,14 +55,14 @@ const TripsTripIdRoute = TripsTripIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const TripsTripIdPrintRoute = TripsTripIdPrintRouteImport.update({
-  id: '/print',
-  path: '/print',
-  getParentRoute: () => TripsTripIdRoute,
+  id: '/trips/$tripId_/print',
+  path: '/trips/$tripId/print',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TripsTripIdChecklistRoute = TripsTripIdChecklistRouteImport.update({
-  id: '/checklist',
-  path: '/checklist',
-  getParentRoute: () => TripsTripIdRoute,
+  id: '/trips/$tripId_/checklist',
+  path: '/trips/$tripId/checklist',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -71,7 +71,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
+  '/trips/$tripId': typeof TripsTripIdRoute
   '/trips/new': typeof TripsNewRoute
   '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
   '/trips/$tripId/print': typeof TripsTripIdPrintRoute
@@ -82,7 +82,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
+  '/trips/$tripId': typeof TripsTripIdRoute
   '/trips/new': typeof TripsNewRoute
   '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
   '/trips/$tripId/print': typeof TripsTripIdPrintRoute
@@ -94,10 +94,10 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/share': typeof ShareRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trips/$tripId': typeof TripsTripIdRouteWithChildren
+  '/trips/$tripId': typeof TripsTripIdRoute
   '/trips/new': typeof TripsNewRoute
-  '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
-  '/trips/$tripId/print': typeof TripsTripIdPrintRoute
+  '/trips/$tripId_/checklist': typeof TripsTripIdChecklistRoute
+  '/trips/$tripId_/print': typeof TripsTripIdPrintRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,8 +131,8 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/trips/$tripId'
     | '/trips/new'
-    | '/trips/$tripId/checklist'
-    | '/trips/$tripId/print'
+    | '/trips/$tripId_/checklist'
+    | '/trips/$tripId_/print'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,8 +141,10 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ShareRoute: typeof ShareRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TripsTripIdRoute: typeof TripsTripIdRouteWithChildren
+  TripsTripIdRoute: typeof TripsTripIdRoute
   TripsNewRoute: typeof TripsNewRoute
+  TripsTripIdChecklistRoute: typeof TripsTripIdChecklistRoute
+  TripsTripIdPrintRoute: typeof TripsTripIdPrintRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -196,36 +198,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TripsTripIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trips/$tripId/print': {
-      id: '/trips/$tripId/print'
-      path: '/print'
+    '/trips/$tripId_/print': {
+      id: '/trips/$tripId_/print'
+      path: '/trips/$tripId/print'
       fullPath: '/trips/$tripId/print'
       preLoaderRoute: typeof TripsTripIdPrintRouteImport
-      parentRoute: typeof TripsTripIdRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/trips/$tripId/checklist': {
-      id: '/trips/$tripId/checklist'
-      path: '/checklist'
+    '/trips/$tripId_/checklist': {
+      id: '/trips/$tripId_/checklist'
+      path: '/trips/$tripId/checklist'
       fullPath: '/trips/$tripId/checklist'
       preLoaderRoute: typeof TripsTripIdChecklistRouteImport
-      parentRoute: typeof TripsTripIdRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface TripsTripIdRouteChildren {
-  TripsTripIdChecklistRoute: typeof TripsTripIdChecklistRoute
-  TripsTripIdPrintRoute: typeof TripsTripIdPrintRoute
-}
-
-const TripsTripIdRouteChildren: TripsTripIdRouteChildren = {
-  TripsTripIdChecklistRoute: TripsTripIdChecklistRoute,
-  TripsTripIdPrintRoute: TripsTripIdPrintRoute,
-}
-
-const TripsTripIdRouteWithChildren = TripsTripIdRoute._addFileChildren(
-  TripsTripIdRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -233,8 +221,10 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ShareRoute: ShareRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TripsTripIdRoute: TripsTripIdRouteWithChildren,
+  TripsTripIdRoute: TripsTripIdRoute,
   TripsNewRoute: TripsNewRoute,
+  TripsTripIdChecklistRoute: TripsTripIdChecklistRoute,
+  TripsTripIdPrintRoute: TripsTripIdPrintRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
