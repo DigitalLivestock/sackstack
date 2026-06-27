@@ -19,7 +19,7 @@ const TRAVEL_TYPES = Object.keys(TRAVEL_TYPE_LABELS) as TravelType[];
 export const Route = createFileRoute('/trips/new')({
   head: () => ({
     meta: [
-      { title: 'New trip — Bag Planner' },
+      { title: 'New trip — Sack Stack' },
       { name: 'description', content: 'Start a new packing plan for your trip.' },
     ],
   }),
