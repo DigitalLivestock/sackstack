@@ -131,7 +131,9 @@ function TripPlanner() {
     );
   }
 
-  const totalWeight = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+  const totalWeight =
+    trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+    trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
   const unassignedBags = trip.bags.filter((b) => !b.carrierId).length;
 
   const handleDragStart = (e: DragStartEvent) => {
