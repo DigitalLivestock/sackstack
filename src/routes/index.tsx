@@ -76,9 +76,14 @@ function TripsIndex() {
           <Link to="/" className="shrink-0" aria-label="Sack Stack home">
             <img src={logoSvg} alt="Sack Stack" className="h-14 w-auto object-contain drop-shadow-sm sm:h-20" />
           </Link>
-          <p className="hidden min-w-0 flex-1 pb-2 text-sm italic text-muted-foreground sm:block">
-            Plan and balance the weight of your bags before a trip.
-          </p>
+          <div className="hidden min-w-0 flex-1 flex-col pb-2 sm:flex">
+            <p className="text-sm italic text-muted-foreground">
+              Plan and balance the weight of your bags before a trip.
+            </p>
+            <p className="text-xs text-muted-foreground/80">
+              A free planner brought to you by Östra Aros Teknologi AB
+            </p>
+          </div>
           <div className="flex-1 sm:hidden" />
           <input
             ref={fileInputRef}
