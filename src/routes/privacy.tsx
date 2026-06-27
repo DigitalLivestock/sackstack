@@ -55,7 +55,7 @@ function PrivacyPage() {
       <main className="mx-auto max-w-3xl px-4 py-8">
         <article className="prose prose-sm sm:prose-base max-w-none space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm">
           <p className="text-base">
-            Bag Planner is a fully client-side app. It runs entirely in your
+            Sack Stack is a fully client-side app. It runs entirely in your
             browser — there is <strong>no account, no login, and no server-side
             database</strong>.
           </p>
