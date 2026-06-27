@@ -28,13 +28,16 @@ export function AddBagDialog({ onAdd }: { onAdd: (bag: Omit<Bag, 'id'>) => void 
   const [name, setName] = useState('');
   const [type, setType] = useState<BagType>('backpack');
   const [limit, setLimit] = useState('');
+  const [empty, setEmpty] = useState('');
 
   const submit = () => {
     if (!name.trim()) return;
     const limitG = limit ? parseWeightInput(limit, 'kg') : undefined;
-    onAdd({ name: name.trim(), type, weightLimitG: limitG });
+    const emptyG = empty ? parseWeightInput(empty, 'kg') : undefined;
+    onAdd({ name: name.trim(), type, weightLimitG: limitG, emptyWeightG: emptyG });
     setName('');
     setLimit('');
+    setEmpty('');
     setOpen(false);
   };
 
