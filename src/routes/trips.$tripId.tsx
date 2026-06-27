@@ -20,6 +20,7 @@ import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { BagCard } from '@/components/bag-planner/BagCard';
+import { CarrierWeightChart } from '@/components/bag-planner/CarrierWeightChart';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
