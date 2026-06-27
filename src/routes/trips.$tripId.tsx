@@ -62,6 +62,9 @@ function TripPlanner() {
     removePerson,
     assignCarrier,
   } = useTrip(tripId);
+  const { format } = useDisplayUnit();
+
+
 
 
   const [activeDrag, setActiveDrag] = useState<
