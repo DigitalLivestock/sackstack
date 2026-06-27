@@ -106,6 +106,7 @@ function PrintView() {
                 <div className="text-sm text-gray-600">
                   {carrier ? `Bärs av ${carrier.name}` : ''} · {formatWeight(total)}
                   {bag.weightLimitG ? ` / ${formatWeight(bag.weightLimitG)}` : ''}
+                  {bag.emptyWeightG ? ` (väska ${formatWeight(bag.emptyWeightG)})` : ''}
                 </div>
               </div>
               {items.length === 0 ? (
