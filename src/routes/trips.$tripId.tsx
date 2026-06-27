@@ -16,6 +16,7 @@ import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 import { buildShareUrl } from '@/lib/bag-planner/share-link';
 
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
@@ -24,6 +25,7 @@ import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
+import { SectionHeader } from '@/components/bag-planner/SectionHeader';
 
 
 export const Route = createFileRoute('/trips/$tripId')({
