@@ -13,6 +13,19 @@ import appCss from "../styles.css?url";
 import logoUrl from "../assets/logo.svg?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+function Footer() {
+  return (
+    <footer className="border-t border-border bg-background/50">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
+        <span>No accounts. No tracking. Your data stays in this browser.</span>
+        <Link to="/privacy" className="underline-offset-2 hover:underline">
+          Privacy &amp; data
+        </Link>
+      </div>
+    </footer>
+  );
+}
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
