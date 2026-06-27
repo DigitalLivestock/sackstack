@@ -22,6 +22,9 @@ function Footer() {
         <span>No accounts. No tracking. Your data stays in this browser.</span>
         <div className="flex items-center gap-3">
           <span className="text-muted-foreground/60">v{APP_VERSION}</span>
+          <Link to="/about" className="underline-offset-2 hover:underline">
+            About
+          </Link>
           <Link to="/privacy" className="underline-offset-2 hover:underline">
             Privacy &amp; data
           </Link>
