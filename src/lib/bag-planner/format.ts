@@ -34,40 +34,6 @@ export function formatWeight(grams: number, unit: DisplayUnit = 'auto'): string 
   }
 }
 
-export function toChartValue(grams: number, unit: DisplayUnit): number {
-  const g = grams || 0;
-  if (unit === 'auto') {
-    return g >= 1000 ? g / 1000 : g;
-  }
-  switch (unit) {
-    case 'kg':
-      return g / 1000;
-    case 'lb':
-      return g / GRAMS_PER_LB;
-    case 'oz':
-      return g / GRAMS_PER_OZ;
-    case 'g':
-    default:
-      return g;
-  }
-}
-
-export function chartUnitLabel(unit: DisplayUnit): string {
-  if (unit === 'auto') return '';
-  switch (unit) {
-    case 'kg':
-      return 'kg';
-    case 'lb':
-      return 'lb';
-    case 'oz':
-      return 'oz';
-    case 'g':
-      return 'g';
-    default:
-      return '';
-  }
-}
-
 export function parseWeightInput(value: string, unit: 'g' | 'kg' | 'lb' | 'oz'): number {
   const n = parseFloat(value.replace(',', '.'));
   if (!isFinite(n) || n < 0) return 0;

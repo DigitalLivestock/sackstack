@@ -20,7 +20,6 @@ import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { BagCard } from '@/components/bag-planner/BagCard';
-import { CarrierWeightChart } from '@/components/bag-planner/CarrierWeightChart';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
@@ -63,7 +62,7 @@ function TripPlanner() {
     removePerson,
     assignCarrier,
   } = useTrip(tripId);
-  const { unit, format } = useDisplayUnit();
+  const { format } = useDisplayUnit();
 
 
 
@@ -309,7 +308,28 @@ function TripPlanner() {
             </section>
 
             <aside className="space-y-3">
-              <CarrierWeightChart trip={trip} unit={unit} format={format} />
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="text-sm font-semibold">Trip Summary</h3>
+                <div className="mt-3 space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Items</span>
+                    <span className="font-medium">{trip.items.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Bags</span>
+                    <span className="font-medium">{trip.bags.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Carriers</span>
+                    <span className="font-medium">{trip.people.length}</span>
+                  </div>
+                  {unassignedBags > 0 && (
+                    <div className="pt-1 text-xs font-medium text-orange-600">
+                      {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
+                    </div>
+                  )}
+                </div>
+              </div>
             </aside>
           </div>
 
