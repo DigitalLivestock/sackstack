@@ -77,6 +77,7 @@ export function BagCard({
   const [filter, setFilter] = useState<ItemFilter>('all');
   const [sort, setSort] = useState<ItemSort>('manual');
   const visible = applyItemFilterSort(items, filter, sort);
+  const { format } = useDisplayUnit();
 
   void activeDragItemId;
   const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
