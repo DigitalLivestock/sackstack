@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
@@ -81,9 +81,10 @@ function PrintView() {
             </Link>
           </Button>
           <h1 className="flex-1 truncate text-base font-semibold">Print — {trip.name}</h1>
-          <Button onClick={() => window.print()} size="sm">
-            <Printer className="h-4 w-4" />
-            Print
+          <Button onClick={() => window.print()} size="sm" className="gap-1.5">
+            <FileDown className="h-4 w-4" />
+            <span className="hidden sm:inline">Print / PDF</span>
+            <span className="sm:hidden">PDF</span>
           </Button>
         </div>
       </header>
