@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
@@ -12,12 +13,22 @@ export const Route = createFileRoute('/trips/$tripId/print')({
 function PrintView() {
   const { tripId } = Route.useParams();
   const { trip } = useTrip(tripId);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
+  if (!hydrated) {
+    return (
+      <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+        Loading…
+      </div>
+    );
+  }
 
   if (!trip) {
     return (
       <div className="grid min-h-screen place-items-center">
         <Button asChild>
-          <Link to="/">Tillbaka</Link>
+          <Link to="/">Back</Link>
         </Button>
       </div>
     );
@@ -46,24 +57,24 @@ function PrintView() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h1 className="flex-1 truncate text-base font-semibold">Utskrift — {trip.name}</h1>
+          <h1 className="flex-1 truncate text-base font-semibold">Print — {trip.name}</h1>
           <Button onClick={() => window.print()} size="sm">
             <Printer className="h-4 w-4" />
-            Skriv ut
+            Print
           </Button>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl space-y-6 px-6 py-8 print:px-0 print:py-0">
         <div>
-          <h1 className="text-2xl font-bold">Packlista — {trip.name}</h1>
+          <h1 className="text-2xl font-bold">Packing list — {trip.name}</h1>
           <p className="text-sm text-gray-700">
-            {travelTypeLabel(trip)} · {trip.bags.length} väskor · {trip.items.length} items ·{' '}
-            Totalvikt {formatWeight(totalAll)}
+            {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items ·{' '}
+            Total weight {formatWeight(totalAll)}
           </p>
           {trip.people.length ? (
             <p className="mt-1 text-sm">
-              <span className="font-semibold">Personer: </span>
+              <span className="font-semibold">People: </span>
               {trip.people
                 .map((p) => {
                   const w = trip.bags
@@ -99,18 +110,18 @@ function PrintView() {
                   {bag.name}
                   {!carrier ? (
                     <span className="ml-2 rounded bg-orange-100 px-1.5 py-0.5 text-xs text-orange-700">
-                      Ingen bärare
+                      No carrier
                     </span>
                   ) : null}
                 </h2>
                 <div className="text-sm text-gray-600">
-                  {carrier ? `Bärs av ${carrier.name}` : ''} · {formatWeight(total)}
+                  {carrier ? `Carried by ${carrier.name}` : ''} · {formatWeight(total)}
                   {bag.weightLimitG ? ` / ${formatWeight(bag.weightLimitG)}` : ''}
-                  {bag.emptyWeightG ? ` (väska ${formatWeight(bag.emptyWeightG)})` : ''}
+                  {bag.emptyWeightG ? ` (bag ${formatWeight(bag.emptyWeightG)})` : ''}
                 </div>
               </div>
               {items.length === 0 ? (
-                <p className="text-sm italic text-gray-500">Tomt</p>
+                <p className="text-sm italic text-gray-500">Empty</p>
               ) : (
                 <ul className="space-y-1">
                   {items.map((i) => (
@@ -138,7 +149,7 @@ function PrintView() {
 
         {unpacked.length ? (
           <section className="page-break-avoid rounded-md border border-dashed border-gray-400 p-4">
-            <h2 className="mb-2 text-lg font-semibold">Ej packat</h2>
+            <h2 className="mb-2 text-lg font-semibold">Unpacked</h2>
             <ul className="space-y-1">
               {unpacked.map((i) => (
                 <li key={i.id} className="flex items-center gap-2 text-sm">
