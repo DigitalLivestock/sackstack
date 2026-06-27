@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
+import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCustomTravelTypesDialog';
+
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -97,7 +99,9 @@ function TripsIndex() {
             <Upload className="h-4 w-4" />
             <span className="hidden sm:inline">Import</span>
           </Button>
+          <ManageCustomTravelTypesDialog />
           <Button
+
             variant="outline"
             size="sm"
             onClick={handleExportAll}
