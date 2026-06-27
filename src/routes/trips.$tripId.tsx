@@ -282,9 +282,7 @@ function TripPlanner() {
                   onRemove={removeCustomTravelType}
                   onSelect={setTravelType}
                 />
-                <span className="hidden text-xs text-muted-foreground md:block">
-                  Drag a bag onto a carrier
-                </span>
+                <AddPersonDialog onAdd={addPerson} />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
