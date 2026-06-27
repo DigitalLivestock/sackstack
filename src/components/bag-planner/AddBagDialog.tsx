@@ -44,10 +44,9 @@ export function AddBagDialog({ onAdd }: { onAdd: (bag: Omit<Bag, 'id'>) => void 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-
+        <Button size="sm" className="gap-1.5">
           <Plus className="h-4 w-4" />
-          Add bag
+          <span className="hidden sm:inline">Add bag</span>
         </Button>
       </DialogTrigger>
       <DialogContent>

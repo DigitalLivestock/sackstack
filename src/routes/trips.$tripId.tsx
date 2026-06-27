@@ -281,7 +281,7 @@ function TripPlanner() {
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <main className="mx-auto max-w-6xl space-y-4 px-3 py-4 sm:space-y-6 sm:px-4 sm:py-6">
           {/* Carriers + Summary */}
-          <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
             <Collapsible open={openCarriers} onOpenChange={setOpenCarriers} asChild>
               <section className="space-y-2">
                 <SectionHeader
@@ -366,7 +366,7 @@ function TripPlanner() {
           </div>
 
           {/* Bags + Unpacked */}
-          <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
             <Collapsible open={openBags} onOpenChange={setOpenBags} asChild>
               <section className="space-y-3">
                 <SectionHeader

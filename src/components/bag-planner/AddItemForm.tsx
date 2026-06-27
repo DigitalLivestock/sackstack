@@ -69,7 +69,7 @@ export function AddItemForm({
         />
         <Button type="submit" size="sm" className="shrink-0">
           <Plus className="h-4 w-4" />
-          Add
+          <span className="hidden sm:inline">Add</span>
         </Button>
       </div>
       <div className="flex flex-wrap items-center gap-2">
