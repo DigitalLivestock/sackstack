@@ -95,6 +95,8 @@ function parseTrip(raw: unknown, opts: { regenerateIds: boolean }): Trip {
             carrierId,
             weightLimitG:
               typeof b.weightLimitG === 'number' ? b.weightLimitG : undefined,
+            emptyWeightG:
+              typeof b.emptyWeightG === 'number' ? b.emptyWeightG : undefined,
           },
         ];
       })
