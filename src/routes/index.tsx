@@ -52,7 +52,7 @@ function TripsIndex() {
       toast.error('No trips to export');
       return;
     }
-    downloadJson('bag-planner-trips', buildExport(trips));
+    downloadJson('sack-stack-trips', buildExport(trips));
     toast.success(`Exported ${trips.length} trip${trips.length === 1 ? '' : 's'}`);
   };
 
