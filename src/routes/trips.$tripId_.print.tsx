@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
+import logoSvg from '@/assets/logo.svg';
 
 export const Route = createFileRoute('/trips/$tripId_/print')({
   component: PrintView,
