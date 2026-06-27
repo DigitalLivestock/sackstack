@@ -309,28 +309,6 @@ function TripPlanner() {
             </section>
 
             <aside className="space-y-3">
-              <div className="rounded-xl border border-border bg-card p-4">
-                <h3 className="text-sm font-semibold">Trip Summary</h3>
-                <div className="mt-3 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Items</span>
-                    <span className="font-medium">{trip.items.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Bags</span>
-                    <span className="font-medium">{trip.bags.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Carriers</span>
-                    <span className="font-medium">{trip.people.length}</span>
-                  </div>
-                  {unassignedBags > 0 && (
-                    <div className="pt-1 text-xs font-medium text-orange-600">
-                      {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
-                    </div>
-                  )}
-                </div>
-              </div>
               <CarrierWeightChart trip={trip} unit={unit} format={format} />
             </aside>
           </div>
