@@ -65,16 +65,19 @@ function PrintView() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <style>{`
+        @page { size: A4; margin: 12mm; }
         @media print {
+          html, body { background: white !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .no-print { display: none !important; }
-          body { background: white !important; color: black !important; }
-          .page-break-avoid { break-inside: avoid; }
+          main { max-width: none !important; padding: 0 !important; }
+          .page-break-avoid { break-inside: avoid; page-break-inside: avoid; }
           .print-box { border: 1px solid #999 !important; }
           .print-muted { color: #444 !important; }
           .print-bar-bg { background: #e5e5e5 !important; }
           .print-bar-fill { background: #333 !important; }
         }
       `}</style>
+
       <header className="no-print sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3">
           <Button asChild variant="ghost" size="icon">
