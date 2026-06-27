@@ -22,7 +22,7 @@ import { formatWeight } from '@/lib/bag-planner/format';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
-import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
+import { AddPersonDialog } from '@/components/bag-planner/AddPersonDialog';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
 import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
 import {
@@ -282,9 +282,7 @@ function TripPlanner() {
                   onRemove={removeCustomTravelType}
                   onSelect={setTravelType}
                 />
-                <span className="hidden text-xs text-muted-foreground md:block">
-                  Drag a bag onto a carrier
-                </span>
+                <AddPersonDialog onAdd={addPerson} />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -314,7 +312,6 @@ function TripPlanner() {
                   </div>
                 );
               })}
-              <AddPersonInline onAdd={addPerson} />
             </div>
           </section>
 
