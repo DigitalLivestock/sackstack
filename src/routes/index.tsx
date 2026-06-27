@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Download, Plus, Trash2, Upload } from 'lucide-react';
 import logoSvg from '@/assets/logo.svg';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,8 @@ function TripsIndex() {
   const { trips, deleteTrip, importTrips } = useTrips();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   const handleExportAll = () => {
     if (!trips.length) {
@@ -55,11 +57,11 @@ function TripsIndex() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-secondary via-background to-accent/30">
       <Toaster position="top-center" richColors />
-      <header className="border-b border-border">
+      <header className="border-b border-border bg-gradient-to-r from-primary/10 via-accent/20 to-chart-3/15 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-4">
-          <img src={logoSvg} alt="" className="h-14 w-auto shrink-0 object-contain sm:h-16" />
+          <img src={logoSvg} alt="" className="h-14 w-auto shrink-0 object-contain drop-shadow-sm sm:h-16" />
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-xl font-semibold tracking-tight text-primary sm:text-2xl">Bag Planner</h1>
             <p className="truncate text-xs text-muted-foreground">
