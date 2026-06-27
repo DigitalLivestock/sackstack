@@ -16,7 +16,7 @@ import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
-import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
@@ -131,7 +131,9 @@ function TripPlanner() {
     );
   }
 
-  const totalWeight = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+  const totalWeight =
+    trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+    trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
   const unassignedBags = trip.bags.filter((b) => !b.carrierId).length;
 
   const handleDragStart = (e: DragStartEvent) => {
@@ -268,6 +270,7 @@ function TripPlanner() {
                 const w = carries.reduce(
                   (s, b) =>
                     s +
+                    bagEmptyWeight(b) +
                     trip.items
                       .filter((i) => i.bagId === b.id)
                       .reduce((ss, i) => ss + itemWeight(i), 0),

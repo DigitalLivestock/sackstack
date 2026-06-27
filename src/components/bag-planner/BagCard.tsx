@@ -3,7 +3,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { MoreVertical, Trash2, User, Pencil, AlertTriangle } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
-import { BAG_TYPE_LABELS, itemWeight } from '@/lib/bag-planner/types';
+import { BAG_TYPE_LABELS, bagEmptyWeight, itemWeight } from '@/lib/bag-planner/types';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
 import { EditBagDialog } from './EditBagDialog';
@@ -69,7 +69,9 @@ export function BagCard({
   const [editOpen, setEditOpen] = useState(false);
 
   void activeDragItemId;
-  const currentTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
+  const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
+  const empty = bagEmptyWeight(bag);
+  const currentTotal = itemsTotal + empty;
   const carrier = people.find((p) => p.id === bag.carrierId);
   const noCarrier = !carrier;
 
@@ -173,6 +175,11 @@ export function BagCard({
       </div>
 
       <WeightBar current={currentTotal} limit={bag.weightLimitG} />
+      {empty > 0 ? (
+        <div className="-mt-1 text-[11px] tabular-nums text-muted-foreground">
+          Bag own weight: {(empty / 1000).toFixed(empty % 1000 === 0 ? 0 : 2)} kg
+        </div>
+      ) : null}
 
       <div className="flex flex-col gap-1.5">
         {items.length === 0 ? (

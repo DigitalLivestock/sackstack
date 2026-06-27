@@ -21,6 +21,8 @@ export type Bag = {
   type: BagType;
   carrierId?: string;
   weightLimitG?: number;
+  /** Empty (own) weight of the bag itself, in grams. */
+  emptyWeightG?: number;
 };
 
 export type Item = {
@@ -104,6 +106,10 @@ export const GLOBAL_TAGS = [
 
 export function itemWeight(i: Pick<Item, 'weightG' | 'quantity'>): number {
   return i.weightG * Math.max(1, i.quantity ?? 1);
+}
+
+export function bagEmptyWeight(b: Pick<Bag, 'emptyWeightG'>): number {
+  return b.emptyWeightG ?? 0;
 }
 
 export function travelTypeLabel(trip: Pick<Trip, 'travelType' | 'customTravelTypes'>): string {

@@ -34,24 +34,25 @@ export function EditBagDialog({
 }) {
   const [name, setName] = useState(bag.name);
   const [type, setType] = useState<BagType>(bag.type);
-  const [limit, setLimit] = useState(
-    bag.weightLimitG ? String((bag.weightLimitG / 1000).toFixed(2)).replace(/\.00$/, '') : ''
-  );
+  const fmtKg = (g?: number) =>
+    g ? String((g / 1000).toFixed(2)).replace(/\.00$/, '') : '';
+  const [limit, setLimit] = useState(fmtKg(bag.weightLimitG));
+  const [empty, setEmpty] = useState(fmtKg(bag.emptyWeightG));
 
   useEffect(() => {
     if (open) {
       setName(bag.name);
       setType(bag.type);
-      setLimit(
-        bag.weightLimitG ? String((bag.weightLimitG / 1000).toFixed(2)).replace(/\.00$/, '') : ''
-      );
+      setLimit(fmtKg(bag.weightLimitG));
+      setEmpty(fmtKg(bag.emptyWeightG));
     }
   }, [open, bag]);
 
   const submit = () => {
     if (!name.trim()) return;
     const limitG = limit ? parseWeightInput(limit, 'kg') : undefined;
-    onSave({ name: name.trim(), type, weightLimitG: limitG });
+    const emptyG = empty ? parseWeightInput(empty, 'kg') : undefined;
+    onSave({ name: name.trim(), type, weightLimitG: limitG, emptyWeightG: emptyG });
     onOpenChange(false);
   };
 
@@ -96,6 +97,18 @@ export function EditBagDialog({
               min="0"
               value={limit}
               onChange={(e) => setLimit(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="edit-bag-empty">Bag's own weight (kg, optional)</Label>
+            <Input
+              id="edit-bag-empty"
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              value={empty}
+              onChange={(e) => setEmpty(e.target.value)}
             />
           </div>
         </div>

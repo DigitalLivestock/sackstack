@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
-import { itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 
 export const Route = createFileRoute('/trips/$tripId/print')({
@@ -26,7 +26,9 @@ function PrintView() {
   const unpacked = trip.items.filter(
     (i) => !i.bagId || !trip.bags.some((b) => b.id === i.bagId),
   );
-  const totalAll = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+  const totalAll =
+    trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+    trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -69,6 +71,7 @@ function PrintView() {
                     .reduce(
                       (s, b) =>
                         s +
+                        bagEmptyWeight(b) +
                         trip.items
                           .filter((i) => i.bagId === b.id)
                           .reduce((ss, i) => ss + itemWeight(i), 0),
@@ -83,7 +86,8 @@ function PrintView() {
 
         {trip.bags.map((bag) => {
           const items = trip.items.filter((i) => i.bagId === bag.id);
-          const total = items.reduce((s, i) => s + itemWeight(i), 0);
+          const itemsTotal = items.reduce((s, i) => s + itemWeight(i), 0);
+          const total = itemsTotal + bagEmptyWeight(bag);
           const carrier = trip.people.find((p) => p.id === bag.carrierId);
           return (
             <section
@@ -102,6 +106,7 @@ function PrintView() {
                 <div className="text-sm text-gray-600">
                   {carrier ? `Bärs av ${carrier.name}` : ''} · {formatWeight(total)}
                   {bag.weightLimitG ? ` / ${formatWeight(bag.weightLimitG)}` : ''}
+                  {bag.emptyWeightG ? ` (väska ${formatWeight(bag.emptyWeightG)})` : ''}
                 </div>
               </div>
               {items.length === 0 ? (

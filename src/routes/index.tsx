@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
-import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
 
@@ -124,7 +124,9 @@ function TripsIndex() {
               .slice()
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((trip) => {
-                const total = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+                const total =
+                  trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+                  trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
                 return (
                   <div
                     key={trip.id}
