@@ -264,17 +264,14 @@ function TripPlanner() {
         <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
           {/* Carriers */}
           <section className="space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  Carriers
-                </h2>
-                <span className="hidden text-xs text-muted-foreground md:block">
-                  · Drag a bag onto a carrier
-                </span>
-              </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Carriers
+              </h2>
               <AddPersonInline onAdd={addPerson} />
-
+              <span className="hidden text-xs text-muted-foreground md:block">
+                · Drag a bag onto a carrier
+              </span>
             </div>
             {trip.people.length === 0 ? (
               <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
@@ -313,9 +310,9 @@ function TripPlanner() {
           </section>
 
           {/* Bags + Unpacked */}
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]">
+          <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
             <section className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex h-9 items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                   Bags
                 </h2>
@@ -326,7 +323,7 @@ function TripPlanner() {
                   No bags yet. Add one to start packing.
                 </div>
               ) : (
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col gap-3">
                   {trip.bags.map((bag) => (
                     <BagCard
                       key={bag.id}
@@ -353,7 +350,12 @@ function TripPlanner() {
               )}
             </section>
 
-            <aside className="md:sticky md:top-20 md:self-start">
+            <aside className="space-y-3 md:sticky md:top-20 md:self-start">
+              <div className="flex h-9 items-center justify-between">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Unpacked
+                </h2>
+              </div>
               <UnpackedTray
                 items={itemsByBag.get(undefined) ?? []}
                 bags={trip.bags}
@@ -368,6 +370,7 @@ function TripPlanner() {
               />
             </aside>
           </div>
+
         </main>
 
         <DragOverlay dropAnimation={null}>
