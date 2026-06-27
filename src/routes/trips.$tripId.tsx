@@ -108,14 +108,15 @@ function TripPlanner() {
     return map;
   }, [trip, itemFilter, itemSort]);
 
+  if (!hydrated) {
+    return (
+      <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+        Loading…
+      </div>
+    );
+  }
+
   if (!trip) {
-    if (!hydrated) {
-      return (
-        <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
-          Loading…
-        </div>
-      );
-    }
     return (
       <div className="grid min-h-screen place-items-center px-4 text-center">
         <div>
