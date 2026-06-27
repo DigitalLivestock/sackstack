@@ -63,7 +63,7 @@ function TripPlanner() {
     removePerson,
     assignCarrier,
   } = useTrip(tripId);
-  const { format } = useDisplayUnit();
+  const { unit, format } = useDisplayUnit();
 
 
 
