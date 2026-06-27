@@ -69,7 +69,9 @@ export function BagCard({
   const [editOpen, setEditOpen] = useState(false);
 
   void activeDragItemId;
-  const currentTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
+  const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
+  const empty = bagEmptyWeight(bag);
+  const currentTotal = itemsTotal + empty;
   const carrier = people.find((p) => p.id === bag.carrierId);
   const noCarrier = !carrier;
 
