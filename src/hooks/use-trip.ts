@@ -152,7 +152,7 @@ export function useTrips() {
     return trip;
   }, []);
 
-  return { trips, createTrip, deleteTrip, importTrips };
+  return { trips, createTrip, deleteTrip, importTrips, addDemoTrip };
 }
 
 export function useTrip(tripId: string) {
