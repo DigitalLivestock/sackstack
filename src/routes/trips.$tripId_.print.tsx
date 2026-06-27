@@ -17,6 +17,23 @@ function PrintView() {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
+  const carriers = useMemo(() => {
+    if (!trip) return [];
+    return trip.people.map((p) => {
+      const bags = trip.bags.filter((b) => b.carrierId === p.id);
+      const w = bags.reduce(
+        (s, b) =>
+          s +
+          bagEmptyWeight(b) +
+          trip.items
+            .filter((i) => i.bagId === b.id)
+            .reduce((ss, i) => ss + itemWeight(i), 0),
+        0,
+      );
+      return { ...p, bags, weight: w };
+    });
+  }, [trip]);
+
   if (!hydrated) {
     return (
       <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
@@ -42,23 +59,8 @@ function PrintView() {
     trip.items.reduce((s, i) => s + itemWeight(i), 0) +
     trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
 
-  const carriers = useMemo(() => {
-    return trip.people.map((p) => {
-      const bags = trip.bags.filter((b) => b.carrierId === p.id);
-      const w = bags.reduce(
-        (s, b) =>
-          s +
-          bagEmptyWeight(b) +
-          trip.items
-            .filter((i) => i.bagId === b.id)
-            .reduce((ss, i) => ss + itemWeight(i), 0),
-        0,
-      );
-      return { ...p, bags, weight: w };
-    });
-  }, [trip]);
-
   const maxCarrierWeight = Math.max(...carriers.map((c) => c.weight), 1);
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
