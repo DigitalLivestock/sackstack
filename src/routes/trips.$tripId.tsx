@@ -199,51 +199,55 @@ function TripPlanner() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <Button asChild size="sm">
-              <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
-                <ListChecks className="h-4 w-4" />
-                <span className="hidden sm:inline">Checklist</span>
-              </Link>
-            </Button>
-            <Button asChild size="sm" variant="secondary">
-              <Link to="/trips/$tripId/print" params={{ tripId: trip.id }}>
-                <Printer className="h-4 w-4" />
-                <span className="hidden sm:inline">Print</span>
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                try {
-                  const url = buildShareUrl(trip);
-                  if (navigator.clipboard?.writeText) {
-                    await navigator.clipboard.writeText(url);
-                    toast.success('Share link copied to clipboard');
-                  } else {
-                    window.prompt('Copy this share link', url);
+            <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
+              <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5">
+                <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
+                  <ListChecks className="h-4 w-4" />
+                  <span className="hidden md:inline">Checklist</span>
+                </Link>
+              </Button>
+              <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5">
+                <Link to="/trips/$tripId/print" params={{ tripId: trip.id }}>
+                  <Printer className="h-4 w-4" />
+                  <span className="hidden md:inline">Print</span>
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 gap-1.5"
+                onClick={async () => {
+                  try {
+                    const url = buildShareUrl(trip);
+                    if (navigator.clipboard?.writeText) {
+                      await navigator.clipboard.writeText(url);
+                      toast.success('Share link copied to clipboard');
+                    } else {
+                      window.prompt('Copy this share link', url);
+                    }
+                  } catch {
+                    toast.error('Could not create share link');
                   }
-                } catch {
-                  toast.error('Could not create share link');
-                }
-              }}
-              aria-label="Copy share link"
-            >
-              <Share2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Share</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                downloadJson(`trip-${trip.name}`, buildExport([trip]));
-                toast.success('Trip exported');
-              }}
-              aria-label="Export trip to JSON"
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Export</span>
-            </Button>
+                }}
+                aria-label="Copy share link"
+              >
+                <Share2 className="h-4 w-4" />
+                <span className="hidden md:inline">Share</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 gap-1.5"
+                onClick={() => {
+                  downloadJson(`trip-${trip.name}`, buildExport([trip]));
+                  toast.success('Trip exported');
+                }}
+                aria-label="Export trip to JSON"
+              >
+                <Download className="h-4 w-4" />
+                <span className="hidden md:inline">Export</span>
+              </Button>
+            </div>
             <div className="flex items-center gap-2 rounded-lg border-2 border-primary/30 bg-primary/10 px-3 py-1.5 shadow-sm">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
                 Total
