@@ -86,7 +86,8 @@ function PrintView() {
 
         {trip.bags.map((bag) => {
           const items = trip.items.filter((i) => i.bagId === bag.id);
-          const total = items.reduce((s, i) => s + itemWeight(i), 0);
+          const itemsTotal = items.reduce((s, i) => s + itemWeight(i), 0);
+          const total = itemsTotal + bagEmptyWeight(bag);
           const carrier = trip.people.find((p) => p.id === bag.carrierId);
           return (
             <section
