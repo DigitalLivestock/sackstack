@@ -99,6 +99,18 @@ export function EditBagDialog({
               onChange={(e) => setLimit(e.target.value)}
             />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="edit-bag-empty">Bag's own weight (kg, optional)</Label>
+            <Input
+              id="edit-bag-empty"
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              value={empty}
+              onChange={(e) => setEmpty(e.target.value)}
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
