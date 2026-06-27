@@ -324,19 +324,9 @@ function TripPlanner() {
                     <span className="font-medium">{trip.people.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Total</span>
-                    <span className="font-medium tabular-nums">{format(totalWeight)}</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-muted-foreground">Packed</span>
                     <span className="font-medium">
                       {trip.items.filter((i) => i.packed).length} / {trip.items.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Missing weight</span>
-                    <span className="font-medium">
-                      {trip.items.filter((i) => i.weightG === 0).length}
                     </span>
                   </div>
                 </div>
