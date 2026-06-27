@@ -124,7 +124,9 @@ function TripsIndex() {
               .slice()
               .sort((a, b) => b.createdAt - a.createdAt)
               .map((trip) => {
-                const total = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+                const total =
+                  trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+                  trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
                 return (
                   <div
                     key={trip.id}
