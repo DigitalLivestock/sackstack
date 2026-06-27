@@ -125,10 +125,22 @@ function TripsIndex() {
             <p className="mt-1 text-sm text-muted-foreground">
               Create your first trip to start planning bags and items.
             </p>
-            <Button className="mt-6" onClick={() => navigate({ to: '/trips/new' })}>
-              <Plus className="h-4 w-4" />
-              Create a trip
-            </Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <Button onClick={() => navigate({ to: '/trips/new' })}>
+                <Plus className="h-4 w-4" />
+                Create a trip
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const t = addDemoTrip();
+                  toast.success('Demo trip loaded');
+                  navigate({ to: '/trips/$tripId', params: { tripId: t.id } });
+                }}
+              >
+                Try a demo trip
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -187,6 +199,15 @@ function TripsIndex() {
           </div>
         )}
       </main>
+
+      <footer className="mt-8 border-t border-border bg-background/50">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
+          <span>No accounts. No tracking. Your data stays in this browser.</span>
+          <Link to="/privacy" className="underline-offset-2 hover:underline">
+            Privacy &amp; data
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
