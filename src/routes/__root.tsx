@@ -101,8 +101,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sack Stack | Organize your Voyage" },
-      { name: "description", content: "Sack Stack helps users plan and track item weights for trips, supporting multiple users and travel types." },
+      { title: "Sack Stack — Free packing planner" },
+      { name: "description", content: "Free packing planner. Sack Stack helps you plan and track item weights for trips, supporting multiple carriers, bags, and travel types." },
       { name: "author", content: "Sack Stack" },
       { property: "og:title", content: "Sack Stack | Organize your Voyage" },
       { property: "og:description", content: "Sack Stack helps users plan and track item weights for trips, supporting multiple users and travel types." },
