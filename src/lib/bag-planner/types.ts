@@ -21,6 +21,8 @@ export type Bag = {
   type: BagType;
   carrierId?: string;
   weightLimitG?: number;
+  /** Empty (own) weight of the bag itself, in grams. */
+  emptyWeightG?: number;
 };
 
 export type Item = {
