@@ -7,7 +7,7 @@ import { useTrip } from '@/hooks/use-trip';
 import { itemWeight, travelTypeLabel, GLOBAL_TAGS } from '@/lib/bag-planner/types';
 import { useDisplayUnit } from '@/hooks/use-display-unit';
 
-export const Route = createFileRoute('/trips/$tripId/checklist')({
+export const Route = createFileRoute('/trips/$tripId_/checklist')({
   component: ChecklistView,
 });
 
