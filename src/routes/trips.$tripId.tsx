@@ -75,6 +75,11 @@ function TripPlanner() {
     | null
   >(null);
 
+  const [openCarriers, setOpenCarriers] = useState(true);
+  const [openSummary, setOpenSummary] = useState(true);
+  const [openBags, setOpenBags] = useState(true);
+  const [openUnpacked, setOpenUnpacked] = useState(true);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
