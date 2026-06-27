@@ -186,7 +186,7 @@ function ChecklistView() {
               <header className="flex items-center justify-between border-b border-border bg-muted/30 px-3 py-2">
                 <div className="text-sm font-semibold">{g.label}</div>
                 <div className="text-xs tabular-nums text-muted-foreground">
-                  {gPacked}/{g.items.length} · {formatWeight(gWeight)}
+                  {gPacked}/{g.items.length} · {format(gWeight)}
                 </div>
               </header>
               <ul className="divide-y divide-border">
@@ -213,7 +213,7 @@ function ChecklistView() {
                       ) : null}
                     </div>
                     <span className="text-xs tabular-nums text-muted-foreground">
-                      {formatWeight(itemWeight(i))}
+                      {format(itemWeight(i))}
                     </span>
                   </li>
                 ))}

@@ -249,7 +249,7 @@ function TripPlanner() {
                 Total
               </div>
               <div className="text-sm font-semibold tabular-nums">
-                {formatWeight(totalWeight)}
+                {format(totalWeight)}
               </div>
             </div>
           </div>
@@ -299,7 +299,7 @@ function TripPlanner() {
                       />
                       <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
                         {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
-                        <span className="font-semibold text-foreground">{formatWeight(w)}</span>
+                        <span className="font-semibold text-foreground">{format(w)}</span>
                       </span>
                     </div>
                   );
@@ -375,7 +375,7 @@ function TripPlanner() {
                   <div className="rounded-md border border-foreground bg-card px-3 py-2 text-sm shadow-lg">
                     <span className="font-medium">{item.name}</span>
                     <span className="ml-2 text-muted-foreground tabular-nums">
-                      {formatWeight(itemWeight(item))}
+                      {format(itemWeight(item))}
                     </span>
                   </div>
                 );
