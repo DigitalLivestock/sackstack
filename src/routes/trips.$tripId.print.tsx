@@ -26,7 +26,9 @@ function PrintView() {
   const unpacked = trip.items.filter(
     (i) => !i.bagId || !trip.bags.some((b) => b.id === i.bagId),
   );
-  const totalAll = trip.items.reduce((s, i) => s + itemWeight(i), 0);
+  const totalAll =
+    trip.items.reduce((s, i) => s + itemWeight(i), 0) +
+    trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
 
   return (
     <div className="min-h-screen bg-white text-black">
