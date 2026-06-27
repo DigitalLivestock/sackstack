@@ -1,6 +1,6 @@
 {
-  "name": "Bag Planner",
-  "short_name": "Bag Planner",
+  "name": "Sack Stack",
+  "short_name": "Sack Stack",
   "description": "Plan and balance the weight of your bags before a trip. No account, your data stays on your device.",
   "start_url": "/",
   "scope": "/",
