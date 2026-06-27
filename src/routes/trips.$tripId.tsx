@@ -263,51 +263,75 @@ function TripPlanner() {
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
           {/* Carriers */}
-          <section className="space-y-2">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Carriers
-              </h2>
-              <AddPersonInline onAdd={addPerson} />
-              <span className="hidden text-xs text-muted-foreground md:block">
-                · Drag a bag onto a carrier
-              </span>
-            </div>
-            {trip.people.length === 0 ? (
-              <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
-                No carriers yet. Add one to assign bags.
+          <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
+            <section className="space-y-2">
+              <div className="flex h-9 items-center justify-between">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Carriers
+                </h2>
+                <AddPersonInline onAdd={addPerson} />
               </div>
-            ) : (
-              <div className="flex flex-wrap items-center gap-2">
-                {trip.people.map((p) => {
-                  const carries = trip.bags.filter((b) => b.carrierId === p.id);
-                  const w = carries.reduce(
-                    (s, b) =>
-                      s +
-                      bagEmptyWeight(b) +
-                      trip.items
-                        .filter((i) => i.bagId === b.id)
-                        .reduce((ss, i) => ss + itemWeight(i), 0),
-                    0,
-                  );
-                  return (
-                    <div key={p.id} className="flex flex-col items-start gap-0.5">
-                      <PersonChip
-                        person={p}
-                        droppable={activeDrag?.kind === 'bag-drag'}
-                        onEdit={(patch) => updatePerson(p.id, patch)}
-                        onRemove={() => removePerson(p.id)}
-                      />
-                      <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
-                        {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
-                        <span className="font-semibold text-foreground">{format(w)}</span>
-                      </span>
+              {trip.people.length === 0 ? (
+                <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+                  No carriers yet. Add one to assign bags.
+                </div>
+              ) : (
+                <div className="flex flex-wrap items-center gap-2">
+                  {trip.people.map((p) => {
+                    const carries = trip.bags.filter((b) => b.carrierId === p.id);
+                    const w = carries.reduce(
+                      (s, b) =>
+                        s +
+                        bagEmptyWeight(b) +
+                        trip.items
+                          .filter((i) => i.bagId === b.id)
+                          .reduce((ss, i) => ss + itemWeight(i), 0),
+                      0,
+                    );
+                    return (
+                      <div key={p.id} className="flex flex-col items-start gap-0.5">
+                        <PersonChip
+                          person={p}
+                          droppable={activeDrag?.kind === 'bag-drag'}
+                          onEdit={(patch) => updatePerson(p.id, patch)}
+                          onRemove={() => removePerson(p.id)}
+                        />
+                        <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
+                          {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
+                          <span className="font-semibold text-foreground">{format(w)}</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+
+            <aside className="space-y-3">
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="text-sm font-semibold">Trip Summary</h3>
+                <div className="mt-3 space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Items</span>
+                    <span className="font-medium">{trip.items.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Bags</span>
+                    <span className="font-medium">{trip.bags.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Carriers</span>
+                    <span className="font-medium">{trip.people.length}</span>
+                  </div>
+                  {unassignedBags > 0 && (
+                    <div className="pt-1 text-xs font-medium text-orange-600">
+                      {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
                     </div>
-                  );
-                })}
+                  )}
+                </div>
               </div>
-            )}
-          </section>
+            </aside>
+          </div>
 
           {/* Bags + Unpacked */}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
