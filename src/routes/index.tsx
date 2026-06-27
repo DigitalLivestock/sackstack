@@ -21,7 +21,7 @@ export const Route = createFileRoute('/')({
       { property: 'og:title', content: 'Bag Planner' },
       {
         property: 'og:description',
-        content: 'Plan bag weights for any trip with people, bags, and item weights.',
+        content: 'Plan bag weights for any trip with carriers, bags, and item weights.',
       },
     ],
   }),

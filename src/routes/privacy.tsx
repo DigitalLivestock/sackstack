@@ -69,7 +69,7 @@ function PrivacyPage() {
 
           <h2 className="text-lg font-semibold">Where your data lives</h2>
           <p>
-            All trips, bags, people, and items are saved in your browser's
+            All trips, bags, carriers, and items are saved in your browser's
             <code className="rounded bg-muted px-1 py-0.5 text-xs"> localStorage</code>
             on this device only. They are never sent over the network. If you
             open the site on another device or browser, you will not see your
