@@ -86,37 +86,37 @@ export function ItemRow({
         missingWeight ? 'border-orange-500/50' : 'border-border'
       } ${item.packed ? 'opacity-70' : ''}`}
     >
-      {/* Row 1: name on its own line, full width */}
-      <button
-        type="button"
-        onClick={() => setEditOpen(true)}
-        className="flex w-full items-center gap-1.5 px-2.5 pt-1.5 text-left"
-        aria-label={`Edit ${item.name}`}
-      >
-        {item.packed ? (
-          <Check
-            className="h-3.5 w-3.5 shrink-0 text-green-600"
-            aria-label="Packed"
-          />
-        ) : null}
-        {missingWeight ? (
-          <AlertTriangle
-            className="h-3.5 w-3.5 shrink-0 text-orange-500"
-            aria-label="Missing weight"
-          />
-        ) : null}
-        <span
-          className={`block min-w-0 flex-1 truncate text-sm font-semibold leading-tight ${
-            item.packed ? 'line-through' : ''
-          }`}
-          title={item.name}
+      {/* Single row: name · drag · tags · qty · weight · menu */}
+      <div className="flex items-center gap-1.5 px-2.5 py-1.5">
+        {/* Name left of drag handle */}
+        <button
+          type="button"
+          onClick={() => setEditOpen(true)}
+          className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
+          aria-label={`Edit ${item.name}`}
         >
-          {item.name}
-        </span>
-      </button>
+          {item.packed ? (
+            <Check
+              className="h-3.5 w-3.5 shrink-0 text-green-600"
+              aria-label="Packed"
+            />
+          ) : null}
+          {missingWeight ? (
+            <AlertTriangle
+              className="h-3.5 w-3.5 shrink-0 text-orange-500"
+              aria-label="Missing weight"
+            />
+          ) : null}
+          <span
+            className={`block min-w-0 flex-1 truncate text-sm font-semibold leading-tight ${
+              item.packed ? 'line-through' : ''
+            }`}
+            title={item.name}
+          >
+            {item.name}
+          </span>
+        </button>
 
-      {/* Row 2: meta (drag handle · tags · qty · weight · menu) */}
-      <div className="flex items-center gap-1.5 px-2.5 pb-1.5 pt-1">
         {draggable ? (
           <button
             {...listeners}
