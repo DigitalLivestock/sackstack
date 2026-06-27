@@ -331,6 +331,7 @@ function TripPlanner() {
                   )}
                 </div>
               </div>
+              <CarrierWeightChart trip={trip} unit={unit} format={format} />
             </aside>
           </div>
 
