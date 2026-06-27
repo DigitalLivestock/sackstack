@@ -266,15 +266,8 @@ function TripPlanner() {
                   · Drag a bag onto a carrier
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <CustomTravelTypeDialog
-                  trip={trip}
-                  onAdd={addCustomTravelType}
-                  onRemove={removeCustomTravelType}
-                  onSelect={setTravelType}
-                />
-                <AddPersonInline onAdd={addPerson} />
-              </div>
+              <AddPersonInline onAdd={addPerson} />
+
             </div>
             {trip.people.length === 0 ? (
               <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
