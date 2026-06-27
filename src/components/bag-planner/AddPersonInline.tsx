@@ -9,7 +9,7 @@ export function AddPersonInline({ onAdd }: { onAdd: (name: string) => void }) {
 
   if (!open) {
     return (
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <Button size="sm" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
         Add carrier
       </Button>
