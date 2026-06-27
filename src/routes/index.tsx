@@ -199,15 +199,6 @@ function TripsIndex() {
           </div>
         )}
       </main>
-
-      <footer className="mt-8 border-t border-border bg-background/50">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
-          <span>No accounts. No tracking. Your data stays in this browser.</span>
-          <Link to="/privacy" className="underline-offset-2 hover:underline">
-            Privacy &amp; data
-          </Link>
-        </div>
-      </footer>
     </div>
   );
 }
