@@ -182,99 +182,96 @@ function TripPlanner() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-4 sm:py-3">
-          <div className="flex min-w-0 items-center gap-2">
-            <Button asChild variant="ghost" size="icon" className="h-9 w-9 shrink-0">
-              <Link to="/" aria-label="Back to trips">
-                <ArrowLeft className="h-4 w-4" />
+        <div className="mx-auto flex max-w-6xl items-center gap-2 px-2 py-2 sm:gap-3 sm:px-4 sm:py-3">
+          <Button asChild variant="ghost" size="icon" className="h-9 w-9 shrink-0">
+            <Link to="/" aria-label="Back to trips">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <span className="shrink-0 text-xl leading-none" aria-hidden>
+            {travelTypeEmoji(trip)}
+          </span>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-sm font-semibold leading-tight sm:text-lg">
+              {trip.name}
+            </h1>
+            <div className="truncate text-[11px] text-muted-foreground sm:text-xs">
+              {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
+              {unassignedBags > 0 ? (
+                <span className="ml-1 text-orange-600">
+                  · {unassignedBags} w/o carrier
+                </span>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
+            <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
+              <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
+                <ListChecks className="h-4 w-4" />
+                <span className="hidden md:inline">Checklist</span>
               </Link>
             </Button>
-            <span className="shrink-0 text-xl leading-none" aria-hidden>
-              {travelTypeEmoji(trip)}
-            </span>
-            <div className="min-w-0 flex-1">
-              <h1 className="truncate text-base font-semibold leading-tight sm:text-lg">
-                {trip.name}
-              </h1>
-              <div className="truncate text-[11px] text-muted-foreground sm:text-xs">
-                {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
-                {unassignedBags > 0 ? (
-                  <span className="ml-1 text-orange-600">
-                    · {unassignedBags} w/o carrier
-                  </span>
-                ) : null}
-              </div>
-            </div>
-          </div>
-          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:overflow-visible sm:px-0">
-            <div className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
-              <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
-                <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
-                  <ListChecks className="h-4 w-4" />
-                  <span className="hidden sm:inline">Checklist</span>
-                </Link>
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 gap-1.5 px-2"
-                onClick={() => {
-                  const url = `${window.location.origin}/trips/${trip.id}/print`;
-                  const w = window.open(url, '_blank');
-                  if (w) {
-                    const tryPrint = () => {
-                      try {
-                        w.print();
-                      } catch {
-                        /* noop */
-                      }
-                    };
-                    setTimeout(tryPrint, 800);
-                  }
-                }}
-                aria-label="Open print view"
-              >
-                <Printer className="h-4 w-4" />
-                <span className="hidden sm:inline">Print / PDF</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 gap-1.5 px-2"
-                onClick={async () => {
-                  try {
-                    const url = buildShareUrl(trip);
-                    if (navigator.clipboard?.writeText) {
-                      await navigator.clipboard.writeText(url);
-                      toast.success('Share link copied to clipboard');
-                    } else {
-                      window.prompt('Copy this share link', url);
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 gap-1.5 px-2"
+              onClick={() => {
+                const url = `${window.location.origin}/trips/${trip.id}/print`;
+                const w = window.open(url, '_blank');
+                if (w) {
+                  const tryPrint = () => {
+                    try {
+                      w.print();
+                    } catch {
+                      /* noop */
                     }
-                  } catch {
-                    toast.error('Could not create share link');
+                  };
+                  setTimeout(tryPrint, 800);
+                }
+              }}
+              aria-label="Open print view"
+            >
+              <Printer className="h-4 w-4" />
+              <span className="hidden md:inline">Print / PDF</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1.5 px-2"
+              onClick={async () => {
+                try {
+                  const url = buildShareUrl(trip);
+                  if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(url);
+                    toast.success('Share link copied to clipboard');
+                  } else {
+                    window.prompt('Copy this share link', url);
                   }
-                }}
-                aria-label="Copy share link"
-              >
-                <Share2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Share</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 gap-1.5 px-2"
-                onClick={() => {
-                  downloadJson(`trip-${trip.name}`, buildExport([trip]));
-                  toast.success('Trip exported');
-                }}
-                aria-label="Export trip to JSON"
-              >
-                <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Export</span>
-              </Button>
-            </div>
+                } catch {
+                  toast.error('Could not create share link');
+                }
+              }}
+              aria-label="Copy share link"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden md:inline">Share</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1.5 px-2"
+              onClick={() => {
+                downloadJson(`trip-${trip.name}`, buildExport([trip]));
+                toast.success('Trip exported');
+              }}
+              aria-label="Export trip to JSON"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden md:inline">Export</span>
+            </Button>
           </div>
         </div>
+
       </header>
 
 
