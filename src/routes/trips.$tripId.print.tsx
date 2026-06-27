@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
-import { itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 
 export const Route = createFileRoute('/trips/$tripId/print')({
