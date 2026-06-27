@@ -148,7 +148,7 @@ function ChecklistView() {
                 groupBy === g ? 'border-foreground bg-accent' : 'border-border'
               }`}
             >
-              {g === 'bag' ? 'Bag' : g === 'person' ? 'Person' : 'Tag'}
+              {g === 'bag' ? 'Bag' : g === 'person' ? 'Carrier' : 'Tag'}
             </button>
           ))}
           <span className="ml-3 text-xs font-medium uppercase text-muted-foreground">Filter:</span>

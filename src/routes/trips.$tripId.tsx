@@ -283,7 +283,7 @@ function TripPlanner() {
                   onSelect={setTravelType}
                 />
                 <span className="hidden text-xs text-muted-foreground md:block">
-                  Drag a bag onto a person
+                  Drag a bag onto a carrier
                 </span>
               </div>
             </div>
