@@ -14,13 +14,13 @@ import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCu
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: 'Bag Planner — plan and balance your packing' },
+      { title: 'Sack Stack — plan and balance your packing' },
       {
         name: 'description',
         content:
           'Plan bag weights for any trip. Split items across bags, assign carriers, and never overpack again.',
       },
-      { property: 'og:title', content: 'Bag Planner' },
+      { property: 'og:title', content: 'Sack Stack' },
       {
         property: 'og:description',
         content: 'Plan bag weights for any trip with carriers, bags, and item weights.',
@@ -52,7 +52,7 @@ function TripsIndex() {
       toast.error('No trips to export');
       return;
     }
-    downloadJson('bag-planner-trips', buildExport(trips));
+    downloadJson('sack-stack-trips', buildExport(trips));
     toast.success(`Exported ${trips.length} trip${trips.length === 1 ? '' : 's'}`);
   };
 
@@ -76,8 +76,8 @@ function TripsIndex() {
           <img src={logoSvg} alt="" className="h-12 w-auto shrink-0 object-contain drop-shadow-sm sm:h-16" />
           <div className="min-w-0 flex-1">
             <h1 className="font-semibold tracking-tight text-primary leading-[0.95] text-lg sm:text-2xl">
-              <span className="block">Bag</span>
-              <span className="block">Planner</span>
+              <span className="block">Sack</span>
+              <span className="block">Stack</span>
             </h1>
             <p className="mt-1 hidden truncate text-xs text-muted-foreground sm:block">
               Plan and balance the weight of your bags before a trip.

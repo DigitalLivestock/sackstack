@@ -7,13 +7,13 @@ import { toast, Toaster } from 'sonner';
 export const Route = createFileRoute('/privacy')({
   head: () => ({
     meta: [
-      { title: 'Privacy — Bag Planner' },
+      { title: 'Privacy — Sack Stack' },
       {
         name: 'description',
         content:
-          'Bag Planner stores everything in your browser. No accounts, no tracking, no server-side database.',
+          'Sack Stack stores everything in your browser. No accounts, no tracking, no server-side database.',
       },
-      { property: 'og:title', content: 'Privacy — Bag Planner' },
+      { property: 'og:title', content: 'Privacy — Sack Stack' },
       {
         property: 'og:description',
         content: 'No accounts, no tracking. Your trips live only on your device.',
@@ -55,7 +55,7 @@ function PrivacyPage() {
       <main className="mx-auto max-w-3xl px-4 py-8">
         <article className="prose prose-sm sm:prose-base max-w-none space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm">
           <p className="text-base">
-            Bag Planner is a fully client-side app. It runs entirely in your
+            Sack Stack is a fully client-side app. It runs entirely in your
             browser — there is <strong>no account, no login, and no server-side
             database</strong>.
           </p>
@@ -102,7 +102,7 @@ function PrivacyPage() {
 
           <h2 className="text-lg font-semibold">Clear everything</h2>
           <p>
-            Wipe all Bag Planner data from this browser. This cannot be undone —
+            Wipe all Sack Stack data from this browser. This cannot be undone —
             export a backup first if you want to keep your trips.
           </p>
           {!confirming ? (

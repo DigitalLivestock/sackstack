@@ -262,7 +262,7 @@ export const ITEMS_IMPORT_TEMPLATE = [
 ];
 
 export function downloadTemplate() {
-  downloadJson('bagplanner-items-template', ITEMS_IMPORT_TEMPLATE);
+  downloadJson('sack-stack-items-template', ITEMS_IMPORT_TEMPLATE);
 }
 
 export function parseItemsImport(text: string): ItemImport[] {

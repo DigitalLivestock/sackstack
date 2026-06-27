@@ -9,7 +9,7 @@ import type { Trip } from '@/lib/bag-planner/types';
 export const Route = createFileRoute('/share')({
   head: () => ({
     meta: [
-      { title: 'Shared trip — Bag Planner' },
+      { title: 'Shared trip — Sack Stack' },
       { name: 'robots', content: 'noindex' },
     ],
   }),
