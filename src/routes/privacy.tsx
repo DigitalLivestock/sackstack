@@ -11,16 +11,16 @@ export const Route = createFileRoute('/privacy')({
       {
         name: 'description',
         content:
-          'Sack Stack stores everything in your browser. No accounts, no tracking, no server-side database.',
+          'Sack Stack is a free, privacy-focused packing planner. Everything stays in your browser — no accounts, no tracking, no server-side database.',
       },
       { property: 'og:title', content: 'Privacy — Sack Stack' },
       {
         property: 'og:description',
-        content: 'No accounts, no tracking. Your trips live only on your device.',
+        content: 'Free, privacy-focused packing planner. No accounts, no tracking. Your trips live only on your device.',
       },
-      { property: 'og:url', content: 'https://bagplanner.lovable.app/privacy' },
+      { property: 'og:url', content: 'https://sackstack.lovable.app/privacy' },
     ],
-    links: [{ rel: 'canonical', href: 'https://bagplanner.lovable.app/privacy' }],
+    links: [{ rel: 'canonical', href: 'https://sackstack.lovable.app/privacy' }],
   }),
   component: PrivacyPage,
 });
