@@ -105,9 +105,11 @@ function TripsIndex() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        {trips.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
-            <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-muted text-2xl">
+        {!hydrated ? (
+          <div className="py-16 text-center text-sm text-muted-foreground">Loading…</div>
+        ) : trips.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-primary/30 bg-card px-6 py-16 text-center shadow-sm">
+            <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-primary/20 to-accent/40 text-2xl">
               🧳
             </div>
             <h2 className="text-lg font-semibold">No trips yet</h2>
@@ -120,25 +122,33 @@ function TripsIndex() {
             </Button>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trips
               .slice()
               .sort((a, b) => b.createdAt - a.createdAt)
-              .map((trip) => {
+              .map((trip, idx) => {
                 const total =
                   trip.items.reduce((s, i) => s + itemWeight(i), 0) +
                   trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
+                const accents = [
+                  'from-primary/15 to-primary/5 ring-primary/30',
+                  'from-accent/30 to-accent/5 ring-accent/40',
+                  'from-chart-3/20 to-chart-3/5 ring-chart-3/30',
+                  'from-chart-4/20 to-chart-4/5 ring-chart-4/30',
+                  'from-chart-5/20 to-chart-5/5 ring-chart-5/30',
+                ];
+                const accent = accents[idx % accents.length];
                 return (
                   <div
                     key={trip.id}
-                    className="group relative rounded-xl border border-border bg-card p-5 transition-all hover:shadow-sm"
+                    className={`group relative overflow-hidden rounded-xl border border-border bg-gradient-to-br ${accent} p-5 ring-1 ring-inset transition-all hover:-translate-y-0.5 hover:shadow-md`}
                   >
                     <Link
                       to="/trips/$tripId"
                       params={{ tripId: trip.id }}
                       className="block"
                     >
-                      <div className="text-2xl">{travelTypeEmoji(trip)}</div>
+                      <div className="text-3xl drop-shadow-sm">{travelTypeEmoji(trip)}</div>
                       <div className="mt-3 truncate text-base font-semibold">
                         {trip.name}
                       </div>
@@ -150,14 +160,14 @@ function TripsIndex() {
                         <span>·</span>
                         <span>{trip.items.length} items</span>
                         <span>·</span>
-                        <span className="tabular-nums">{formatWeight(total)}</span>
+                        <span className="tabular-nums font-medium text-foreground">{formatWeight(total)}</span>
                       </div>
                     </Link>
                     <button
                       onClick={() => {
                         if (confirm(`Delete trip "${trip.name}"?`)) deleteTrip(trip.id);
                       }}
-                      className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-destructive group-hover:opacity-100"
+                      className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-background hover:text-destructive group-hover:opacity-100"
                       aria-label="Delete trip"
                     >
                       <Trash2 className="h-4 w-4" />
