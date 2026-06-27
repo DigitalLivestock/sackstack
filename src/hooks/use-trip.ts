@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Bag, CustomTravelType, Item, Person, Trip, TravelType } from '@/lib/bag-planner/types';
-import { buildPresetBags, PERSON_COLORS } from '@/lib/bag-planner/presets';
+import { buildPresetBags, buildBagsFromPresets, PERSON_COLORS, TRAVEL_PRESETS } from '@/lib/bag-planner/presets';
+import { loadCustomTravelTypes } from '@/hooks/use-custom-travel-types';
+
 
 const STORAGE_KEY = 'bagplanner:trips';
 
@@ -77,12 +79,20 @@ export function useTrips() {
   }, []);
 
   const createTrip = useCallback((name: string, travelType: TravelType): Trip => {
+    const isBuiltin = (travelType as string) in TRAVEL_PRESETS;
+    let bags: Bag[];
+    if (isBuiltin) {
+      bags = buildPresetBags(travelType);
+    } else {
+      const custom = loadCustomTravelTypes().find((c) => c.id === travelType);
+      bags = custom?.bagPresets ? buildBagsFromPresets(custom.bagPresets) : [];
+    }
     const trip: Trip = {
       id: crypto.randomUUID(),
       name,
       travelType,
       people: [],
-      bags: buildPresetBags(travelType),
+      bags,
       items: [],
       createdAt: Date.now(),
       customTags: [],
@@ -94,6 +104,7 @@ export function useTrips() {
     emit();
     return trip;
   }, []);
+
 
   const deleteTrip = useCallback((id: string) => {
     saveAll(loadAll().filter((t) => t.id !== id));
