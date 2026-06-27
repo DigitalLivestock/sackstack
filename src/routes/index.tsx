@@ -72,11 +72,11 @@ function TripsIndex() {
     <div className="min-h-screen bg-gradient-to-br from-secondary via-background to-accent/30">
       <Toaster position="top-center" richColors />
       <header className="border-b border-border bg-gradient-to-r from-primary/10 via-accent/20 to-chart-3/15 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-3 py-3 sm:px-4 sm:py-4">
+        <div className="mx-auto flex max-w-5xl items-end gap-3 px-3 py-3 sm:px-4 sm:py-4">
           <Link to="/" className="shrink-0" aria-label="Sack Stack home">
             <img src={logoSvg} alt="Sack Stack" className="h-14 w-auto object-contain drop-shadow-sm sm:h-20" />
           </Link>
-          <p className="hidden min-w-0 flex-1 text-sm text-muted-foreground italic sm:block">
+          <p className="hidden min-w-0 flex-1 pb-2 text-sm italic text-muted-foreground sm:block">
             Plan and balance the weight of your bags before a trip.
           </p>
           <div className="flex-1 sm:hidden" />
