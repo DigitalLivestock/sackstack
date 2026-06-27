@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import logoUrl from "../assets/logo.svg?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { DisplayUnitSelect } from "@/components/bag-planner/DisplayUnitSelect";
 
 function Footer() {
   return (
@@ -21,6 +22,7 @@ function Footer() {
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
         <span>No accounts. No tracking. Your data stays in this browser.</span>
         <div className="flex items-center gap-3">
+          <DisplayUnitSelect />
           <span className="text-muted-foreground/60">v{APP_VERSION}</span>
           <Link to="/about" className="underline-offset-2 hover:underline">
             About
