@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
-import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
 
