@@ -102,7 +102,7 @@ function PrivacyPage() {
 
           <h2 className="text-lg font-semibold">Clear everything</h2>
           <p>
-            Wipe all Bag Planner data from this browser. This cannot be undone —
+            Wipe all Sack Stack data from this browser. This cannot be undone —
             export a backup first if you want to keep your trips.
           </p>
           {!confirming ? (
