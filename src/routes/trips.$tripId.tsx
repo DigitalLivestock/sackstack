@@ -248,14 +248,6 @@ function TripPlanner() {
                 <span className="hidden md:inline">Export</span>
               </Button>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border-2 border-primary/30 bg-primary/10 px-3 py-1.5 shadow-sm">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                Total
-              </div>
-              <div className="text-base font-bold tabular-nums text-primary">
-                {format(totalWeight)}
-              </div>
-            </div>
           </div>
         </div>
       </header>
