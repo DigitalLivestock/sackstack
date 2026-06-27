@@ -269,11 +269,11 @@ function TripPlanner() {
 
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
-          {/* People */}
+          {/* Carriers */}
           <section className="space-y-2">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                People
+                Carriers
               </h2>
               <div className="flex items-center gap-2">
                 <CustomTravelTypeDialog
