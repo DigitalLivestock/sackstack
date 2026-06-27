@@ -175,30 +175,32 @@ function TripPlanner() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto grid max-w-6xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3">
-          <Button asChild variant="ghost" size="icon">
-            <Link to="/" aria-label="Back to trips">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">{travelTypeEmoji(trip)}</span>
-              <h1 className="truncate text-base font-semibold sm:text-lg">{trip.name}</h1>
-            </div>
-            <div className="truncate text-xs text-muted-foreground">
-              {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
-              {unassignedBags > 0 ? (
-                <span className="ml-2 text-orange-600">
-                  · {unassignedBags} without carrier
-                </span>
-              ) : null}
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-3">
+          <div className="flex min-w-0 items-center gap-2 sm:flex-1 sm:gap-3">
+            <Button asChild variant="ghost" size="icon" className="shrink-0">
+              <Link to="/" aria-label="Back to trips">
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </Button>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-lg shrink-0">{travelTypeEmoji(trip)}</span>
+                <h1 className="truncate text-base font-semibold sm:text-lg">{trip.name}</h1>
+              </div>
+              <div className="truncate text-xs text-muted-foreground">
+                {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
+                {unassignedBags > 0 ? (
+                  <span className="ml-2 text-orange-600">
+                    · {unassignedBags} without carrier
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center justify-end">
             <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
-              <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5">
-                <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
+              <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
+                <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
                   <ListChecks className="h-4 w-4" />
                   <span className="hidden md:inline">Checklist</span>
                 </Link>
@@ -206,7 +208,7 @@ function TripPlanner() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-8 gap-1.5"
+                className="h-8 gap-1.5 px-2"
                 onClick={() => {
                   const url = `${window.location.origin}/trips/${trip.id}/print`;
                   const w = window.open(url, '_blank');
@@ -218,7 +220,6 @@ function TripPlanner() {
                         /* noop — user can print manually */
                       }
                     };
-                    // Give the new page a moment to render before triggering print
                     setTimeout(tryPrint, 800);
                   }
                 }}
@@ -230,7 +231,7 @@ function TripPlanner() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 gap-1.5"
+                className="h-8 gap-1.5 px-2"
                 onClick={async () => {
                   try {
                     const url = buildShareUrl(trip);
@@ -252,7 +253,7 @@ function TripPlanner() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 gap-1.5"
+                className="h-8 gap-1.5 px-2"
                 onClick={() => {
                   downloadJson(`trip-${trip.name}`, buildExport([trip]));
                   toast.success('Trip exported');
@@ -267,8 +268,9 @@ function TripPlanner() {
         </div>
       </header>
 
+
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
+        <main className="mx-auto max-w-6xl space-y-6 px-3 py-4 sm:px-4 sm:py-6">
           {/* Carriers */}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
             <section className="space-y-2">
