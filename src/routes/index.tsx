@@ -29,11 +29,20 @@ export const Route = createFileRoute('/')({
 });
 
 function TripsIndex() {
-  const { trips, deleteTrip, importTrips } = useTrips();
+  const { trips, deleteTrip, importTrips, addDemoTrip } = useTrips();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
+
+  useEffect(() => {
+    const onErr = (e: Event) => {
+      const detail = (e as CustomEvent<{ message: string }>).detail;
+      toast.error(detail?.message ?? 'Storage error');
+    };
+    window.addEventListener('bagplanner:storage-error', onErr);
+    return () => window.removeEventListener('bagplanner:storage-error', onErr);
+  }, []);
 
   const handleExportAll = () => {
     if (!trips.length) {
