@@ -25,12 +25,6 @@ import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
 import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
-import {
-  ItemFilterBar,
-  applyItemFilterSort,
-  type ItemFilter,
-  type ItemSort,
-} from '@/components/bag-planner/ItemFilterBar';
 
 export const Route = createFileRoute('/trips/$tripId')({
   component: TripPlanner,
@@ -88,9 +82,6 @@ function TripPlanner() {
     setHydrated(true);
   }, []);
 
-  const [itemFilter, setItemFilter] = useState<ItemFilter>('all');
-  const [itemSort, setItemSort] = useState<ItemSort>('manual');
-
   const itemsByBag = useMemo(() => {
     const map = new Map<string | undefined, NonNullable<typeof trip>['items']>();
     if (!trip) return map;
@@ -103,11 +94,8 @@ function TripPlanner() {
       arr.push(it);
       map.set(key, arr);
     });
-    for (const [k, arr] of map) {
-      map.set(k, applyItemFilterSort(arr, itemFilter, itemSort));
-    }
     return map;
-  }, [trip, itemFilter, itemSort]);
+  }, [trip]);
 
   if (!hydrated) {
     return (
@@ -210,13 +198,13 @@ function TripPlanner() {
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <Button asChild variant="outline" size="sm">
+            <Button asChild size="sm">
               <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
                 <ListChecks className="h-4 w-4" />
                 <span className="hidden sm:inline">Checklist</span>
               </Link>
             </Button>
-            <Button asChild variant="outline" size="sm">
+            <Button asChild size="sm" variant="secondary">
               <Link to="/trips/$tripId/print" params={{ tripId: trip.id }}>
                 <Printer className="h-4 w-4" />
                 <span className="hidden sm:inline">Print</span>
@@ -271,10 +259,15 @@ function TripPlanner() {
         <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
           {/* Carriers */}
           <section className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Carriers
-              </h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Carriers
+                </h2>
+                <span className="hidden text-xs text-muted-foreground md:block">
+                  · Drag a bag onto a carrier
+                </span>
+              </div>
               <div className="flex items-center gap-2">
                 <CustomTravelTypeDialog
                   trip={trip}
@@ -282,51 +275,47 @@ function TripPlanner() {
                   onRemove={removeCustomTravelType}
                   onSelect={setTravelType}
                 />
-                <span className="hidden text-xs text-muted-foreground md:block">
-                  Drag a bag onto a carrier
-                </span>
+                <AddPersonInline onAdd={addPerson} />
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {trip.people.map((p) => {
-                const carries = trip.bags.filter((b) => b.carrierId === p.id);
-                const w = carries.reduce(
-                  (s, b) =>
-                    s +
-                    bagEmptyWeight(b) +
-                    trip.items
-                      .filter((i) => i.bagId === b.id)
-                      .reduce((ss, i) => ss + itemWeight(i), 0),
-                  0,
-                );
-                return (
-                  <div key={p.id} className="flex flex-col items-start gap-0.5">
-                    <PersonChip
-                      person={p}
-                      droppable={activeDrag?.kind === 'bag-drag'}
-                      onEdit={(patch) => updatePerson(p.id, patch)}
-                      onRemove={() => removePerson(p.id)}
-                    />
-                    <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
-                      {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
-                      <span className="font-semibold text-foreground">{formatWeight(w)}</span>
-                    </span>
-                  </div>
-                );
-              })}
-              <AddPersonInline onAdd={addPerson} />
-            </div>
+            {trip.people.length === 0 ? (
+              <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+                No carriers yet. Add one to assign bags.
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                {trip.people.map((p) => {
+                  const carries = trip.bags.filter((b) => b.carrierId === p.id);
+                  const w = carries.reduce(
+                    (s, b) =>
+                      s +
+                      bagEmptyWeight(b) +
+                      trip.items
+                        .filter((i) => i.bagId === b.id)
+                        .reduce((ss, i) => ss + itemWeight(i), 0),
+                    0,
+                  );
+                  return (
+                    <div key={p.id} className="flex flex-col items-start gap-0.5">
+                      <PersonChip
+                        person={p}
+                        droppable={activeDrag?.kind === 'bag-drag'}
+                        onEdit={(patch) => updatePerson(p.id, patch)}
+                        onRemove={() => removePerson(p.id)}
+                      />
+                      <span className="pl-3 text-[11px] tabular-nums text-muted-foreground">
+                        {carries.length} bag{carries.length === 1 ? '' : 's'} ·{' '}
+                        <span className="font-semibold text-foreground">{formatWeight(w)}</span>
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
-          <ItemFilterBar
-            filter={itemFilter}
-            sort={itemSort}
-            onFilter={setItemFilter}
-            onSort={setItemSort}
-          />
-
           {/* Bags + Unpacked */}
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]">
             <section className="space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">

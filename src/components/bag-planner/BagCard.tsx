@@ -16,6 +16,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  CompactItemFilterBar,
+  applyItemFilterSort,
+  type ItemFilter,
+  type ItemSort,
+} from './ItemFilterBar';
 
 export function BagCard({
   bag,
@@ -67,6 +73,9 @@ export function BagCard({
   });
 
   const [editOpen, setEditOpen] = useState(false);
+  const [filter, setFilter] = useState<ItemFilter>('all');
+  const [sort, setSort] = useState<ItemSort>('manual');
+  const visible = applyItemFilterSort(items, filter, sort);
 
   void activeDragItemId;
   const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
@@ -108,6 +117,13 @@ export function BagCard({
           </div>
           <div className="text-xs text-muted-foreground">{BAG_TYPE_LABELS[bag.type]}</div>
         </div>
+
+        <CompactItemFilterBar
+          filter={filter}
+          sort={sort}
+          onFilter={setFilter}
+          onSort={setSort}
+        />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -186,8 +202,12 @@ export function BagCard({
           <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
             Drop items here, or use Move
           </div>
+        ) : visible.length === 0 ? (
+          <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+            No items match the current filter.
+          </div>
         ) : (
-          items.map((item) => (
+          visible.map((item) => (
             <ItemRow
               key={item.id}
               item={item}

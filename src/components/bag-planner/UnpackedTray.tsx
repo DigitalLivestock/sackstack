@@ -10,6 +10,12 @@ import { AddItemForm } from './AddItemForm';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { ImportItemsDialog } from './ImportItemsDialog';
 import { SuggestionsPopover } from './SuggestionsPopover';
+import {
+  CompactItemFilterBar,
+  applyItemFilterSort,
+  type ItemFilter,
+  type ItemSort,
+} from './ItemFilterBar';
 
 export function UnpackedTray({
   items,
@@ -41,6 +47,10 @@ export function UnpackedTray({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importPreview, setImportPreview] = useState<ItemImport[] | null>(null);
 
+  const [filter, setFilter] = useState<ItemFilter>('all');
+  const [sort, setSort] = useState<ItemSort>('manual');
+  const visible = applyItemFilterSort(items, filter, sort);
+
   const total = items.reduce((s, i) => s + itemWeight(i), 0);
 
   const handleImport = async (file: File) => {
@@ -60,12 +70,18 @@ export function UnpackedTray({
         isOver ? 'border-foreground ring-2 ring-foreground/10' : 'border-border'
       }`}
     >
-      <div className="flex items-baseline justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <h2 className="text-base font-semibold">Unpacked</h2>
         <div className="flex items-center gap-2">
           <span className="text-xs tabular-nums text-muted-foreground">
             {items.length} · {formatWeight(total)}
           </span>
+          <CompactItemFilterBar
+            filter={filter}
+            sort={sort}
+            onFilter={setFilter}
+            onSort={setSort}
+          />
         </div>
       </div>
 
@@ -113,8 +129,12 @@ export function UnpackedTray({
           <div className="rounded-md border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
             Add items above — they appear here, then drag them to a bag.
           </div>
+        ) : visible.length === 0 ? (
+          <div className="rounded-md border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
+            No items match the current filter.
+          </div>
         ) : (
-          items.map((item) => (
+          visible.map((item) => (
             <ItemRow
               key={item.id}
               item={item}

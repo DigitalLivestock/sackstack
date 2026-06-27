@@ -3,13 +3,15 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import {
   GripVertical,
-  X,
   Pencil,
   Minus,
   Plus,
   AlertTriangle,
   ChevronDown,
   Check,
+  MoreVertical,
+  Trash2,
+  ArrowRightLeft,
 } from 'lucide-react';
 import type { Item, Bag } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, itemWeight } from '@/lib/bag-planner/types';
@@ -26,6 +28,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { EditItemDialog } from './EditItemDialog';
@@ -67,7 +72,6 @@ export function ItemRow({
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
 
-  // suppress unused warning – packed status is now toggled in the checklist view
   void onTogglePacked;
 
   return (
@@ -77,63 +81,125 @@ export function ItemRow({
         transform: draggable ? CSS.Translate.toString(transform) : undefined,
         opacity: isDragging ? 0.4 : 1,
       }}
-      className={`group rounded-lg border bg-card transition-colors hover:border-foreground/40 ${
+      className={`group rounded-md border bg-card transition-colors hover:border-foreground/40 ${
         missingWeight ? 'border-orange-500/50' : 'border-border'
       } ${item.packed ? 'opacity-70' : ''}`}
     >
-      {/* Header: name + status icons + actions */}
-      <div className="flex items-start gap-1.5 px-3 pt-2.5">
+      {/* Row 1: name on its own line, full width */}
+      <button
+        type="button"
+        onClick={() => setEditOpen(true)}
+        className="flex w-full items-center gap-1.5 px-2.5 pt-1.5 text-left"
+        aria-label={`Edit ${item.name}`}
+      >
+        {item.packed ? (
+          <Check
+            className="h-3.5 w-3.5 shrink-0 text-green-600"
+            aria-label="Packed"
+          />
+        ) : null}
+        {missingWeight ? (
+          <AlertTriangle
+            className="h-3.5 w-3.5 shrink-0 text-orange-500"
+            aria-label="Missing weight"
+          />
+        ) : null}
+        <span
+          className={`block min-w-0 flex-1 truncate text-sm font-semibold leading-tight ${
+            item.packed ? 'line-through' : ''
+          }`}
+          title={item.name}
+        >
+          {item.name}
+        </span>
+      </button>
+
+      {/* Row 2: meta (drag handle · tags · qty · weight · menu) */}
+      <div className="flex items-center gap-1.5 px-2.5 pb-1.5 pt-1">
         {draggable ? (
           <button
             {...listeners}
             {...attributes}
-            className="mt-0.5 hidden touch-none cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing md:block"
+            className="hidden touch-none cursor-grab text-muted-foreground/60 hover:text-foreground active:cursor-grabbing md:block"
             aria-label="Drag"
             onClick={(e) => e.stopPropagation()}
           >
-            <GripVertical className="h-4 w-4" />
+            <GripVertical className="h-3.5 w-3.5" />
           </button>
         ) : null}
 
-        <button
-          type="button"
-          onClick={() => setEditOpen(true)}
-          className="min-w-0 flex-1 text-left"
-          aria-label={`Edit ${item.name}`}
-        >
-          <div className="flex items-center gap-1.5">
-            {item.packed ? (
-              <Check
-                className="h-3.5 w-3.5 shrink-0 text-green-600"
-                aria-label="Packed"
-              />
-            ) : null}
+        <div className="flex min-w-0 flex-1 items-center gap-1.5">
+          {item.tags.length ? <TagBadges tags={item.tags} /> : null}
+          {item.allowedBagTypes ? (
             <span
-              className={`block truncate text-base font-semibold leading-tight ${
-                item.packed ? 'line-through' : ''
-              }`}
-              title={item.name}
+              className="truncate text-[10px] text-muted-foreground"
+              title={`Only: ${item.allowedBagTypes.map((t) => BAG_TYPE_LABELS[t]).join(', ')}`}
             >
-              {item.name}
+              only {item.allowedBagTypes.map((t) => BAG_TYPE_LABELS[t]).join(', ')}
             </span>
-            {missingWeight ? (
-              <AlertTriangle
-                className="h-3.5 w-3.5 shrink-0 text-orange-500"
-                aria-label="Missing weight"
-              />
-            ) : null}
-          </div>
-        </button>
+          ) : null}
+        </div>
+
+        {onSetQuantity ? (
+          <Popover open={qtyOpen} onOpenChange={setQtyOpen}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs tabular-nums text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label="Change quantity"
+              >
+                ×{item.quantity}
+                <ChevronDown className="h-3 w-3" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-auto p-2">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={() => onSetQuantity(Math.max(1, item.quantity - 1))}
+                  disabled={item.quantity <= 1}
+                  aria-label="Decrease"
+                >
+                  <Minus className="h-3.5 w-3.5" />
+                </Button>
+                <span className="w-8 text-center text-sm font-medium tabular-nums">
+                  {item.quantity}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={() => onSetQuantity(item.quantity + 1)}
+                  aria-label="Increase"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : null}
+
+        <div className="shrink-0 text-right text-sm font-medium tabular-nums">
+          {formatWeight(itemWeight(item))}
+          {item.quantity > 1 ? (
+            <div className="text-[10px] font-normal leading-none text-muted-foreground/70">
+              {formatWeight(item.weightG)} × {item.quantity}
+            </div>
+          ) : null}
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-xs"
+              size="icon"
+              className="h-6 w-6 shrink-0 text-muted-foreground"
               onClick={(e) => e.stopPropagation()}
+              aria-label="Item actions"
             >
-              Move
+              <MoreVertical className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -141,99 +207,37 @@ export function ItemRow({
               <Pencil className="mr-2 h-4 w-4" />
               Edit item
             </DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <ArrowRightLeft className="mr-2 h-4 w-4" />
+                Move to…
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuLabel>Move to…</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => onMove(undefined)}>
+                  Unpacked
+                </DropdownMenuItem>
+                {bags.map((b) => (
+                  <DropdownMenuItem
+                    key={b.id}
+                    disabled={!allowed(b) || b.id === item.bagId}
+                    onClick={() => onMove(b.id)}
+                  >
+                    {b.name}
+                    {!allowed(b) ? (
+                      <span className="ml-auto text-xs text-destructive">blocked</span>
+                    ) : null}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
             <DropdownMenuSeparator />
-            <DropdownMenuLabel>Move to…</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onMove(undefined)}>
-              Unpacked
+            <DropdownMenuItem onClick={onRemove} className="text-destructive">
+              <Trash2 className="mr-2 h-4 w-4" />
+              Remove
             </DropdownMenuItem>
-            {bags.map((b) => (
-              <DropdownMenuItem
-                key={b.id}
-                disabled={!allowed(b) || b.id === item.bagId}
-                onClick={() => onMove(b.id)}
-              >
-                {b.name}
-                {!allowed(b) ? (
-                  <span className="ml-auto text-xs text-destructive">blocked</span>
-                ) : null}
-              </DropdownMenuItem>
-            ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
-          className="mt-1 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
-          aria-label="Remove item"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-
-      {/* Meta row: tags + restrictions + qty + weight */}
-      <div className="flex items-end justify-between gap-2 px-3 pb-2 pt-1">
-        <div className="min-w-0 flex-1">
-          {item.tags.length ? <TagBadges tags={item.tags} /> : null}
-          {item.allowedBagTypes ? (
-            <div className="mt-0.5 truncate text-[10px] text-muted-foreground">
-              only: {item.allowedBagTypes.map((t) => BAG_TYPE_LABELS[t]).join(', ')}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="flex shrink-0 items-center gap-2">
-          {onSetQuantity ? (
-            <Popover open={qtyOpen} onOpenChange={setQtyOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs tabular-nums text-muted-foreground hover:bg-muted hover:text-foreground"
-                  aria-label="Change quantity"
-                >
-                  ×{item.quantity}
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-auto p-2">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={() => onSetQuantity(Math.max(1, item.quantity - 1))}
-                    disabled={item.quantity <= 1}
-                    aria-label="Decrease"
-                  >
-                    <Minus className="h-3.5 w-3.5" />
-                  </Button>
-                  <span className="w-8 text-center text-sm font-medium tabular-nums">
-                    {item.quantity}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={() => onSetQuantity(item.quantity + 1)}
-                    aria-label="Increase"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-          ) : null}
-
-          <div className="text-right text-sm font-medium tabular-nums">
-            {formatWeight(itemWeight(item))}
-            {item.quantity > 1 ? (
-              <div className="text-[10px] font-normal leading-none text-muted-foreground/70">
-                {formatWeight(item.weightG)} × {item.quantity}
-              </div>
-            ) : null}
-          </div>
-        </div>
       </div>
 
       <EditItemDialog

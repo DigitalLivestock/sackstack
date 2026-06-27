@@ -1,4 +1,5 @@
-import { ArrowDownAZ, ArrowDownWideNarrow, ListFilter, X } from 'lucide-react';
+import { ArrowDownAZ, ArrowDownWideNarrow, ListFilter, SlidersHorizontal, X } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export type ItemFilter = 'all' | 'packed' | 'unpacked' | 'missing-weight';
 export type ItemSort = 'manual' | 'name-asc' | 'weight-desc' | 'weight-asc';
@@ -80,6 +81,98 @@ export function ItemFilterBar({
         </button>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * Compact popover-based filter/sort trigger for use inside section headers
+ * (Unpacked tray, individual bag cards). Shows an indicator dot when active.
+ */
+export function CompactItemFilterBar({
+  filter,
+  sort,
+  onFilter,
+  onSort,
+}: {
+  filter: ItemFilter;
+  sort: ItemSort;
+  onFilter: (f: ItemFilter) => void;
+  onSort: (s: ItemSort) => void;
+}) {
+  const active = filter !== 'all' || sort !== 'manual';
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label="Filter and sort"
+          className={`relative inline-flex h-7 w-7 items-center justify-center rounded-md border transition-colors ${
+            active
+              ? 'border-foreground bg-accent text-foreground'
+              : 'border-border text-muted-foreground hover:bg-muted hover:text-foreground'
+          }`}
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" />
+          {active ? (
+            <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-orange-500" />
+          ) : null}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-56 p-2">
+        <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Filter
+        </div>
+        <div className="mb-2 flex flex-wrap gap-1">
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              type="button"
+              onClick={() => onFilter(f.value)}
+              className={`rounded-md border px-2 py-0.5 text-xs transition-colors ${
+                filter === f.value
+                  ? 'border-foreground bg-accent text-foreground'
+                  : 'border-border text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Sort
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {SORTS.map((s) => (
+            <button
+              key={s.value}
+              type="button"
+              onClick={() => onSort(s.value)}
+              className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors ${
+                sort === s.value
+                  ? 'border-foreground bg-accent text-foreground'
+                  : 'border-border text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {s.icon}
+              {s.label}
+            </button>
+          ))}
+        </div>
+        {active ? (
+          <button
+            type="button"
+            onClick={() => {
+              onFilter('all');
+              onSort('manual');
+            }}
+            className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-3 w-3" />
+            Clear
+          </button>
+        ) : null}
+      </PopoverContent>
+    </Popover>
   );
 }
 

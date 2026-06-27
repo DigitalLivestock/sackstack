@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { parseWeightInput } from '@/lib/bag-planner/format';
 import { TagPicker, TagBadges } from './TagPicker';
+import { UnitToggle } from './UnitToggle';
 
 export function AddItemForm({
   customTags,
@@ -33,33 +34,28 @@ export function AddItemForm({
   };
 
   return (
-    <form onSubmit={submit} className="space-y-1.5">
-      <div className="flex flex-wrap items-stretch gap-2">
+    <form onSubmit={submit} className="space-y-2">
+      {/* Row 1: name fills full width */}
+      <Input
+        placeholder="Item name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="w-full"
+      />
+      {/* Row 2: weight + unit + qty + submit */}
+      <div className="flex items-center gap-2">
         <Input
-          placeholder="Item name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          type="number"
+          inputMode="decimal"
+          step="any"
+          min="0"
+          placeholder="0"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
           className="min-w-0 flex-1"
+          aria-label="Weight"
         />
-        <div className="flex shrink-0 items-stretch overflow-hidden rounded-md border border-input">
-          <Input
-            type="number"
-            inputMode="decimal"
-            step="any"
-            min="0"
-            placeholder="0"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            className="w-20 rounded-none border-0 focus-visible:ring-0"
-          />
-          <button
-            type="button"
-            onClick={() => setUnit((u) => (u === 'g' ? 'kg' : 'g'))}
-            className="border-l border-input bg-muted px-2 text-xs font-medium hover:bg-accent"
-          >
-            {unit}
-          </button>
-        </div>
+        <UnitToggle unit={unit} onChange={setUnit} />
         <Input
           type="number"
           min="1"
@@ -75,7 +71,7 @@ export function AddItemForm({
           Add
         </Button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <TagPicker
           selected={tags}
           customTags={customTags}
