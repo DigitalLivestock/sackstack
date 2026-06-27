@@ -67,8 +67,8 @@ export function AddItemForm({
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           className="w-14 shrink-0"
-          aria-label="Antal"
-          title="Antal"
+          aria-label="Quantity"
+          title="Quantity"
         />
         <Button type="submit" size="sm" className="shrink-0">
           <Plus className="h-4 w-4" />

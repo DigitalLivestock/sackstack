@@ -251,7 +251,7 @@ export const ITEMS_IMPORT_TEMPLATE = [
   { name: 'Sleeping bag', weightG: 1200, quantity: 1, tags: ['Sovsaker'] },
   { name: 'Tent', weightG: '2.5kg', tags: ['Sovsaker'] },
   { name: 'Cooking kit', weightG: '450g' },
-  { name: 'Socks', weightG: 80, quantity: 3, tags: ['Kläder'] },
+  { name: 'Socks', weightG: 80, quantity: 3, tags: ['Clothing'] },
   { name: 'Item without weight' },
   {
     name: 'Toiletries bag',

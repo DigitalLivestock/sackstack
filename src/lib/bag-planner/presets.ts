@@ -41,29 +41,29 @@ export function buildBagsFromPresets(presets: PresetBag[]): Bag[] {
 
 export const TRAVEL_SUGGESTIONS: Record<TravelType, ItemSuggestion[]> = {
   hiking: [
-    { name: 'Sovsäck', weightG: 1200, tags: ['Sovsaker'] },
-    { name: 'Vattenflaska', weightG: 600, tags: ['Mat'] },
-    { name: 'Pannlampa', weightG: 90, tags: ['Elektronik'] },
+    { name: 'Sleeping bag', weightG: 1200, tags: ['Sleep gear'] },
+    { name: 'Water bottle', weightG: 600, tags: ['Food'] },
+    { name: 'Headlamp', weightG: 90, tags: ['Electronics'] },
   ],
   normal: [
-    { name: 'Pass', weightG: 50, tags: ['Dokument'], allowedBagTypes: ['hand_luggage', 'personal'] },
-    { name: 'Laddare', weightG: 150, tags: ['Elektronik'] },
-    { name: 'Tandborste', weightG: 20, tags: ['Hygien'] },
+    { name: 'Passport', weightG: 50, tags: ['Documents'], allowedBagTypes: ['hand_luggage', 'personal'] },
+    { name: 'Charger', weightG: 150, tags: ['Electronics'] },
+    { name: 'Toothbrush', weightG: 20, tags: ['Hygiene'] },
   ],
   camping: [
-    { name: 'Tält', weightG: 3000, tags: ['Sovsaker'] },
-    { name: 'Stormkök', weightG: 450, tags: ['Mat'] },
-    { name: 'Sovkudde', weightG: 300, tags: ['Sovsaker'] },
+    { name: 'Tent', weightG: 3000, tags: ['Sleep gear'] },
+    { name: 'Camp stove', weightG: 450, tags: ['Food'] },
+    { name: 'Pillow', weightG: 300, tags: ['Sleep gear'] },
   ],
   business: [
-    { name: 'Laptop', weightG: 1400, tags: ['Elektronik'], allowedBagTypes: ['laptop_bag', 'hand_luggage'] },
-    { name: 'Skjorta', weightG: 220, tags: ['Kläder'] },
-    { name: 'Notisblock', weightG: 180, tags: ['Dokument'] },
+    { name: 'Laptop', weightG: 1400, tags: ['Electronics'], allowedBagTypes: ['laptop_bag', 'hand_luggage'] },
+    { name: 'Shirt', weightG: 220, tags: ['Clothing'] },
+    { name: 'Notebook', weightG: 180, tags: ['Documents'] },
   ],
   beach: [
-    { name: 'Solkräm', weightG: 200, tags: ['Hygien'] },
-    { name: 'Badhandduk', weightG: 350, tags: ['Kläder'] },
-    { name: 'Solglasögon', weightG: 30, tags: ['Kläder'] },
+    { name: 'Sunscreen', weightG: 200, tags: ['Hygiene'] },
+    { name: 'Beach towel', weightG: 350, tags: ['Clothing'] },
+    { name: 'Sunglasses', weightG: 30, tags: ['Clothing'] },
   ],
 };
 

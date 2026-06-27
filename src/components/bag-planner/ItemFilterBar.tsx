@@ -4,17 +4,17 @@ export type ItemFilter = 'all' | 'packed' | 'unpacked' | 'missing-weight';
 export type ItemSort = 'manual' | 'name-asc' | 'weight-desc' | 'weight-asc';
 
 const FILTERS: { value: ItemFilter; label: string }[] = [
-  { value: 'all', label: 'Alla' },
-  { value: 'unpacked', label: 'Ej packat' },
-  { value: 'packed', label: 'Packat' },
-  { value: 'missing-weight', label: 'Vikt saknas' },
+  { value: 'all', label: 'All' },
+  { value: 'unpacked', label: 'Unpacked' },
+  { value: 'packed', label: 'Packed' },
+  { value: 'missing-weight', label: 'Missing weight' },
 ];
 
 const SORTS: { value: ItemSort; label: string; icon: React.ReactNode }[] = [
-  { value: 'manual', label: 'Manuell', icon: <ListFilter className="h-3 w-3" /> },
-  { value: 'name-asc', label: 'Namn (A–Ö)', icon: <ArrowDownAZ className="h-3 w-3" /> },
-  { value: 'weight-desc', label: 'Vikt (tyngst)', icon: <ArrowDownWideNarrow className="h-3 w-3" /> },
-  { value: 'weight-asc', label: 'Vikt (lättast)', icon: <ArrowDownWideNarrow className="h-3 w-3 rotate-180" /> },
+  { value: 'manual', label: 'Manual', icon: <ListFilter className="h-3 w-3" /> },
+  { value: 'name-asc', label: 'Name (A–Z)', icon: <ArrowDownAZ className="h-3 w-3" /> },
+  { value: 'weight-desc', label: 'Weight (heavy)', icon: <ArrowDownWideNarrow className="h-3 w-3" /> },
+  { value: 'weight-asc', label: 'Weight (light)', icon: <ArrowDownWideNarrow className="h-3 w-3 rotate-180" /> },
 ];
 
 export function ItemFilterBar({
@@ -48,7 +48,7 @@ export function ItemFilterBar({
           </button>
         ))}
       </div>
-      <span className="ml-2 font-medium uppercase tracking-wide text-muted-foreground">Sortera</span>
+      <span className="ml-2 font-medium uppercase tracking-wide text-muted-foreground">Sort</span>
       <div className="flex flex-wrap gap-1">
         {SORTS.map((s) => (
           <button
@@ -76,7 +76,7 @@ export function ItemFilterBar({
           className="ml-auto inline-flex items-center gap-1 rounded-md border border-border px-2 py-0.5 text-muted-foreground hover:text-foreground"
         >
           <X className="h-3 w-3" />
-          Rensa
+          Clear
         </button>
       ) : null}
     </div>
@@ -95,7 +95,7 @@ export function applyItemFilterSort<T extends { name: string; weightG: number; q
 
   if (sort !== 'manual') {
     const arr = [...out];
-    if (sort === 'name-asc') arr.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+    if (sort === 'name-asc') arr.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === 'weight-desc')
       arr.sort((a, b) => b.weightG * b.quantity - a.weightG * a.quantity);
     else if (sort === 'weight-asc')

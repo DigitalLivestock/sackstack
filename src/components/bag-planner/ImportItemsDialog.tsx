@@ -48,14 +48,14 @@ export function ImportItemsDialog({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-h-[85vh] max-w-2xl overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Förhandsgranska import</DialogTitle>
+          <DialogTitle>Preview import</DialogTitle>
         </DialogHeader>
         <div className="text-xs text-muted-foreground">
           {rows.length} item{rows.length === 1 ? '' : 's'}
           {missing > 0 ? (
             <span className="ml-2 inline-flex items-center gap-1 rounded bg-orange-500/15 px-1.5 py-0.5 text-orange-600">
               <AlertTriangle className="h-3 w-3" />
-              {missing} saknar vikt
+              {missing} missing weight
             </span>
           ) : null}
         </div>
@@ -98,14 +98,14 @@ export function ImportItemsDialog({
                       })
                     }
                     className="h-8 w-14 text-sm"
-                    aria-label="Antal"
-                    title="Antal"
+                    aria-label="Quantity"
+                    title="Quantity"
                   />
                   <button
                     type="button"
                     onClick={() => remove(row._key)}
                     className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
-                    aria-label="Ta bort"
+                    aria-label="Remove"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -114,7 +114,7 @@ export function ImportItemsDialog({
                   {missingWeight ? (
                     <span className="inline-flex items-center gap-1 rounded bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-medium text-orange-600">
                       <AlertTriangle className="h-3 w-3" />
-                      Vikt saknas
+                      Missing weight
                     </span>
                   ) : null}
                   <TagPicker
@@ -135,19 +135,19 @@ export function ImportItemsDialog({
           })}
           {rows.length === 0 ? (
             <div className="px-2 py-6 text-center text-sm text-muted-foreground">
-              Inga items att importera.
+              No items to import.
             </div>
           ) : null}
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={onClose}>
-            Avbryt
+            Cancel
           </Button>
           <Button
             disabled={!rows.length}
             onClick={() => onConfirm(rows.map(({ _key, ...rest }) => rest))}
           >
-            Importera ({rows.length})
+            Import ({rows.length})
           </Button>
         </DialogFooter>
       </DialogContent>

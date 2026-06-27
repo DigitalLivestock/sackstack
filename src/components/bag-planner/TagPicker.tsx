@@ -49,7 +49,7 @@ export function TagPicker({
       <PopoverTrigger asChild>
         {trigger ?? (
           <Button variant="outline" size="sm" className="h-7 text-xs">
-            Taggar ({selected.length})
+            Tags ({selected.length})
           </Button>
         )}
       </PopoverTrigger>
@@ -82,7 +82,7 @@ export function TagPicker({
               ref={inputRef}
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
-              placeholder="Ny tagg"
+              placeholder="New tag"
               className="h-8 text-sm"
             />
             <Button type="submit" size="sm" className="h-8 px-2">

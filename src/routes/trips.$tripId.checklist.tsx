@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -19,6 +19,9 @@ function ChecklistView() {
   const [groupBy, setGroupBy] = useState<GroupKey>('bag');
   const [tagFilter, setTagFilter] = useState<string | null>(null);
 
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
   const allTags = useMemo(() => {
     if (!trip) return [];
     const set = new Set<string>([...GLOBAL_TAGS, ...trip.customTags]);
@@ -26,11 +29,19 @@ function ChecklistView() {
     return Array.from(set);
   }, [trip]);
 
+  if (!hydrated) {
+    return (
+      <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+        Loading…
+      </div>
+    );
+  }
+
   if (!trip) {
     return (
       <div className="grid min-h-screen place-items-center">
         <Button asChild>
-          <Link to="/">Tillbaka</Link>
+          <Link to="/">Back</Link>
         </Button>
       </div>
     );
@@ -54,7 +65,7 @@ function ChecklistView() {
       }));
       list.push({
         key: 'unpacked',
-        label: 'Ej packat',
+        label: 'Unpacked',
         items: filteredItems.filter((i) => !i.bagId || !trip.bags.some((b) => b.id === i.bagId)),
       });
       return list;
@@ -70,7 +81,7 @@ function ChecklistView() {
       });
       list.push({
         key: 'noperson',
-        label: 'Ingen bärare / ej packat',
+        label: 'No carrier / unpacked',
         items: filteredItems.filter((i) => {
           if (!i.bagId) return true;
           const bag = trip.bags.find((b) => b.id === i.bagId);
@@ -81,13 +92,13 @@ function ChecklistView() {
     }
     // tag
     const tags = Array.from(
-      new Set(filteredItems.flatMap((i) => (i.tags.length ? i.tags : ['Otaggat']))),
+      new Set(filteredItems.flatMap((i) => (i.tags.length ? i.tags : ['Untagged']))),
     );
     return tags.map((t) => ({
       key: t,
       label: t,
       items: filteredItems.filter((i) =>
-        t === 'Otaggat' ? i.tags.length === 0 : i.tags.includes(t),
+        t === 'Untagged' ? i.tags.length === 0 : i.tags.includes(t),
       ),
     }));
   })();
@@ -103,16 +114,16 @@ function ChecklistView() {
           </Button>
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-base font-semibold sm:text-lg">
-              Packlista — {trip.name}
+              Checklist — {trip.name}
             </h1>
             <div className="truncate text-xs text-muted-foreground">
-              {travelTypeLabel(trip)} · {packed}/{total} packat
+              {travelTypeLabel(trip)} · {packed}/{total} packed
             </div>
           </div>
           <Button asChild variant="outline" size="sm">
             <Link to="/trips/$tripId/print" params={{ tripId }}>
               <Printer className="h-4 w-4" />
-              <span className="hidden sm:inline">Skriv ut</span>
+              <span className="hidden sm:inline">Print</span>
             </Link>
           </Button>
         </div>
@@ -128,7 +139,7 @@ function ChecklistView() {
 
       <main className="mx-auto max-w-4xl space-y-4 px-4 py-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium uppercase text-muted-foreground">Gruppera:</span>
+          <span className="text-xs font-medium uppercase text-muted-foreground">Group by:</span>
           {(['bag', 'person', 'tag'] as GroupKey[]).map((g) => (
             <button
               key={g}
@@ -137,7 +148,7 @@ function ChecklistView() {
                 groupBy === g ? 'border-foreground bg-accent' : 'border-border'
               }`}
             >
-              {g === 'bag' ? 'Väska' : g === 'person' ? 'Person' : 'Tagg'}
+              {g === 'bag' ? 'Bag' : g === 'person' ? 'Person' : 'Tag'}
             </button>
           ))}
           <span className="ml-3 text-xs font-medium uppercase text-muted-foreground">Filter:</span>
@@ -147,7 +158,7 @@ function ChecklistView() {
               tagFilter === null ? 'border-foreground bg-accent' : 'border-border'
             }`}
           >
-            Alla
+            All
           </button>
           {allTags.map((t) => (
             <button

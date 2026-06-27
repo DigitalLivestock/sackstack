@@ -102,7 +102,7 @@ export function BagCard({
             {noCarrier ? (
               <span className="inline-flex items-center gap-0.5 rounded bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-medium text-orange-600">
                 <AlertTriangle className="h-3 w-3" />
-                Ingen bärare
+                No carrier
               </span>
             ) : null}
           </div>
@@ -127,19 +127,19 @@ export function BagCard({
               ) : (
                 <>
                   <User className="h-3.5 w-3.5" />
-                  Tilldela
+                  Assign
                 </>
               )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Bär denna väska</DropdownMenuLabel>
+            <DropdownMenuLabel>Carry this bag</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onAssignCarrier(undefined)}>
-              Ingen
+              No one
             </DropdownMenuItem>
             {people.length === 0 ? (
-              <DropdownMenuItem disabled>Inga personer än</DropdownMenuItem>
+              <DropdownMenuItem disabled>No people yet</DropdownMenuItem>
             ) : (
               people.map((p) => (
                 <DropdownMenuItem key={p.id} onClick={() => onAssignCarrier(p.id)}>
@@ -163,12 +163,12 @@ export function BagCard({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Redigera väska
+              Edit bag
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onRemoveBag} className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
-              Ta bort väska
+              Remove bag
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -184,7 +184,7 @@ export function BagCard({
       <div className="flex flex-col gap-1.5">
         {items.length === 0 ? (
           <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
-            Släpp items här, eller använd Move
+            Drop items here, or use Move
           </div>
         ) : (
           items.map((item) => (

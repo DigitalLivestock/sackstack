@@ -108,14 +108,15 @@ function TripPlanner() {
     return map;
   }, [trip, itemFilter, itemSort]);
 
+  if (!hydrated) {
+    return (
+      <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+        Loading…
+      </div>
+    );
+  }
+
   if (!trip) {
-    if (!hydrated) {
-      return (
-        <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
-          Loading…
-        </div>
-      );
-    }
     return (
       <div className="grid min-h-screen place-items-center px-4 text-center">
         <div>
@@ -202,7 +203,7 @@ function TripPlanner() {
               {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items
               {unassignedBags > 0 ? (
                 <span className="ml-2 text-orange-600">
-                  · {unassignedBags} utan bärare
+                  · {unassignedBags} without carrier
                 </span>
               ) : null}
             </div>
@@ -211,13 +212,13 @@ function TripPlanner() {
             <Button asChild variant="outline" size="sm">
               <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }}>
                 <ListChecks className="h-4 w-4" />
-                <span className="hidden sm:inline">Packlista</span>
+                <span className="hidden sm:inline">Checklist</span>
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/trips/$tripId/print" params={{ tripId: trip.id }}>
                 <Printer className="h-4 w-4" />
-                <span className="hidden sm:inline">Skriv ut</span>
+                <span className="hidden sm:inline">Print</span>
               </Link>
             </Button>
             <Button

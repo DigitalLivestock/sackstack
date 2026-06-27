@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { Upload, FileDown, Sparkles } from 'lucide-react';
+import { Upload, FileDown } from 'lucide-react';
 import { downloadTemplate, parseItemsImport, type ItemImport } from '@/lib/bag-planner/trip-io';
 import { toast } from 'sonner';
 import type { Bag, Item, Trip } from '@/lib/bag-planner/types';
@@ -111,7 +111,7 @@ export function UnpackedTray({
       <div className="flex flex-col gap-1.5">
         {items.length === 0 ? (
           <div className="rounded-md border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
-            Lägg till items ovan — de hamnar här, dra sedan till en väska.
+            Add items above — they appear here, then drag them to a bag.
           </div>
         ) : (
           items.map((item) => (
@@ -147,7 +147,7 @@ export function UnpackedTray({
               allowedBagTypes: it.allowedBagTypes,
             }),
           );
-          toast.success(`Importerade ${toImport.length} items`);
+          toast.success(`Imported ${toImport.length} items`);
           setImportPreview(null);
         }}
       />
