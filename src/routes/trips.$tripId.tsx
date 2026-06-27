@@ -244,11 +244,11 @@ function TripPlanner() {
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export</span>
             </Button>
-            <div className="text-right">
-              <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+            <div className="flex items-center gap-2 rounded-lg border-2 border-primary/30 bg-primary/10 px-3 py-1.5 shadow-sm">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
                 Total
               </div>
-              <div className="text-sm font-semibold tabular-nums">
+              <div className="text-base font-bold tabular-nums text-primary">
                 {format(totalWeight)}
               </div>
             </div>
