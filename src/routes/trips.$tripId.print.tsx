@@ -42,11 +42,11 @@ function PrintView() {
     trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-background text-foreground">
       <style>{`
         @media print {
           .no-print { display: none !important; }
-          body { background: white !important; }
+          body { background: white !important; color: black !important; }
           .page-break-avoid { break-inside: avoid; }
         }
       `}</style>
