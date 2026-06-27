@@ -182,7 +182,7 @@ function TripPlanner() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:px-4 sm:py-3">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-4 sm:py-3">
           <div className="flex min-w-0 items-center gap-2">
             <Button asChild variant="ghost" size="icon" className="h-9 w-9 shrink-0">
               <Link to="/" aria-label="Back to trips">
