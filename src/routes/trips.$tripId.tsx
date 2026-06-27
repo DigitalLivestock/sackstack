@@ -22,7 +22,7 @@ import { formatWeight } from '@/lib/bag-planner/format';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
-import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
+import { AddPersonDialog } from '@/components/bag-planner/AddPersonDialog';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
 import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
 import {
