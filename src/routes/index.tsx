@@ -72,11 +72,14 @@ function TripsIndex() {
     <div className="min-h-screen bg-gradient-to-br from-secondary via-background to-accent/30">
       <Toaster position="top-center" richColors />
       <header className="border-b border-border bg-gradient-to-r from-primary/10 via-accent/20 to-chart-3/15 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-4">
-          <img src={logoSvg} alt="" className="h-14 w-auto shrink-0 object-contain drop-shadow-sm sm:h-16" />
+        <div className="mx-auto flex max-w-5xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 sm:py-4">
+          <img src={logoSvg} alt="" className="h-12 w-auto shrink-0 object-contain drop-shadow-sm sm:h-16" />
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-xl font-semibold tracking-tight text-primary sm:text-2xl">Bag Planner</h1>
-            <p className="truncate text-xs text-muted-foreground">
+            <h1 className="font-semibold tracking-tight text-primary leading-[0.95] text-lg sm:text-2xl">
+              <span className="block">Bag</span>
+              <span className="block">Planner</span>
+            </h1>
+            <p className="mt-1 hidden truncate text-xs text-muted-foreground sm:block">
               Plan and balance the weight of your bags before a trip.
             </p>
           </div>
