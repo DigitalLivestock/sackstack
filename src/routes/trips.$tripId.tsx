@@ -18,7 +18,7 @@ import { buildShareUrl } from '@/lib/bag-planner/share-link';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';

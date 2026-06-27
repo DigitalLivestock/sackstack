@@ -6,7 +6,7 @@ import { toast, Toaster } from 'sonner';
 import { useTrips } from '@/hooks/use-trip';
 import { Button } from '@/components/ui/button';
 import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { buildExport, downloadJson, parseImport } from '@/lib/bag-planner/trip-io';
 import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCustomTravelTypesDialog';
 
@@ -36,6 +36,7 @@ function TripsIndex() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
+  const { format } = useDisplayUnit();
 
   useEffect(() => {
     const onErr = (e: Event) => {
@@ -185,7 +186,7 @@ function TripsIndex() {
                         <span>·</span>
                         <span>{trip.items.length} items</span>
                         <span>·</span>
-                        <span className="tabular-nums font-medium text-foreground">{formatWeight(total)}</span>
+                        <span className="tabular-nums font-medium text-foreground">{format(total)}</span>
                       </div>
                     </Link>
                     <button
