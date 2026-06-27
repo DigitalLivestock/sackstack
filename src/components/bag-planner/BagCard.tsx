@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { MoreVertical, Trash2, User, Pencil, AlertTriangle } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, bagEmptyWeight, itemWeight } from '@/lib/bag-planner/types';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
 import { EditBagDialog } from './EditBagDialog';
