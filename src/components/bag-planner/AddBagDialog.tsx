@@ -92,6 +92,19 @@ export function AddBagDialog({ onAdd }: { onAdd: (bag: Omit<Bag, 'id'>) => void 
               placeholder="e.g. 8"
             />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="bag-empty">Bag's own weight (kg, optional)</Label>
+            <Input
+              id="bag-empty"
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              value={empty}
+              onChange={(e) => setEmpty(e.target.value)}
+              placeholder="e.g. 1.2"
+            />
+          </div>
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>
