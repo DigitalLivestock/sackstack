@@ -310,7 +310,7 @@ function TripPlanner() {
             <aside className="space-y-3">
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-semibold">Trip Summary</h3>
-                <div className="mt-3 space-y-2 text-sm">
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Items</span>
                     <span className="font-medium">{trip.items.length}</span>
@@ -323,12 +323,28 @@ function TripPlanner() {
                     <span className="text-muted-foreground">Carriers</span>
                     <span className="font-medium">{trip.people.length}</span>
                   </div>
-                  {unassignedBags > 0 && (
-                    <div className="pt-1 text-xs font-medium text-orange-600">
-                      {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
-                    </div>
-                  )}
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total</span>
+                    <span className="font-medium tabular-nums">{format(totalWeight)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Packed</span>
+                    <span className="font-medium">
+                      {trip.items.filter((i) => i.packed).length} / {trip.items.length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Missing weight</span>
+                    <span className="font-medium">
+                      {trip.items.filter((i) => i.weightG === 0).length}
+                    </span>
+                  </div>
                 </div>
+                {unassignedBags > 0 && (
+                  <div className="mt-3 text-xs font-medium text-orange-600">
+                    {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
+                  </div>
+                )}
               </div>
             </aside>
           </div>
