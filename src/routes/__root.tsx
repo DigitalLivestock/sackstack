@@ -1,3 +1,5 @@
+const APP_VERSION = "1.0.0";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
