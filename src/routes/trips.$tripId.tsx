@@ -10,9 +10,10 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { ArrowLeft, Download, ListChecks, Printer } from 'lucide-react';
+import { ArrowLeft, Download, ListChecks, Printer, Share2 } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
+import { buildShareUrl } from '@/lib/bag-planner/share-link';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
@@ -220,6 +221,27 @@ function TripPlanner() {
                 <Printer className="h-4 w-4" />
                 <span className="hidden sm:inline">Print</span>
               </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                try {
+                  const url = buildShareUrl(trip);
+                  if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(url);
+                    toast.success('Share link copied to clipboard');
+                  } else {
+                    window.prompt('Copy this share link', url);
+                  }
+                } catch {
+                  toast.error('Could not create share link');
+                }
+              }}
+              aria-label="Copy share link"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Share</span>
             </Button>
             <Button
               variant="outline"
