@@ -50,7 +50,7 @@ export function SuggestionsPopover({
             No suggestions for this travel type.
           </div>
         ) : (
-          <div className="space-y-0.5">
+          <div className="max-h-72 overflow-y-auto space-y-0.5">
             {suggestions.map((s, i) => (
               <button
                 key={i}
