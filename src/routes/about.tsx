@@ -12,12 +12,12 @@ export const Route = createFileRoute('/about')({
       {
         name: 'description',
         content:
-          'Learn what Sack Stack does and how it helps you organize packing for any trip.',
+          'Learn what Sack Stack does and how this free packing planner helps you organize any trip.',
       },
       { property: 'og:title', content: 'About — Sack Stack' },
       {
         property: 'og:description',
-        content: 'Plan and balance packing weights for any trip, with any carrier.',
+        content: 'Free packing planner — plan and balance packing weights for any trip, with any carrier.',
       },
     ],
   }),

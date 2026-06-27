@@ -14,16 +14,16 @@ import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCu
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: 'Sack Stack — plan and balance your packing' },
+      { title: 'Sack Stack — free packing planner' },
       {
         name: 'description',
         content:
-          'Plan bag weights for any trip. Split items across bags, assign carriers, and never overpack again.',
+          'Free packing planner. Split items across bags, assign carriers, and never overpack again.',
       },
-      { property: 'og:title', content: 'Sack Stack' },
+      { property: 'og:title', content: 'Sack Stack — free packing planner' },
       {
         property: 'og:description',
-        content: 'Plan bag weights for any trip with carriers, bags, and item weights.',
+        content: 'Free packing planner for any trip with carriers, bags, and item weights.',
       },
     ],
   }),
