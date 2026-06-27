@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
@@ -42,6 +42,24 @@ function PrintView() {
     trip.items.reduce((s, i) => s + itemWeight(i), 0) +
     trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
 
+  const carriers = useMemo(() => {
+    return trip.people.map((p) => {
+      const bags = trip.bags.filter((b) => b.carrierId === p.id);
+      const w = bags.reduce(
+        (s, b) =>
+          s +
+          bagEmptyWeight(b) +
+          trip.items
+            .filter((i) => i.bagId === b.id)
+            .reduce((ss, i) => ss + itemWeight(i), 0),
+        0,
+      );
+      return { ...p, bags, weight: w };
+    });
+  }, [trip]);
+
+  const maxCarrierWeight = Math.max(...carriers.map((c) => c.weight), 1);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <style>{`
@@ -49,6 +67,10 @@ function PrintView() {
           .no-print { display: none !important; }
           body { background: white !important; color: black !important; }
           .page-break-avoid { break-inside: avoid; }
+          .print-box { border: 1px solid #999 !important; }
+          .print-muted { color: #444 !important; }
+          .print-bar-bg { background: #e5e5e5 !important; }
+          .print-bar-fill { background: #333 !important; }
         }
       `}</style>
       <header className="no-print sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
@@ -66,35 +88,40 @@ function PrintView() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl space-y-6 px-6 py-8 print:px-0 print:py-0">
+      <main className="mx-auto max-w-3xl space-y-5 px-6 py-6 print:px-0 print:py-0">
         <div>
-          <h1 className="text-2xl font-bold">Packing list — {trip.name}</h1>
-          <p className="text-sm text-gray-700">
-            {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items ·{' '}
-            Total weight {format(totalAll)}
+          <h1 className="text-xl font-bold print:text-2xl">Packing list — {trip.name}</h1>
+          <p className="text-sm text-muted-foreground print:text-black print-muted">
+            {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items · Total {format(totalAll)}
           </p>
-          {trip.people.length ? (
-            <p className="mt-1 text-sm">
-              <span className="font-semibold">Carriers: </span>
-              {trip.people
-                .map((p) => {
-                  const w = trip.bags
-                    .filter((b) => b.carrierId === p.id)
-                    .reduce(
-                      (s, b) =>
-                        s +
-                        bagEmptyWeight(b) +
-                        trip.items
-                          .filter((i) => i.bagId === b.id)
-                          .reduce((ss, i) => ss + itemWeight(i), 0),
-                      0,
-                    );
-                  return `${p.name} (${format(w)})`;
-                })
-                .join(', ')}
-            </p>
-          ) : null}
         </div>
+
+        {carriers.length > 0 && (
+          <section className="page-break-avoid print-box rounded-lg border border-border p-3">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground print:text-black">
+              Weight by carrier
+            </h2>
+            <div className="space-y-2">
+              {carriers.map((c) => {
+                const pct = Math.round((c.weight / maxCarrierWeight) * 100);
+                return (
+                  <div key={c.id} className="flex items-center gap-3">
+                    <span className="w-24 shrink-0 truncate text-sm font-medium">{c.name}</span>
+                    <div className="h-3 flex-1 overflow-hidden rounded-sm print-bar-bg bg-muted">
+                      <div
+                        className="h-full rounded-sm bg-primary print-bar-fill"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="w-20 shrink-0 text-right text-sm tabular-nums font-medium">
+                      {format(c.weight)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {trip.bags.map((bag) => {
           const items = trip.items.filter((i) => i.bagId === bag.id);
@@ -104,40 +131,45 @@ function PrintView() {
           return (
             <section
               key={bag.id}
-              className="page-break-avoid rounded-md border border-gray-300 p-4"
+              className="page-break-avoid print-box rounded-lg border border-border p-3"
             >
-              <div className="mb-2 flex items-baseline justify-between border-b border-gray-200 pb-1">
-                <h2 className="text-lg font-semibold">
+              <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-1 border-b border-border pb-1">
+                <h2 className="text-base font-semibold">
                   {bag.name}
                   {!carrier ? (
-                    <span className="ml-2 rounded bg-orange-100 px-1.5 py-0.5 text-xs text-orange-700">
+                    <span className="ml-2 rounded border border-orange-500/60 px-1.5 py-0.5 text-[10px] font-medium text-orange-700 print:border-gray-600 print:text-gray-700">
                       No carrier
                     </span>
                   ) : null}
                 </h2>
-                <div className="text-sm text-gray-600">
-                  {carrier ? `Carried by ${carrier.name}` : ''} · {format(total)}
+                <div className="text-xs text-muted-foreground print:text-black print-muted">
+                  {carrier ? `Carried by ${carrier.name} · ` : ''}
+                  {format(total)}
                   {bag.weightLimitG ? ` / ${format(bag.weightLimitG)}` : ''}
-                  {bag.emptyWeightG ? ` (bag ${format(bag.emptyWeightG)})` : ''}
+                  {bag.emptyWeightG ? ` · bag ${format(bag.emptyWeightG)}` : ''}
                 </div>
               </div>
               {items.length === 0 ? (
-                <p className="text-sm italic text-gray-500">Empty</p>
+                <p className="text-sm italic text-muted-foreground">Empty</p>
               ) : (
-                <ul className="space-y-1">
+                <ul className="space-y-0.5">
                   {items.map((i) => (
-                    <li key={i.id} className="flex items-center gap-2 text-sm">
-                      <span className="inline-block h-4 w-4 shrink-0 border border-gray-500" />
-                      <span className="flex-1">
+                    <li key={i.id} className="flex items-center gap-2 py-0.5 text-sm">
+                      <span className="inline-block h-3.5 w-3.5 shrink-0 border border-current text-center text-[10px] leading-3">
+                        {i.packed ? '✓' : ''}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate">
                         {i.name}
                         {i.quantity > 1 ? (
-                          <span className="text-gray-600"> × {i.quantity}</span>
-                        ) : null}
-                        {i.tags.length ? (
-                          <span className="ml-2 text-xs text-gray-500">[{i.tags.join(', ')}]</span>
+                          <span className="text-muted-foreground print:text-gray-600"> × {i.quantity}</span>
                         ) : null}
                       </span>
-                      <span className="tabular-nums text-gray-700">
+                      {i.tags.length ? (
+                        <span className="hidden shrink-0 text-[10px] text-muted-foreground print:inline print:text-gray-500">
+                          {i.tags.join(' · ')}
+                        </span>
+                      ) : null}
+                      <span className="w-16 shrink-0 text-right tabular-nums text-muted-foreground print:text-black">
                         {format(itemWeight(i))}
                       </span>
                     </li>
@@ -149,17 +181,21 @@ function PrintView() {
         })}
 
         {unpacked.length ? (
-          <section className="page-break-avoid rounded-md border border-dashed border-gray-400 p-4">
-            <h2 className="mb-2 text-lg font-semibold">Unpacked</h2>
-            <ul className="space-y-1">
+          <section className="page-break-avoid print-box rounded-lg border border-dashed border-border p-3">
+            <h2 className="mb-1.5 text-base font-semibold">Unpacked</h2>
+            <ul className="space-y-0.5">
               {unpacked.map((i) => (
-                <li key={i.id} className="flex items-center gap-2 text-sm">
-                  <span className="inline-block h-4 w-4 shrink-0 border border-gray-500" />
-                  <span className="flex-1">
-                    {i.name}
-                    {i.quantity > 1 ? <span className="text-gray-600"> × {i.quantity}</span> : null}
+                <li key={i.id} className="flex items-center gap-2 py-0.5 text-sm">
+                  <span className="inline-block h-3.5 w-3.5 shrink-0 border border-current text-center text-[10px] leading-3">
+                    {i.packed ? '✓' : ''}
                   </span>
-                  <span className="tabular-nums text-gray-700">
+                  <span className="min-w-0 flex-1 truncate">
+                    {i.name}
+                    {i.quantity > 1 ? (
+                      <span className="text-muted-foreground print:text-gray-600"> × {i.quantity}</span>
+                    ) : null}
+                  </span>
+                  <span className="w-16 shrink-0 text-right tabular-nums text-muted-foreground print:text-black">
                     {format(itemWeight(i))}
                   </span>
                 </li>

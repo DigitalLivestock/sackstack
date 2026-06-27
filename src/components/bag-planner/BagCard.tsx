@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { MoreVertical, Trash2, User, Pencil, AlertTriangle } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, bagEmptyWeight, itemWeight } from '@/lib/bag-planner/types';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
 import { EditBagDialog } from './EditBagDialog';
@@ -76,6 +77,7 @@ export function BagCard({
   const [filter, setFilter] = useState<ItemFilter>('all');
   const [sort, setSort] = useState<ItemSort>('manual');
   const visible = applyItemFilterSort(items, filter, sort);
+  const { format } = useDisplayUnit();
 
   void activeDragItemId;
   const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
@@ -193,7 +195,7 @@ export function BagCard({
       <WeightBar current={currentTotal} limit={bag.weightLimitG} />
       {empty > 0 ? (
         <div className="-mt-1 text-[11px] tabular-nums text-muted-foreground">
-          Bag own weight: {(empty / 1000).toFixed(empty % 1000 === 0 ? 0 : 2)} kg
+          Bag own weight: {format(empty)}
         </div>
       ) : null}
 

@@ -297,9 +297,9 @@ function TripPlanner() {
             </section>
 
             <aside className="space-y-3">
-              <div className="rounded-xl border border-border bg-card p-4">
+              <div className="rounded-xl border border-border bg-card p-3">
                 <h3 className="text-sm font-semibold">Trip Summary</h3>
-                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Items</span>
                     <span className="font-medium">{trip.items.length}</span>
@@ -320,7 +320,7 @@ function TripPlanner() {
                   </div>
                 </div>
                 {unassignedBags > 0 && (
-                  <div className="mt-3 text-xs font-medium text-orange-600">
+                  <div className="mt-2 text-xs font-medium text-orange-600">
                     {unassignedBags} bag{unassignedBags === 1 ? '' : 's'} without carrier
                   </div>
                 )}
