@@ -9,12 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ShareRouteImport } from './routes/share'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TripsNewRouteImport } from './routes/trips.new'
 import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
 import { Route as TripsTripIdPrintRouteImport } from './routes/trips.$tripId.print'
 import { Route as TripsTripIdChecklistRouteImport } from './routes/trips.$tripId.checklist'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +61,9 @@ const TripsTripIdChecklistRoute = TripsTripIdChecklistRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/privacy': typeof PrivacyRoute
+  '/share': typeof ShareRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
   '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
@@ -50,6 +71,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/privacy': typeof PrivacyRoute
+  '/share': typeof ShareRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
   '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
@@ -58,6 +82,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/privacy': typeof PrivacyRoute
+  '/share': typeof ShareRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/trips/$tripId': typeof TripsTripIdRouteWithChildren
   '/trips/new': typeof TripsNewRoute
   '/trips/$tripId/checklist': typeof TripsTripIdChecklistRoute
@@ -67,6 +94,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/privacy'
+    | '/share'
+    | '/sitemap.xml'
     | '/trips/$tripId'
     | '/trips/new'
     | '/trips/$tripId/checklist'
@@ -74,6 +104,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/privacy'
+    | '/share'
+    | '/sitemap.xml'
     | '/trips/$tripId'
     | '/trips/new'
     | '/trips/$tripId/checklist'
@@ -81,6 +114,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/privacy'
+    | '/share'
+    | '/sitemap.xml'
     | '/trips/$tripId'
     | '/trips/new'
     | '/trips/$tripId/checklist'
@@ -89,12 +125,36 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ShareRoute: typeof ShareRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TripsTripIdRoute: typeof TripsTripIdRouteWithChildren
   TripsNewRoute: typeof TripsNewRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -149,6 +209,9 @@ const TripsTripIdRouteWithChildren = TripsTripIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PrivacyRoute: PrivacyRoute,
+  ShareRoute: ShareRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TripsTripIdRoute: TripsTripIdRouteWithChildren,
   TripsNewRoute: TripsNewRoute,
 }
