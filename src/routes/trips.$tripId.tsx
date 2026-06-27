@@ -312,7 +312,6 @@ function TripPlanner() {
                   </div>
                 );
               })}
-              <AddPersonInline onAdd={addPerson} />
             </div>
           </section>
 
