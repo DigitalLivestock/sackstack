@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export const Route = createFileRoute('/trips/$tripId/print')({
   component: PrintView,
@@ -13,6 +13,7 @@ export const Route = createFileRoute('/trips/$tripId/print')({
 function PrintView() {
   const { tripId } = Route.useParams();
   const { trip } = useTrip(tripId);
+  const { format } = useDisplayUnit();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 

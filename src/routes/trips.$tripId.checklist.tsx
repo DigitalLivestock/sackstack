@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTrip } from '@/hooks/use-trip';
 import { itemWeight, travelTypeLabel, GLOBAL_TAGS } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export const Route = createFileRoute('/trips/$tripId/checklist')({
   component: ChecklistView,
@@ -16,6 +16,7 @@ type GroupKey = 'bag' | 'person' | 'tag';
 function ChecklistView() {
   const { tripId } = Route.useParams();
   const { trip, toggleItemPacked } = useTrip(tripId);
+  const { format } = useDisplayUnit();
   const [groupBy, setGroupBy] = useState<GroupKey>('bag');
   const [tagFilter, setTagFilter] = useState<string | null>(null);
 
