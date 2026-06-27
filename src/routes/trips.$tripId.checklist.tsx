@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTrip } from '@/hooks/use-trip';
 import { itemWeight, travelTypeLabel, GLOBAL_TAGS } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export const Route = createFileRoute('/trips/$tripId/checklist')({
   component: ChecklistView,
@@ -16,6 +16,7 @@ type GroupKey = 'bag' | 'person' | 'tag';
 function ChecklistView() {
   const { tripId } = Route.useParams();
   const { trip, toggleItemPacked } = useTrip(tripId);
+  const { format } = useDisplayUnit();
   const [groupBy, setGroupBy] = useState<GroupKey>('bag');
   const [tagFilter, setTagFilter] = useState<string | null>(null);
 
@@ -185,7 +186,7 @@ function ChecklistView() {
               <header className="flex items-center justify-between border-b border-border bg-muted/30 px-3 py-2">
                 <div className="text-sm font-semibold">{g.label}</div>
                 <div className="text-xs tabular-nums text-muted-foreground">
-                  {gPacked}/{g.items.length} · {formatWeight(gWeight)}
+                  {gPacked}/{g.items.length} · {format(gWeight)}
                 </div>
               </header>
               <ul className="divide-y divide-border">
@@ -212,7 +213,7 @@ function ChecklistView() {
                       ) : null}
                     </div>
                     <span className="text-xs tabular-nums text-muted-foreground">
-                      {formatWeight(itemWeight(i))}
+                      {format(itemWeight(i))}
                     </span>
                   </li>
                 ))}

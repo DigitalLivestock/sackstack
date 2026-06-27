@@ -1,6 +1,7 @@
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export function WeightBar({ current, limit }: { current: number; limit?: number }) {
+  const { format } = useDisplayUnit();
   const pct = limit ? Math.min(100, (current / limit) * 100) : 0;
   const over = limit ? current > limit : false;
   const near = limit ? current / limit > 0.85 : false;
@@ -15,11 +16,11 @@ export function WeightBar({ current, limit }: { current: number; limit?: number 
     <div className="space-y-1">
       <div className="flex items-baseline justify-between text-xs">
         <span className="font-medium text-foreground tabular-nums">
-          {formatWeight(current)}
+          {format(current)}
         </span>
         {limit ? (
           <span className={over ? 'text-destructive' : 'text-muted-foreground'}>
-            / {formatWeight(limit)}
+            / {format(limit)}
           </span>
         ) : (
           <span className="text-muted-foreground">no limit</span>

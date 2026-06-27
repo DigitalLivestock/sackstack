@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export const Route = createFileRoute('/trips/$tripId/print')({
   component: PrintView,
@@ -13,6 +13,7 @@ export const Route = createFileRoute('/trips/$tripId/print')({
 function PrintView() {
   const { tripId } = Route.useParams();
   const { trip } = useTrip(tripId);
+  const { format } = useDisplayUnit();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
@@ -70,7 +71,7 @@ function PrintView() {
           <h1 className="text-2xl font-bold">Packing list — {trip.name}</h1>
           <p className="text-sm text-gray-700">
             {travelTypeLabel(trip)} · {trip.bags.length} bags · {trip.items.length} items ·{' '}
-            Total weight {formatWeight(totalAll)}
+            Total weight {format(totalAll)}
           </p>
           {trip.people.length ? (
             <p className="mt-1 text-sm">
@@ -88,7 +89,7 @@ function PrintView() {
                           .reduce((ss, i) => ss + itemWeight(i), 0),
                       0,
                     );
-                  return `${p.name} (${formatWeight(w)})`;
+                  return `${p.name} (${format(w)})`;
                 })
                 .join(', ')}
             </p>
@@ -115,9 +116,9 @@ function PrintView() {
                   ) : null}
                 </h2>
                 <div className="text-sm text-gray-600">
-                  {carrier ? `Carried by ${carrier.name}` : ''} · {formatWeight(total)}
-                  {bag.weightLimitG ? ` / ${formatWeight(bag.weightLimitG)}` : ''}
-                  {bag.emptyWeightG ? ` (bag ${formatWeight(bag.emptyWeightG)})` : ''}
+                  {carrier ? `Carried by ${carrier.name}` : ''} · {format(total)}
+                  {bag.weightLimitG ? ` / ${format(bag.weightLimitG)}` : ''}
+                  {bag.emptyWeightG ? ` (bag ${format(bag.emptyWeightG)})` : ''}
                 </div>
               </div>
               {items.length === 0 ? (
@@ -137,7 +138,7 @@ function PrintView() {
                         ) : null}
                       </span>
                       <span className="tabular-nums text-gray-700">
-                        {formatWeight(itemWeight(i))}
+                        {format(itemWeight(i))}
                       </span>
                     </li>
                   ))}
@@ -159,7 +160,7 @@ function PrintView() {
                     {i.quantity > 1 ? <span className="text-gray-600"> × {i.quantity}</span> : null}
                   </span>
                   <span className="tabular-nums text-gray-700">
-                    {formatWeight(itemWeight(i))}
+                    {format(itemWeight(i))}
                   </span>
                 </li>
               ))}

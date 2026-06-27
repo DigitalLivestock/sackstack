@@ -11,7 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BAG_TYPE_LABELS, type BagType, type Item } from '@/lib/bag-planner/types';
-import { formatWeight, parseWeightInput } from '@/lib/bag-planner/format';
+import { parseWeightInput } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { TagPicker, TagBadges } from './TagPicker';
 
 const ALL_BAG_TYPES = Object.keys(BAG_TYPE_LABELS) as BagType[];
@@ -38,6 +39,7 @@ export function EditItemDialog({
   const [tags, setTags] = useState<string[]>(item.tags);
   const [allowed, setAllowed] = useState<BagType[]>(item.allowedBagTypes ?? []);
   const [packed, setPacked] = useState(item.packed);
+  const { format } = useDisplayUnit();
 
   useEffect(() => {
     if (open) {
@@ -108,7 +110,7 @@ export function EditItemDialog({
                   {unit}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground">Current: {formatWeight(item.weightG)}</p>
+              <p className="text-xs text-muted-foreground">Current: {format(item.weightG)}</p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="edit-item-qty">Quantity</Label>
@@ -121,7 +123,7 @@ export function EditItemDialog({
                 onChange={(e) => setQuantity(parseInt(e.target.value || '1', 10))}
               />
               <p className="text-xs text-muted-foreground">
-                Total: {formatWeight(parseWeightInput(weight || '0', unit) * Math.max(1, quantity))}
+                Total: {format(parseWeightInput(weight || '0', unit) * Math.max(1, quantity))}
               </p>
             </div>
           </div>

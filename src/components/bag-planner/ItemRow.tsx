@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import type { Item, Bag } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, itemWeight } from '@/lib/bag-planner/types';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -68,6 +68,7 @@ export function ItemRow({
   const [editOpen, setEditOpen] = useState(false);
   const [qtyOpen, setQtyOpen] = useState(false);
   const missingWeight = item.weightG === 0;
+  const { format } = useDisplayUnit();
 
   const allowed = (b: Bag) =>
     !item.allowedBagTypes || item.allowedBagTypes.includes(b.type);
@@ -182,10 +183,10 @@ export function ItemRow({
         ) : null}
 
         <div className="shrink-0 text-right text-sm font-medium tabular-nums">
-          {formatWeight(itemWeight(item))}
+          {format(itemWeight(item))}
           {item.quantity > 1 ? (
             <div className="text-[10px] font-normal leading-none text-muted-foreground/70">
-              {formatWeight(item.weightG)} × {item.quantity}
+              {format(item.weightG)} × {item.quantity}
             </div>
           ) : null}
         </div>

@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/popover';
 import type { Item, ItemSuggestion, Trip, TravelType } from '@/lib/bag-planner/types';
 import { TRAVEL_SUGGESTIONS } from '@/lib/bag-planner/presets';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { loadCustomTravelTypes } from '@/hooks/use-custom-travel-types';
 
 const BUILTIN: TravelType[] = ['hiking', 'normal', 'camping', 'business', 'beach'];
@@ -27,6 +27,7 @@ export function SuggestionsPopover({
     const fromGlobal = loadCustomTravelTypes().find((c) => c.id === trip.travelType);
     return fromGlobal?.itemSuggestions ?? [];
   }, [trip]);
+  const { format } = useDisplayUnit();
 
 
   return (
@@ -73,7 +74,7 @@ export function SuggestionsPopover({
                   ) : null}
                 </div>
                 <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                  {formatWeight(s.weightG)}
+                  {format(s.weightG)}
                 </span>
                 <Plus className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               </button>
