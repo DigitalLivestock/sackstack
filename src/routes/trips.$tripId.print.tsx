@@ -71,6 +71,7 @@ function PrintView() {
                     .reduce(
                       (s, b) =>
                         s +
+                        bagEmptyWeight(b) +
                         trip.items
                           .filter((i) => i.bagId === b.id)
                           .reduce((ss, i) => ss + itemWeight(i), 0),
