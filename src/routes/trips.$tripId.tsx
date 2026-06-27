@@ -182,7 +182,7 @@ function TripPlanner() {
     <div className="min-h-screen bg-background">
       <Toaster position="top-center" richColors />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:px-4 sm:py-3">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-4 sm:py-3">
           <div className="flex min-w-0 items-center gap-2">
             <Button asChild variant="ghost" size="icon" className="h-9 w-9 shrink-0">
               <Link to="/" aria-label="Back to trips">
@@ -206,7 +206,7 @@ function TripPlanner() {
               </div>
             </div>
           </div>
-          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:overflow-visible sm:px-0">
             <div className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
               <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
                 <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
