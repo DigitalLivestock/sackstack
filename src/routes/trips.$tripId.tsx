@@ -206,7 +206,7 @@ function TripPlanner() {
               </div>
             </div>
           </div>
-          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+          <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:overflow-visible sm:px-0">
             <div className="inline-flex items-center gap-0.5 rounded-lg border border-border bg-card p-1 shadow-sm">
               <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
                 <Link to="/trips/$tripId/checklist" params={{ tripId: trip.id }} aria-label="Checklist">
