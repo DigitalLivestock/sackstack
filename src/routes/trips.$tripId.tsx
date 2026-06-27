@@ -270,7 +270,7 @@ function TripPlanner() {
 
 
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <main className="mx-auto max-w-6xl space-y-6 px-4 py-6">
+        <main className="mx-auto max-w-6xl space-y-6 px-3 py-4 sm:px-4 sm:py-6">
           {/* Carriers */}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_440px]">
             <section className="space-y-2">
