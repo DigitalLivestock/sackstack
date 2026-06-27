@@ -24,7 +24,7 @@ import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
 import { PersonChip } from '@/components/bag-planner/PersonChip';
 import { AddPersonInline } from '@/components/bag-planner/AddPersonInline';
 import { AddBagDialog } from '@/components/bag-planner/AddBagDialog';
-import { CustomTravelTypeDialog } from '@/components/bag-planner/CustomTravelTypeDialog';
+
 
 export const Route = createFileRoute('/trips/$tripId')({
   component: TripPlanner,
@@ -61,10 +61,8 @@ function TripPlanner() {
     updatePerson,
     removePerson,
     assignCarrier,
-    addCustomTravelType,
-    removeCustomTravelType,
-    setTravelType,
   } = useTrip(tripId);
+
 
   const [activeDrag, setActiveDrag] = useState<
     | { kind: 'item'; itemId: string }
