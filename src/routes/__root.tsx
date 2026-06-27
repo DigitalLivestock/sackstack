@@ -20,7 +20,7 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-background/50">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
-        <span>© {new Date().getFullYear()} Östra Aros Teknologi AB. All rights reserved.</span>
+        <span>No accounts. No tracking. Your data stays in this browser.</span>
         <div className="flex items-center gap-3">
           <DisplayUnitSelect />
           <span className="text-muted-foreground/60">v{APP_VERSION}</span>
