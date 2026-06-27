@@ -122,9 +122,6 @@ function TripPlanner() {
     );
   }
 
-  const totalWeight =
-    trip.items.reduce((s, i) => s + itemWeight(i), 0) +
-    trip.bags.reduce((s, b) => s + bagEmptyWeight(b), 0);
   const unassignedBags = trip.bags.filter((b) => !b.carrierId).length;
 
   const handleDragStart = (e: DragStartEvent) => {
@@ -248,14 +245,6 @@ function TripPlanner() {
                 <span className="hidden md:inline">Export</span>
               </Button>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border-2 border-primary/30 bg-primary/10 px-3 py-1.5 shadow-sm">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                Total
-              </div>
-              <div className="text-base font-bold tabular-nums text-primary">
-                {format(totalWeight)}
-              </div>
-            </div>
           </div>
         </div>
       </header>
@@ -324,19 +313,9 @@ function TripPlanner() {
                     <span className="font-medium">{trip.people.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Total</span>
-                    <span className="font-medium tabular-nums">{format(totalWeight)}</span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-muted-foreground">Packed</span>
                     <span className="font-medium">
                       {trip.items.filter((i) => i.packed).length} / {trip.items.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Missing weight</span>
-                    <span className="font-medium">
-                      {trip.items.filter((i) => i.weightG === 0).length}
                     </span>
                   </div>
                 </div>
