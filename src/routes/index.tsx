@@ -76,8 +76,8 @@ function TripsIndex() {
           <img src={logoSvg} alt="" className="h-12 w-auto shrink-0 object-contain drop-shadow-sm sm:h-16" />
           <div className="min-w-0 flex-1">
             <h1 className="font-semibold tracking-tight text-primary leading-[0.95] text-lg sm:text-2xl">
-              <span className="block">Bag</span>
-              <span className="block">Planner</span>
+              <span className="block">Sack</span>
+              <span className="block">Stack</span>
             </h1>
             <p className="mt-1 hidden truncate text-xs text-muted-foreground sm:block">
               Plan and balance the weight of your bags before a trip.
