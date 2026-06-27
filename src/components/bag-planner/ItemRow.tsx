@@ -105,7 +105,7 @@ export function ItemRow({
             {item.packed ? (
               <Check
                 className="h-3.5 w-3.5 shrink-0 text-green-600"
-                aria-label="Packat"
+                aria-label="Packed"
               />
             ) : null}
             <span
@@ -119,7 +119,7 @@ export function ItemRow({
             {missingWeight ? (
               <AlertTriangle
                 className="h-3.5 w-3.5 shrink-0 text-orange-500"
-                aria-label="Vikt saknas"
+                aria-label="Missing weight"
               />
             ) : null}
           </div>
@@ -190,7 +190,7 @@ export function ItemRow({
                 <button
                   type="button"
                   className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-xs tabular-nums text-muted-foreground hover:bg-muted hover:text-foreground"
-                  aria-label="Ändra antal"
+                  aria-label="Change quantity"
                 >
                   ×{item.quantity}
                   <ChevronDown className="h-3 w-3" />
@@ -204,7 +204,7 @@ export function ItemRow({
                     className="h-7 w-7"
                     onClick={() => onSetQuantity(Math.max(1, item.quantity - 1))}
                     disabled={item.quantity <= 1}
-                    aria-label="Minska"
+                    aria-label="Decrease"
                   >
                     <Minus className="h-3.5 w-3.5" />
                   </Button>
@@ -216,7 +216,7 @@ export function ItemRow({
                     size="icon"
                     className="h-7 w-7"
                     onClick={() => onSetQuantity(item.quantity + 1)}
-                    aria-label="Öka"
+                    aria-label="Increase"
                   >
                     <Plus className="h-3.5 w-3.5" />
                   </Button>

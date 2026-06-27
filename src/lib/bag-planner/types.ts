@@ -94,14 +94,14 @@ export const TRAVEL_TYPE_EMOJI: Record<TravelType, string> = {
 };
 
 export const GLOBAL_TAGS = [
-  'Kläder',
-  'Elektronik',
-  'Hygien',
-  'Mat',
-  'Sovsaker',
-  'Dokument',
-  'Verktyg',
-  'Första hjälpen',
+  'Clothing',
+  'Electronics',
+  'Hygiene',
+  'Food',
+  'Sleep gear',
+  'Documents',
+  'Tools',
+  'First aid',
 ];
 
 export function itemWeight(i: Pick<Item, 'weightG' | 'quantity'>): number {

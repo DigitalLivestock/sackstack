@@ -33,16 +33,16 @@ export function SuggestionsPopover({
           className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted"
         >
           <Sparkles className="h-3.5 w-3.5" />
-          Förslag
+          Suggestions
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-2" align="start">
         <div className="mb-1 px-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Förslag för resetypen
+          Suggestions for this travel type
         </div>
         {suggestions.length === 0 ? (
           <div className="px-2 py-4 text-center text-xs text-muted-foreground">
-            Inga förslag för denna resetyp.
+            No suggestions for this travel type.
           </div>
         ) : (
           <div className="space-y-0.5">

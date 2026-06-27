@@ -89,7 +89,7 @@ export function EditItemDialog({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>Vikt per styck</Label>
+              <Label>Weight per item</Label>
               <div className="flex items-stretch overflow-hidden rounded-md border border-input">
                 <Input
                   type="number"
@@ -108,10 +108,10 @@ export function EditItemDialog({
                   {unit}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground">Nu: {formatWeight(item.weightG)}</p>
+              <p className="text-xs text-muted-foreground">Current: {formatWeight(item.weightG)}</p>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="edit-item-qty">Antal</Label>
+              <Label htmlFor="edit-item-qty">Quantity</Label>
               <Input
                 id="edit-item-qty"
                 type="number"
@@ -121,7 +121,7 @@ export function EditItemDialog({
                 onChange={(e) => setQuantity(parseInt(e.target.value || '1', 10))}
               />
               <p className="text-xs text-muted-foreground">
-                Totalt: {formatWeight(parseWeightInput(weight || '0', unit) * Math.max(1, quantity))}
+                Total: {formatWeight(parseWeightInput(weight || '0', unit) * Math.max(1, quantity))}
               </p>
             </div>
           </div>
@@ -130,10 +130,10 @@ export function EditItemDialog({
               checked={packed}
               onCheckedChange={(v) => setPacked(v === true)}
             />
-            <span>Packat</span>
+            <span>Packed</span>
           </label>
           <div className="space-y-1.5">
-            <Label>Taggar</Label>
+            <Label>Tags</Label>
             <div className="flex items-center gap-2">
               <TagPicker
                 selected={tags}
@@ -145,9 +145,9 @@ export function EditItemDialog({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Tillåtna väsktyper</Label>
+            <Label>Allowed bag types</Label>
             <p className="text-xs text-muted-foreground">
-              Lämna alla omarkerade för att tillåta alla väskor.
+              Leave all unchecked to allow any bag.
             </p>
             <div className="grid grid-cols-2 gap-2">
               {ALL_BAG_TYPES.map((type) => (
@@ -167,9 +167,9 @@ export function EditItemDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Avbryt
+            Cancel
           </Button>
-          <Button onClick={submit}>Spara</Button>
+          <Button onClick={submit}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

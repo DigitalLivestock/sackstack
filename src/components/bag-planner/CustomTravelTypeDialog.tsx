@@ -42,7 +42,7 @@ export function CustomTravelTypeDialog({
   const [name, setName] = useState('');
   const [emoji, setEmoji] = useState('🎒');
   const [bags, setBags] = useState<{ name: string; type: BagType }[]>([
-    { name: 'Väska', type: 'backpack' },
+    { name: 'Bag', type: 'backpack' },
   ]);
   const [sugs, setSugs] = useState<{ name: string; weightG: number }[]>([
     { name: '', weightG: 0 },
@@ -53,7 +53,7 @@ export function CustomTravelTypeDialog({
   const reset = () => {
     setName('');
     setEmoji('🎒');
-    setBags([{ name: 'Väska', type: 'backpack' }]);
+    setBags([{ name: 'Bag', type: 'backpack' }]);
     setSugs([
       { name: '', weightG: 0 },
       { name: '', weightG: 0 },
@@ -79,17 +79,17 @@ export function CustomTravelTypeDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Egna resetyper
+          Custom travel types
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Egna resetyper</DialogTitle>
+          <DialogTitle>Custom travel types</DialogTitle>
         </DialogHeader>
 
         {trip.customTravelTypes.length > 0 ? (
           <div className="space-y-1">
-            <Label className="text-xs uppercase">Befintliga</Label>
+            <Label className="text-xs uppercase">Existing</Label>
             <div className="space-y-1">
               {trip.customTravelTypes.map((c) => (
                 <div
@@ -107,13 +107,13 @@ export function CustomTravelTypeDialog({
                       setOpen(false);
                     }}
                   >
-                    Använd
+                    Use
                   </Button>
                   <button
                     type="button"
                     onClick={() => onRemove(c.id)}
                     className="rounded p-1 text-muted-foreground hover:text-destructive"
-                    aria-label="Ta bort"
+                    aria-label="Remove"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -124,7 +124,7 @@ export function CustomTravelTypeDialog({
         ) : null}
 
         <div className="space-y-3 border-t border-border pt-3">
-          <Label className="text-xs uppercase">Ny resetyp</Label>
+          <Label className="text-xs uppercase">New travel type</Label>
           <div className="grid grid-cols-[60px_1fr] gap-2">
             <Input
               value={emoji}
@@ -135,12 +135,12 @@ export function CustomTravelTypeDialog({
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Namn (t.ex. Vintertur)"
+              placeholder="Name (e.g. Winter trip)"
             />
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs">Förinställda väskor</Label>
+            <Label className="text-xs">Preset bags</Label>
             {bags.map((b, i) => (
               <div key={i} className="flex items-center gap-2">
                 <Input
@@ -148,7 +148,7 @@ export function CustomTravelTypeDialog({
                   onChange={(e) =>
                     setBags(bags.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))
                   }
-                  placeholder="Namn"
+                  placeholder="Name"
                   className="h-8"
                 />
                 <Select
@@ -174,7 +174,7 @@ export function CustomTravelTypeDialog({
                   type="button"
                   onClick={() => setBags(bags.filter((_, j) => j !== i))}
                   className="rounded p-1 text-muted-foreground hover:text-destructive"
-                  aria-label="Ta bort"
+                  aria-label="Remove"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -187,12 +187,12 @@ export function CustomTravelTypeDialog({
               onClick={() => setBags([...bags, { name: '', type: 'backpack' }])}
             >
               <Plus className="h-4 w-4" />
-              Lägg till väska
+              Add bag
             </Button>
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs">Item-förslag (visas i Förslag)</Label>
+            <Label className="text-xs">Item suggestions (shown in Suggestions)</Label>
             {sugs.map((s, i) => (
               <div key={i} className="flex items-center gap-2">
                 <Input
@@ -200,7 +200,7 @@ export function CustomTravelTypeDialog({
                   onChange={(e) =>
                     setSugs(sugs.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))
                   }
-                  placeholder="Namn"
+                  placeholder="Name"
                   className="h-8 flex-1"
                 />
                 <Input
@@ -221,7 +221,7 @@ export function CustomTravelTypeDialog({
                   type="button"
                   onClick={() => setSugs(sugs.filter((_, j) => j !== i))}
                   className="rounded p-1 text-muted-foreground hover:text-destructive"
-                  aria-label="Ta bort"
+                  aria-label="Remove"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -234,17 +234,17 @@ export function CustomTravelTypeDialog({
               onClick={() => setSugs([...sugs, { name: '', weightG: 0 }])}
             >
               <Plus className="h-4 w-4" />
-              Lägg till förslag
+              Add suggestion
             </Button>
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>
-            Stäng
+            Close
           </Button>
           <Button onClick={submit} disabled={!name.trim()}>
-            Spara resetyp
+            Save travel type
           </Button>
         </DialogFooter>
       </DialogContent>
