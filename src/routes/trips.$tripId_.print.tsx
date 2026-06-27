@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
 import { bagEmptyWeight, itemWeight, travelTypeLabel } from '@/lib/bag-planner/types';
