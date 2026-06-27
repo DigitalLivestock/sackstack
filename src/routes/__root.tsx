@@ -78,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Bag Planner" },
-      { name: "description", content: "Plan and share packing weight across bags and travelers." },
+      { title: "Bag Planner | Organize your Voyage" },
+      { name: "description", content: "Bag Buddy Planner helps users plan and track item weights for trips, supporting multiple users and travel types." },
       { name: "author", content: "Bag Planner" },
-      { property: "og:title", content: "Bag Planner" },
-      { property: "og:description", content: "Plan and share packing weight across bags and travelers." },
+      { property: "og:title", content: "Bag Planner | Organize your Voyage" },
+      { property: "og:description", content: "Bag Buddy Planner helps users plan and track item weights for trips, supporting multiple users and travel types." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@BagPlanner" },
+      { name: "twitter:title", content: "Bag Planner | Organize your Voyage" },
+      { name: "twitter:description", content: "Bag Buddy Planner helps users plan and track item weights for trips, supporting multiple users and travel types." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f2f0d30-afda-426c-b4ef-4740a0755ab0/id-preview-391e54f8--e28bdc44-70dd-426c-950e-7b8ab4a70580.lovable.app-1782591201426.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8f2f0d30-afda-426c-b4ef-4740a0755ab0/id-preview-391e54f8--e28bdc44-70dd-426c-950e-7b8ab4a70580.lovable.app-1782591201426.png" },
     ],
     links: [
       {
