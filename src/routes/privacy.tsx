@@ -7,13 +7,13 @@ import { toast, Toaster } from 'sonner';
 export const Route = createFileRoute('/privacy')({
   head: () => ({
     meta: [
-      { title: 'Privacy — Bag Planner' },
+      { title: 'Privacy — Sack Stack' },
       {
         name: 'description',
         content:
-          'Bag Planner stores everything in your browser. No accounts, no tracking, no server-side database.',
+          'Sack Stack stores everything in your browser. No accounts, no tracking, no server-side database.',
       },
-      { property: 'og:title', content: 'Privacy — Bag Planner' },
+      { property: 'og:title', content: 'Privacy — Sack Stack' },
       {
         property: 'og:description',
         content: 'No accounts, no tracking. Your trips live only on your device.',
