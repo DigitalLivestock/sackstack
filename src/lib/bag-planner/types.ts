@@ -112,14 +112,31 @@ export function bagEmptyWeight(b: Pick<Bag, 'emptyWeightG'>): number {
   return b.emptyWeightG ?? 0;
 }
 
+function readGlobalCustomTravelTypes(): { id: string; name: string; emoji?: string }[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem('bagplanner:custom-travel-types');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export function travelTypeLabel(trip: Pick<Trip, 'travelType' | 'customTravelTypes'>): string {
   const t = trip.travelType as TravelType;
   if (t in TRAVEL_TYPE_LABELS) return TRAVEL_TYPE_LABELS[t];
-  return trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.name ?? 'Custom';
+  const fromTrip = trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.name;
+  if (fromTrip) return fromTrip;
+  return readGlobalCustomTravelTypes().find((c) => c.id === trip.travelType)?.name ?? 'Custom';
 }
 
 export function travelTypeEmoji(trip: Pick<Trip, 'travelType' | 'customTravelTypes'>): string {
   const t = trip.travelType as TravelType;
   if (t in TRAVEL_TYPE_EMOJI) return TRAVEL_TYPE_EMOJI[t];
-  return trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.emoji ?? '🎒';
+  const fromTrip = trip.customTravelTypes?.find((c) => c.id === trip.travelType)?.emoji;
+  if (fromTrip) return fromTrip;
+  return readGlobalCustomTravelTypes().find((c) => c.id === trip.travelType)?.emoji ?? '🎒';
 }
+

@@ -7,7 +7,8 @@ import {
 } from '@/components/ui/popover';
 import type { Item, ItemSuggestion, Trip, TravelType } from '@/lib/bag-planner/types';
 import { TRAVEL_SUGGESTIONS } from '@/lib/bag-planner/presets';
-import { formatWeight } from '@/lib/bag-planner/format';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
+import { loadCustomTravelTypes } from '@/hooks/use-custom-travel-types';
 
 const BUILTIN: TravelType[] = ['hiking', 'normal', 'camping', 'business', 'beach'];
 
@@ -21,9 +22,13 @@ export function SuggestionsPopover({
   const suggestions = useMemo<ItemSuggestion[]>(() => {
     const t = trip.travelType as TravelType;
     if (BUILTIN.includes(t)) return TRAVEL_SUGGESTIONS[t] ?? [];
-    const custom = trip.customTravelTypes.find((c) => c.id === trip.travelType);
-    return custom?.itemSuggestions ?? [];
+    const fromTrip = trip.customTravelTypes.find((c) => c.id === trip.travelType);
+    if (fromTrip?.itemSuggestions?.length) return fromTrip.itemSuggestions;
+    const fromGlobal = loadCustomTravelTypes().find((c) => c.id === trip.travelType);
+    return fromGlobal?.itemSuggestions ?? [];
   }, [trip]);
+  const { format } = useDisplayUnit();
+
 
   return (
     <Popover>
@@ -45,7 +50,7 @@ export function SuggestionsPopover({
             No suggestions for this travel type.
           </div>
         ) : (
-          <div className="space-y-0.5">
+          <div className="max-h-72 overflow-y-auto space-y-0.5">
             {suggestions.map((s, i) => (
               <button
                 key={i}
@@ -69,7 +74,7 @@ export function SuggestionsPopover({
                   ) : null}
                 </div>
                 <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                  {formatWeight(s.weightG)}
+                  {format(s.weightG)}
                 </span>
                 <Plus className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               </button>

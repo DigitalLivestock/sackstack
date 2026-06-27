@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Bag, CustomTravelType, Item, Person, Trip, TravelType } from '@/lib/bag-planner/types';
-import { buildPresetBags, PERSON_COLORS } from '@/lib/bag-planner/presets';
+import { buildPresetBags, buildBagsFromPresets, PERSON_COLORS, TRAVEL_PRESETS } from '@/lib/bag-planner/presets';
+import { loadCustomTravelTypes } from '@/hooks/use-custom-travel-types';
+
 
 const STORAGE_KEY = 'bagplanner:trips';
 
@@ -39,7 +41,25 @@ function loadAll(): Trip[] {
 
 function saveAll(trips: Trip[]) {
   if (typeof window === 'undefined') return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(trips));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(trips));
+  } catch (err) {
+    // Quota exceeded or storage blocked — surface a clear message.
+    const isQuota =
+      err instanceof Error &&
+      (err.name === 'QuotaExceededError' ||
+        /quota|exceed/i.test(err.message ?? ''));
+    const event = new CustomEvent('bagplanner:storage-error', {
+      detail: {
+        kind: isQuota ? 'quota' : 'unknown',
+        message: isQuota
+          ? "Browser storage is full. Export a backup, then delete old trips to free space."
+          : 'Could not save changes to browser storage.',
+      },
+    });
+    window.dispatchEvent(event);
+    throw err;
+  }
 }
 
 const listeners = new Set<() => void>();
@@ -59,12 +79,20 @@ export function useTrips() {
   }, []);
 
   const createTrip = useCallback((name: string, travelType: TravelType): Trip => {
+    const isBuiltin = (travelType as string) in TRAVEL_PRESETS;
+    let bags: Bag[];
+    if (isBuiltin) {
+      bags = buildPresetBags(travelType);
+    } else {
+      const custom = loadCustomTravelTypes().find((c) => c.id === travelType);
+      bags = custom?.bagPresets ? buildBagsFromPresets(custom.bagPresets) : [];
+    }
     const trip: Trip = {
       id: crypto.randomUUID(),
       name,
       travelType,
       people: [],
-      bags: buildPresetBags(travelType),
+      bags,
       items: [],
       createdAt: Date.now(),
       customTags: [],
@@ -76,6 +104,7 @@ export function useTrips() {
     emit();
     return trip;
   }, []);
+
 
   const deleteTrip = useCallback((id: string) => {
     saveAll(loadAll().filter((t) => t.id !== id));
@@ -92,7 +121,49 @@ export function useTrips() {
     return merged.length;
   }, []);
 
-  return { trips, createTrip, deleteTrip, importTrips };
+  const addDemoTrip = useCallback((): Trip => {
+    const tripId = crypto.randomUUID();
+    const bagSuitcase = crypto.randomUUID();
+    const bagCarryOn = crypto.randomUUID();
+    const bagPersonal = crypto.randomUUID();
+    const alex = crypto.randomUUID();
+    const sam = crypto.randomUUID();
+    const trip: Trip = {
+      id: tripId,
+      name: 'Weekend in Lisbon (demo)',
+      travelType: 'normal',
+      createdAt: Date.now(),
+      customTags: [],
+      customTravelTypes: [],
+      people: [
+        { id: alex, name: 'Alex', color: PERSON_COLORS[0] },
+        { id: sam, name: 'Sam', color: PERSON_COLORS[3] },
+      ],
+      bags: [
+        { id: bagSuitcase, name: 'Shared suitcase', type: 'suitcase', weightLimitG: 23000, emptyWeightG: 3200, carrierId: alex },
+        { id: bagCarryOn, name: 'Cabin bag', type: 'hand_luggage', weightLimitG: 8000, emptyWeightG: 1800, carrierId: sam },
+        { id: bagPersonal, name: 'Day backpack', type: 'personal', weightLimitG: 5000, emptyWeightG: 600, carrierId: sam },
+      ],
+      items: [
+        { id: crypto.randomUUID(), name: 'T-shirts', weightG: 180, quantity: 4, packed: false, tags: ['Clothing'], bagId: bagSuitcase },
+        { id: crypto.randomUUID(), name: 'Jeans', weightG: 650, quantity: 1, packed: false, tags: ['Clothing'], bagId: bagSuitcase },
+        { id: crypto.randomUUID(), name: 'Toiletries bag', weightG: 480, quantity: 1, packed: false, tags: ['Hygiene'], bagId: bagSuitcase },
+        { id: crypto.randomUUID(), name: 'Sneakers', weightG: 820, quantity: 1, packed: false, tags: ['Clothing'], bagId: bagSuitcase },
+        { id: crypto.randomUUID(), name: 'Passport', weightG: 50, quantity: 2, packed: false, tags: ['Documents'], allowedBagTypes: ['hand_luggage', 'personal'], bagId: bagCarryOn },
+        { id: crypto.randomUUID(), name: 'Charger', weightG: 150, quantity: 1, packed: false, tags: ['Electronics'], bagId: bagCarryOn },
+        { id: crypto.randomUUID(), name: 'Headphones', weightG: 220, quantity: 1, packed: true, tags: ['Electronics'], bagId: bagPersonal },
+        { id: crypto.randomUUID(), name: 'Snacks', weightG: 200, quantity: 1, packed: false, tags: ['Food'], bagId: bagPersonal },
+        { id: crypto.randomUUID(), name: 'Sunglasses', weightG: 30, quantity: 1, packed: false, tags: ['Clothing'] },
+      ],
+    };
+    const all = loadAll();
+    all.push(trip);
+    saveAll(all);
+    emit();
+    return trip;
+  }, []);
+
+  return { trips, createTrip, deleteTrip, importTrips, addDemoTrip };
 }
 
 export function useTrip(tripId: string) {

@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { MoreVertical, Trash2, User, Pencil, AlertTriangle } from 'lucide-react';
 import type { Bag, Item, Person } from '@/lib/bag-planner/types';
 import { BAG_TYPE_LABELS, bagEmptyWeight, itemWeight } from '@/lib/bag-planner/types';
+import { useDisplayUnit } from '@/hooks/use-display-unit';
 import { WeightBar } from './WeightBar';
 import { ItemRow } from './ItemRow';
 import { EditBagDialog } from './EditBagDialog';
@@ -16,6 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  CompactItemFilterBar,
+  applyItemFilterSort,
+  type ItemFilter,
+  type ItemSort,
+} from './ItemFilterBar';
 
 export function BagCard({
   bag,
@@ -67,6 +74,10 @@ export function BagCard({
   });
 
   const [editOpen, setEditOpen] = useState(false);
+  const [filter, setFilter] = useState<ItemFilter>('all');
+  const [sort, setSort] = useState<ItemSort>('manual');
+  const visible = applyItemFilterSort(items, filter, sort);
+  const { format } = useDisplayUnit();
 
   void activeDragItemId;
   const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
@@ -109,6 +120,13 @@ export function BagCard({
           <div className="text-xs text-muted-foreground">{BAG_TYPE_LABELS[bag.type]}</div>
         </div>
 
+        <CompactItemFilterBar
+          filter={filter}
+          sort={sort}
+          onFilter={setFilter}
+          onSort={setSort}
+        />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -139,7 +157,7 @@ export function BagCard({
               No one
             </DropdownMenuItem>
             {people.length === 0 ? (
-              <DropdownMenuItem disabled>No people yet</DropdownMenuItem>
+              <DropdownMenuItem disabled>No carriers yet</DropdownMenuItem>
             ) : (
               people.map((p) => (
                 <DropdownMenuItem key={p.id} onClick={() => onAssignCarrier(p.id)}>
@@ -177,7 +195,7 @@ export function BagCard({
       <WeightBar current={currentTotal} limit={bag.weightLimitG} />
       {empty > 0 ? (
         <div className="-mt-1 text-[11px] tabular-nums text-muted-foreground">
-          Bag own weight: {(empty / 1000).toFixed(empty % 1000 === 0 ? 0 : 2)} kg
+          Bag own weight: {format(empty)}
         </div>
       ) : null}
 
@@ -186,8 +204,12 @@ export function BagCard({
           <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
             Drop items here, or use Move
           </div>
+        ) : visible.length === 0 ? (
+          <div className="rounded-md border border-dashed border-border px-3 py-4 text-center text-xs text-muted-foreground">
+            No items match the current filter.
+          </div>
         ) : (
-          items.map((item) => (
+          visible.map((item) => (
             <ItemRow
               key={item.id}
               item={item}
