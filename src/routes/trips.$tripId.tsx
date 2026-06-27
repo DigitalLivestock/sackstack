@@ -16,7 +16,7 @@ import { buildExport, downloadJson } from '@/lib/bag-planner/trip-io';
 
 import { Button } from '@/components/ui/button';
 import { useTrip } from '@/hooks/use-trip';
-import { itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
+import { bagEmptyWeight, itemWeight, travelTypeEmoji, travelTypeLabel } from '@/lib/bag-planner/types';
 import { formatWeight } from '@/lib/bag-planner/format';
 import { BagCard } from '@/components/bag-planner/BagCard';
 import { UnpackedTray } from '@/components/bag-planner/UnpackedTray';
