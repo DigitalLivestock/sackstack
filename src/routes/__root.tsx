@@ -15,6 +15,8 @@ import appCss from "../styles.css?url";
 import logoUrl from "../assets/logo.svg?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { DisplayUnitSelect } from "@/components/bag-planner/DisplayUnitSelect";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { getThemeScript, useTheme } from "@/hooks/use-theme";
 
 function Footer() {
   return (
@@ -32,6 +34,7 @@ function Footer() {
             </span>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <DisplayUnitSelect />
           <span className="text-muted-foreground">v{APP_VERSION}</span>
           <Link to="/about" className="underline-offset-2 hover:underline">
@@ -160,6 +163,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
         <HeadContent />
       </head>
       <body>
@@ -172,6 +176,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute("content", theme === "dark" ? "#0a3d35" : "#0d7d6c");
+    }
+  }, [theme]);
 
   return (
     <QueryClientProvider client={queryClient}>
