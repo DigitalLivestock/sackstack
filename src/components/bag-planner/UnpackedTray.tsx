@@ -49,8 +49,13 @@ export function UnpackedTray({
 
   const [filter, setFilter] = useState<ItemFilter>('all');
   const [sort, setSort] = useState<ItemSort>('manual');
-  const visible = applyItemFilterSort(items, filter, sort);
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const availableTags = Array.from(
+    new Set([...trip.customTags, ...items.flatMap((i) => i.tags)]),
+  ).sort();
+  const visible = applyItemFilterSort(items, filter, sort, tagFilter);
   const { format } = useDisplayUnit();
+
 
   const total = items.reduce((s, i) => s + itemWeight(i), 0);
 
