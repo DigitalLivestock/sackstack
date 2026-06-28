@@ -176,6 +176,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      meta.setAttribute("content", theme === "dark" ? "#0a3d35" : "#0d7d6c");
+    }
+  }, [theme]);
 
   return (
     <QueryClientProvider client={queryClient}>
