@@ -1,42 +1,29 @@
-## Plan: Packlista, taggar, antal, förslag, utskrift
+## Add tag filter to item lists
 
-### 1. Datamodell (`src/lib/bag-planner/types.ts`)
-- `Item`: lägg till `quantity: number` (default 1), `packed: boolean` (default false), `tags: string[]`.
-- `Trip`: lägg till `customTags: string[]` (egna taggar per trip) och `customTravelTypes: CustomTravelType[]`.
-- Ny typ `CustomTravelType { id, name, bagPresets: BagType[], itemSuggestions: ItemSuggestion[] }`.
-- Ny typ `ItemSuggestion { name, weightG, tags?, allowedBagTypes? }`.
-- All viktsummering (bagg-vikt, weight bar, totalvikt per person) använder `weightG * quantity`.
+Extend the existing item filter/sort controls (Unpacked tray and each Bag card) so items can be filtered by tag, in addition to the current packed/unpacked/missing-weight filters and name/weight sorts.
 
-### 2. Presets (`src/lib/bag-planner/presets.ts`)
-- `GLOBAL_TAGS`: Kläder, Elektronik, Hygien, Mat, Sovsaker, Dokument, Verktyg, Första hjälpen.
-- `TRAVEL_SUGGESTIONS`: 3 förslag per inbyggd resetyp (Hiking, Normal, Camping, Business, Beach) med namn, vikt, taggar.
+### Scope
 
-### 3. Hook (`src/hooks/use-trip.ts`)
-- Nya actions: `setItemQuantity`, `toggleItemPacked`, `setItemTags`, `addCustomTag`, `removeCustomTag`, `addCustomTravelType`, `updateCustomTravelType`, `removeCustomTravelType`.
-- Hjälpare: `getPersonTotalWeight(tripId, personId)`, `getBagWeight(bag)` (båda kvantitetsmedvetna).
+- Tag filtering only on the main trip view (Unpacked + Bags). The Checklist view already has its own tag filter and stays as-is.
+- No changes to data model, storage, or import/export — tags already exist on items.
 
-### 4. UI-komponenter
-- **`ItemRow.tsx`**: kryssruta (packed), quantity stepper (− 1 +), tagg-badges, "Vikt saknas"-badge (orange) när `weightG === 0`. Edit-dialogen får quantity-fält och tagg-väljare.
-- **`BagCard.tsx`**: tydlig varningsbadge ("Ingen bärare") på bag utan `carrierId` — orange ram + ikon i header.
-- **`TagPicker.tsx`** (ny): multi-select över globala + trip-egna taggar, "+ Skapa tagg" inline.
-- **`SuggestionsPopover.tsx`** (ny): knapp "Förslag" i UnpackedTray som öppnar popover med 3+ förslag per resetyp (inkl. egna). Klick → lägger till i Unpacked.
-- **`CustomTravelTypeDialog.tsx`** (ny): hantera trip-egna resetyper (namn, bag-presets, item-förslag). Nås från trip-header.
-- **`ImportItemsDialog.tsx`** (ny från tidigare plan): förhandsgranskning före import, "Vikt saknas"-badge på rader utan vikt, redigerbara fält + radera-knapp.
+### Changes
 
-### 5. Packlista-vy
-- **Inline checkboxar** i alla ItemRow (bag + Unpacked).
-- **Ny route `/trips/$tripId/checklist`**: grupperad vy (per bag / per person / per tagg — togglebar), kryssrutor, progress-bar ("12/34 packat"), filter på tagg.
-- **Utskriftsvy `/trips/$tripId/print`**: ren A4-layout, dolda kontroller, `@media print`-stilar, "Skriv ut"-knapp som triggar `window.print()`. Visar bagg, bärare, items med antal + vikt + taggar + kryssruta-glyf.
+1. `src/components/bag-planner/ItemFilterBar.tsx`
+   - Extend filter state: add an optional `tagFilter: string | null` plus `availableTags: string[]` props on both `ItemFilterBar` and `CompactItemFilterBar`.
+   - In `CompactItemFilterBar` popover, add a "Tag" section listing available tags as toggle chips (single-select; click again to clear). Show the active-dot indicator when a tag is selected too.
+   - In `applyItemFilterSort`, accept an optional `tagFilter` and filter items whose `tags` include it. Keep the existing status filter and sort behavior unchanged (status + tag combine with AND).
 
-### 6. Trip-header (`src/routes/trips.$tripId.tsx`)
-- Nya knappar: **Packlista**, **Skriv ut**, **Förslag**, **Egna resetyper**.
-- Totalvikt per person visas i PersonChip (tooltip eller liten siffra under namnet).
+2. `src/components/bag-planner/UnpackedTray.tsx`
+   - Add `tagFilter` state alongside `filter`/`sort`.
+   - Compute the available tag list from `trip.customTags`, `GLOBAL_TAGS`, and tags actually present on the unpacked items (deduped).
+   - Pass tag props to `CompactItemFilterBar` and `applyItemFilterSort`.
 
-### 7. Import/Export (`src/lib/bag-planner/trip-io.ts`)
-- Trip-export inkluderar `customTags`, `customTravelTypes`, och per item: `quantity`, `packed`, `tags`.
-- `parseItemsImport`: accepterar `tags`, `quantity`, `packed` i objekten; uppdatera template med exempel.
-- Bakåtkompatibel parse: saknade fält får defaults.
+3. `src/components/bag-planner/BagCard.tsx` (uses the same compact filter bar)
+   - Same treatment: add `tagFilter` state, compute available tags from that bag's items (plus trip tags), wire into the compact bar and `applyItemFilterSort`.
 
-### Filer
-**Nya:** `src/components/bag-planner/TagPicker.tsx`, `SuggestionsPopover.tsx`, `CustomTravelTypeDialog.tsx`, `ImportItemsDialog.tsx`, `routes/trips.$tripId.checklist.tsx`, `routes/trips.$tripId.print.tsx`.
-**Edit:** `types.ts`, `presets.ts`, `trip-io.ts`, `use-trip.ts`, `ItemRow.tsx`, `EditItemDialog.tsx`, `BagCard.tsx`, `UnpackedTray.tsx`, `PersonChip.tsx`, `routes/trips.$tripId.tsx`.
+### Notes
+
+- Tag list source per location: union of `GLOBAL_TAGS`, `trip.customTags`, and tags on the items in scope, so the popover doesn't show irrelevant tags.
+- Clearing filters (existing "Clear" action) also clears `tagFilter`.
+- No new dependencies; UI-only change in the bag-planner components.

@@ -76,8 +76,13 @@ export function BagCard({
   const [editOpen, setEditOpen] = useState(false);
   const [filter, setFilter] = useState<ItemFilter>('all');
   const [sort, setSort] = useState<ItemSort>('manual');
-  const visible = applyItemFilterSort(items, filter, sort);
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
+  const availableTags = Array.from(
+    new Set([...customTags, ...items.flatMap((i) => i.tags)]),
+  ).sort();
+  const visible = applyItemFilterSort(items, filter, sort, tagFilter);
   const { format } = useDisplayUnit();
+
 
   void activeDragItemId;
   const itemsTotal = items.reduce((sum, i) => sum + itemWeight(i), 0);
@@ -123,9 +128,13 @@ export function BagCard({
         <CompactItemFilterBar
           filter={filter}
           sort={sort}
+          tagFilter={tagFilter}
+          availableTags={availableTags}
           onFilter={setFilter}
           onSort={setSort}
+          onTagFilter={setTagFilter}
         />
+
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
