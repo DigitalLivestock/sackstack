@@ -128,9 +128,13 @@ export function BagCard({
         <CompactItemFilterBar
           filter={filter}
           sort={sort}
+          tagFilter={tagFilter}
+          availableTags={availableTags}
           onFilter={setFilter}
           onSort={setSort}
+          onTagFilter={setTagFilter}
         />
+
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
