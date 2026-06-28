@@ -15,6 +15,8 @@ import appCss from "../styles.css?url";
 import logoUrl from "../assets/logo.svg?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { DisplayUnitSelect } from "@/components/bag-planner/DisplayUnitSelect";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { getThemeScript, useTheme } from "@/hooks/use-theme";
 
 function Footer() {
   return (
