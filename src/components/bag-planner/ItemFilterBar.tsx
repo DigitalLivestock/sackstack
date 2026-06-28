@@ -91,15 +91,21 @@ export function ItemFilterBar({
 export function CompactItemFilterBar({
   filter,
   sort,
+  tagFilter = null,
+  availableTags = [],
   onFilter,
   onSort,
+  onTagFilter,
 }: {
   filter: ItemFilter;
   sort: ItemSort;
+  tagFilter?: string | null;
+  availableTags?: string[];
   onFilter: (f: ItemFilter) => void;
   onSort: (s: ItemSort) => void;
+  onTagFilter?: (t: string | null) => void;
 }) {
-  const active = filter !== 'all' || sort !== 'manual';
+  const active = filter !== 'all' || sort !== 'manual' || !!tagFilter;
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -118,7 +124,7 @@ export function CompactItemFilterBar({
           ) : null}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-56 p-2">
+      <PopoverContent align="end" className="w-64 p-2">
         <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
           Filter
         </div>
@@ -138,6 +144,29 @@ export function CompactItemFilterBar({
             </button>
           ))}
         </div>
+        {onTagFilter && availableTags.length > 0 ? (
+          <>
+            <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Tag
+            </div>
+            <div className="mb-2 flex flex-wrap gap-1">
+              {availableTags.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => onTagFilter(tagFilter === t ? null : t)}
+                  className={`rounded-md border px-2 py-0.5 text-xs transition-colors ${
+                    tagFilter === t
+                      ? 'border-foreground bg-accent text-foreground'
+                      : 'border-border text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
         <div className="mb-1 px-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
           Sort
         </div>
@@ -164,6 +193,7 @@ export function CompactItemFilterBar({
             onClick={() => {
               onFilter('all');
               onSort('manual');
+              onTagFilter?.(null);
             }}
             className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
           >
@@ -175,6 +205,7 @@ export function CompactItemFilterBar({
     </Popover>
   );
 }
+
 
 export function applyItemFilterSort<T extends { name: string; weightG: number; quantity: number; packed: boolean }>(
   items: T[],
