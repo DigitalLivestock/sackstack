@@ -10,6 +10,9 @@ export const Route = createFileRoute('/share')({
   head: () => ({
     meta: [
       { title: 'Shared trip — Sack Stack' },
+      { name: 'description', content: 'Import a trip that was shared with you via a Sack Stack link — bags, items, and carriers load into your browser.' },
+      { property: 'og:title', content: 'Shared trip — Sack Stack' },
+      { property: 'og:description', content: 'Import a trip that was shared with you via a Sack Stack link — bags, items, and carriers load into your browser.' },
       { name: 'robots', content: 'noindex' },
     ],
   }),

@@ -184,7 +184,7 @@ export function ItemRow({
         <div className="shrink-0 text-right text-sm font-medium tabular-nums">
           {format(itemWeight(item))}
           {item.quantity > 1 ? (
-            <div className="text-[10px] font-normal leading-none text-muted-foreground/70">
+            <div className="text-[10px] font-normal leading-none text-muted-foreground">
               {format(item.weightG)} × {item.quantity}
             </div>
           ) : null}

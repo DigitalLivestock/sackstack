@@ -8,6 +8,15 @@ import { useDisplayUnit } from '@/hooks/use-display-unit';
 import logoSvg from '@/assets/logo.svg';
 
 export const Route = createFileRoute('/trips/$tripId_/print')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Print ${params.tripId.slice(0, 6)} — Sack Stack` },
+      { name: 'description', content: 'Printable packing list with carriers, bags, and per-bag weight totals — ready for PDF export.' },
+      { property: 'og:title', content: 'Print packing list — Sack Stack' },
+      { property: 'og:description', content: 'Printable packing list with carriers, bags, and per-bag weight totals.' },
+      { name: 'robots', content: 'noindex' },
+    ],
+  }),
   component: PrintView,
 });
 

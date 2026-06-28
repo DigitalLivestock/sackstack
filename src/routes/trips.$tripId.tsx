@@ -29,6 +29,15 @@ import { SectionHeader } from '@/components/bag-planner/SectionHeader';
 
 
 export const Route = createFileRoute('/trips/$tripId')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Trip ${params.tripId.slice(0, 6)} — Plan packing — Sack Stack` },
+      { name: 'description', content: 'Plan and balance the weight of every bag in this trip. Drag items between bags and assign carriers — all stored locally in your browser.' },
+      { property: 'og:title', content: 'Plan packing — Sack Stack' },
+      { property: 'og:description', content: 'Plan and balance the weight of every bag in your trip with Sack Stack.' },
+      { name: 'robots', content: 'noindex' },
+    ],
+  }),
   component: TripPlanner,
   notFoundComponent: () => (
     <div className="grid min-h-screen place-items-center px-4 text-center">

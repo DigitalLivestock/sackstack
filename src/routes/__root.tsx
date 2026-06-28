@@ -23,7 +23,7 @@ function Footer() {
         <span>No accounts. No tracking. Your data stays in this browser.</span>
         <div className="flex items-center gap-3">
           <DisplayUnitSelect />
-          <span className="text-muted-foreground/60">v{APP_VERSION}</span>
+          <span className="text-muted-foreground">v{APP_VERSION}</span>
           <Link to="/about" className="underline-offset-2 hover:underline">
             About
           </Link>
@@ -123,6 +123,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/svg+xml", href: logoUrl },
       { rel: "apple-touch-icon", href: logoUrl },
       { rel: "manifest", href: "/manifest.webmanifest" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Sack Stack",
+          description: "Free, privacy-focused packing planner. Balance the weight of every bag, assign carriers, and print your packing list.",
+          applicationCategory: "TravelApplication",
+          operatingSystem: "Web",
+          url: "https://sackstack.app",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,

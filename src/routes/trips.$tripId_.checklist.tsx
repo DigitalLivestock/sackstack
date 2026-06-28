@@ -8,6 +8,15 @@ import { itemWeight, travelTypeLabel, GLOBAL_TAGS } from '@/lib/bag-planner/type
 import { useDisplayUnit } from '@/hooks/use-display-unit';
 
 export const Route = createFileRoute('/trips/$tripId_/checklist')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Checklist ${params.tripId.slice(0, 6)} — Sack Stack` },
+      { name: 'description', content: 'Tick items off as you pack. Group your packing checklist by bag, carrier, or tag.' },
+      { property: 'og:title', content: 'Packing checklist — Sack Stack' },
+      { property: 'og:description', content: 'Tick items off as you pack — grouped by bag, carrier, or tag.' },
+      { name: 'robots', content: 'noindex' },
+    ],
+  }),
   component: ChecklistView,
 });
 

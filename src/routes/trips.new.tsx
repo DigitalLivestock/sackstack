@@ -20,8 +20,12 @@ export const Route = createFileRoute('/trips/new')({
   head: () => ({
     meta: [
       { title: 'New trip — Sack Stack' },
-      { name: 'description', content: 'Start a new packing plan for your trip.' },
+      { name: 'description', content: 'Start a new packing plan: pick a travel type, name your trip, and begin balancing the weight of each bag.' },
+      { property: 'og:title', content: 'New trip — Sack Stack' },
+      { property: 'og:description', content: 'Start a new packing plan: pick a travel type, name your trip, and begin balancing the weight of each bag.' },
+      { property: 'og:url', content: 'https://sackstack.app/trips/new' },
     ],
+    links: [{ rel: 'canonical', href: 'https://sackstack.app/trips/new' }],
   }),
   component: NewTrip,
 });
