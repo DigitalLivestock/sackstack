@@ -22,10 +22,14 @@ function Footer() {
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
           <span>No accounts. No tracking. Your data stays in this browser.</span>
-          <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-            <span>Made in Sweden</span>
-            <span aria-hidden="true">🇸🇪</span>
-          </span>
+            <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+              <span>Made in Sweden</span>
+              <svg aria-hidden="true" width="14" height="10" viewBox="0 0 16 10" className="shrink-0">
+                <rect width="16" height="10" fill="#006AA7" />
+                <rect x="5" y="0" width="2" height="10" fill="#FECC02" />
+                <rect x="0" y="4" width="16" height="2" fill="#FECC02" />
+              </svg>
+            </span>
         </div>
         <div className="flex items-center gap-3">
           <DisplayUnitSelect />
