@@ -1,0 +1,12 @@
+# Sack Stack
+
+> Free, privacy-focused packing planner. Plan and balance the weight of every bag before a trip — no accounts, no tracking, data stays in your browser.
+
+Sack Stack helps travelers, hikers, and campers organize what goes into each bag, assign bags to carriers (people, dogs, cars, robots), and keep weight balanced. Trips, bags, carriers, and items are stored only in the visitor's browser via localStorage; no server-side accounts or databases.
+
+## Pages
+
+- [Home](/): Overview, create a new trip, manage existing trips and custom travel types.
+- [New trip](/trips/new): Pick a travel type (hiking, normal travel, car camping, custom) and start a packing plan.
+- [About](/about): What Sack Stack is, how it works, version info.
+- [Privacy](/privacy): How data is stored locally and how to clear it.
