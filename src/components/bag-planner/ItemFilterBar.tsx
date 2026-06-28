@@ -207,15 +207,18 @@ export function CompactItemFilterBar({
 }
 
 
-export function applyItemFilterSort<T extends { name: string; weightG: number; quantity: number; packed: boolean }>(
+export function applyItemFilterSort<T extends { name: string; weightG: number; quantity: number; packed: boolean; tags: string[] }>(
   items: T[],
   filter: ItemFilter,
   sort: ItemSort,
+  tagFilter: string | null = null,
 ): T[] {
   let out = items;
   if (filter === 'packed') out = out.filter((i) => i.packed);
   else if (filter === 'unpacked') out = out.filter((i) => !i.packed);
   else if (filter === 'missing-weight') out = out.filter((i) => i.weightG === 0);
+
+  if (tagFilter) out = out.filter((i) => i.tags.includes(tagFilter));
 
   if (sort !== 'manual') {
     const arr = [...out];
@@ -228,3 +231,4 @@ export function applyItemFilterSort<T extends { name: string; weightG: number; q
   }
   return out;
 }
+
