@@ -34,6 +34,7 @@ function Footer() {
             </span>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <DisplayUnitSelect />
           <span className="text-muted-foreground">v{APP_VERSION}</span>
           <Link to="/about" className="underline-offset-2 hover:underline">
