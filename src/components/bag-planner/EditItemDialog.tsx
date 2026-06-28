@@ -80,6 +80,17 @@ export function EditItemDialog({
           <DialogTitle>Edit item</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          {item.weightG === 0 ? (
+            <div className="flex items-start gap-2 rounded-md border border-orange-500/50 bg-orange-500/10 px-3 py-2 text-xs text-orange-700 dark:text-orange-400">
+              <span className="mt-0.5">⚠</span>
+              <span>
+                <strong className="font-semibold">Missing weight.</strong> This item has no
+                weight set, so it won't count toward bag or carrier totals. Enter a weight
+                below to fix it.
+              </span>
+            </div>
+          ) : null}
+
           <div className="space-y-1.5">
             <Label htmlFor="edit-item-name">Name</Label>
             <Input
