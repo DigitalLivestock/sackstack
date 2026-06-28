@@ -20,7 +20,13 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-background/50">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground">
-        <span>No accounts. No tracking. Your data stays in this browser.</span>
+        <div className="flex items-center gap-2">
+          <span>No accounts. No tracking. Your data stays in this browser.</span>
+          <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            <span>Made in Sweden</span>
+            <span aria-hidden="true">🇸🇪</span>
+          </span>
+        </div>
         <div className="flex items-center gap-3">
           <DisplayUnitSelect />
           <span className="text-muted-foreground">v{APP_VERSION}</span>
