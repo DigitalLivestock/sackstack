@@ -162,6 +162,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
         <HeadContent />
       </head>
       <body>
