@@ -119,6 +119,7 @@ function TripsIndex() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8">
+        <h1 className="sr-only">Sack Stack — Free and Private Packing Planner</h1>
         {!hydrated ? (
           <div className="py-16 text-center text-sm text-muted-foreground">Loading…</div>
         ) : trips.length === 0 ? (
