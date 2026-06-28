@@ -120,6 +120,50 @@ function TripsIndex() {
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         <h1 className="sr-only">Sack Stack — Free and Private Packing Planner</h1>
+
+        {hydrated && trips.length > 0 && (
+          <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+              {(() => {
+                const totalBags = trips.reduce((s, t) => s + t.bags.length, 0);
+                const totalItems = trips.reduce(
+                  (s, t) => s + t.items.reduce((is, i) => is + (i.quantity ?? 1), 0),
+                  0,
+                );
+                const totalWeight = trips.reduce(
+                  (s, t) =>
+                    s +
+                    t.items.reduce((is, i) => is + itemWeight(i), 0) +
+                    t.bags.reduce((bs, b) => bs + bagEmptyWeight(b), 0),
+                  0,
+                );
+                const totalCarriers = trips.reduce((s, t) => s + t.people.length, 0);
+                const totalPacked = trips.reduce(
+                  (s, t) => s + t.items.filter((i) => i.packed).reduce((ps, i) => ps + (i.quantity ?? 1), 0),
+                  0,
+                );
+                const packPct = totalItems > 0 ? Math.round((totalPacked / totalItems) * 100) : 0;
+                const stats = [
+                  { label: 'Trips', value: trips.length },
+                  { label: 'Bags', value: totalBags },
+                  { label: 'Items', value: totalItems },
+                  { label: 'Total weight', value: format(totalWeight) },
+                  { label: 'Carriers', value: totalCarriers },
+                  { label: 'Packed', value: `${packPct}%` },
+                ];
+                return stats.map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-xl font-bold text-foreground tabular-nums sm:text-2xl">
+                      {stat.value}
+                    </div>
+                    <div className="mt-0.5 text-xs text-muted-foreground">{stat.label}</div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+        )}
+
         {!hydrated ? (
           <div className="py-16 text-center text-sm text-muted-foreground">Loading…</div>
         ) : trips.length === 0 ? (
