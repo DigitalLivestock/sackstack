@@ -124,6 +124,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: logoUrl },
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Sack Stack",
+          description: "Free, privacy-focused packing planner. Balance the weight of every bag, assign carriers, and print your packing list.",
+          applicationCategory: "TravelApplication",
+          operatingSystem: "Web",
+          url: "https://sackstack.app",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
