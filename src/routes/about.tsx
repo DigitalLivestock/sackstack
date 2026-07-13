@@ -85,6 +85,11 @@ function AboutPage() {
               title="Privacy first"
               description="No accounts, no login, no tracking. All data stays in your browser and is never sent to any server."
             />
+            <Feature
+              icon={<Github className="h-5 w-5 text-primary" />}
+              title="Open source"
+              description="The source code is public on GitHub. Inspect how the app works, file issues, or contribute improvements."
+            />
           </div>
 
           <div className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">
