@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { DisplayUnitSelect } from "@/components/bag-planner/DisplayUnitSelect";
+import { Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { getThemeScript, useTheme } from "@/hooks/use-theme";
 
