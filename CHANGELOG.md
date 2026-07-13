@@ -76,7 +76,16 @@ Use the following categories:
 | `Security` | You fix a vulnerability or improve security posture. |
 | `Deprecated` | You mark a feature for removal in a future release. |
 
-When releasing a new version:
+When releasing a new version, use the automated release script:
+
+```bash
+bun run release:patch   # or release:minor / release:major / release 1.2.3
+git push && git push --tags
+```
+
+The script bumps `package.json`, syncs `APP_VERSION` in `src/routes/__root.tsx` and `src/routes/about.tsx`, rewrites `CHANGELOG.md` (promoting `[Unreleased]` to a dated section and updating link references), then creates a commit and annotated `vX.Y.Z` tag. Pushing the tag triggers `.github/workflows/release.yml`, which publishes a GitHub Release with notes extracted from `CHANGELOG.md`.
+
+Manual fallback if you need to do it by hand:
 
 1. Decide the version bump using Semantic Versioning rules above.
 2. Update `version` in `package.json`.
