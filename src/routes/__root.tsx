@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { DisplayUnitSelect } from "@/components/bag-planner/DisplayUnitSelect";
+import { Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { getThemeScript, useTheme } from "@/hooks/use-theme";
 
@@ -42,6 +43,16 @@ function Footer() {
           <Link to="/privacy" className="underline-offset-2 hover:underline">
             Privacy &amp; data
           </Link>
+          <a
+            href="https://github.com/DigitalLivestock/sackstack"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 underline-offset-2 hover:underline"
+            aria-label="View source on GitHub"
+          >
+            <Github className="h-3.5 w-3.5" />
+            GitHub
+          </a>
         </div>
       </div>
     </footer>

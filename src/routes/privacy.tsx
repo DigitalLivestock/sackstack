@@ -100,6 +100,23 @@ function PrivacyPage() {
             website, but receives none of your trip content.
           </p>
 
+          <h2 className="text-lg font-semibold">Transparency</h2>
+          <p>
+            Sack Stack is{' '}
+            <a
+              href="https://github.com/DigitalLivestock/sackstack"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              open-source software
+            </a>
+            . The full source code is public, so you can verify exactly how the
+            app handles your data, what it sends to servers (nothing, for trip
+            content), and what it tracks (also nothing). The privacy claims above
+            are not just promises — they are inspectable in the code.
+          </p>
+
           <h2 className="text-lg font-semibold">Clear everything</h2>
           <p>
             Wipe all Sack Stack data from this browser. This cannot be undone —

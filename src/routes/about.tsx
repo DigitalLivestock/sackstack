@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ArrowLeft, Backpack, Shield, Share2, FileJson, CheckSquare, Weight } from 'lucide-react';
+import { ArrowLeft, Backpack, Shield, Share2, FileJson, CheckSquare, Weight, Github, Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoSvg from '@/assets/logo.svg';
 
@@ -85,6 +85,11 @@ function AboutPage() {
               title="Privacy first"
               description="No accounts, no login, no tracking. All data stays in your browser and is never sent to any server."
             />
+            <Feature
+              icon={<Github className="h-5 w-5 text-primary" />}
+              title="Open source"
+              description="The source code is public on GitHub. Inspect how the app works, file issues, or contribute improvements."
+            />
           </div>
 
           <div className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">
@@ -93,6 +98,30 @@ function AboutPage() {
               can be installed on your phone or desktop. If you ever want to start fresh,
               visit the <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">Privacy &amp; data</Link> page to clear everything.
             </p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">
+            <div className="flex items-start gap-3">
+              <Code2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+              <div className="space-y-2">
+                <p className="font-medium text-foreground">Transparency</p>
+                <p>
+                  Sack Stack is open-source software. The code that runs here is the same code
+                  published on{' '}
+                  <a
+                    href="https://github.com/DigitalLivestock/sackstack"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    GitHub
+                  </a>
+                  , so anyone can verify what the app does, how data is handled, and what is
+                  (or isn't) sent to a server. No hidden tracking, no obfuscated logic, and no
+                  surprises in the privacy policy.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </main>
