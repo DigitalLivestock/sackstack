@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ArrowLeft, Backpack, Shield, Share2, FileJson, CheckSquare, Weight } from 'lucide-react';
+import { ArrowLeft, Backpack, Shield, Share2, FileJson, CheckSquare, Weight, Github, Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoSvg from '@/assets/logo.svg';
 
