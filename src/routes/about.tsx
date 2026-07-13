@@ -99,6 +99,30 @@ function AboutPage() {
               visit the <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">Privacy &amp; data</Link> page to clear everything.
             </p>
           </div>
+
+          <div className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">
+            <div className="flex items-start gap-3">
+              <Code2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+              <div className="space-y-2">
+                <p className="font-medium text-foreground">Transparency</p>
+                <p>
+                  Sack Stack is open-source software. The code that runs here is the same code
+                  published on{' '}
+                  <a
+                    href="https://github.com/DigitalLivestock/sackstack"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    GitHub
+                  </a>
+                  , so anyone can verify what the app does, how data is handled, and what is
+                  (or isn't) sent to a server. No hidden tracking, no obfuscated logic, and no
+                  surprises in the privacy policy.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
