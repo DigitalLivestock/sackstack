@@ -90,10 +90,10 @@ function NewTrip() {
               Travel type <span className="text-destructive">*</span>
             </Label>
             <div
-              className={`grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl p-1 transition-colors ${
-                typeMissing ? 'border border-destructive bg-destructive/5' : ''
+              className={`grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl transition-colors ${
+                typeMissing ? 'border border-destructive bg-destructive/5 p-1' : ''
               }`}
-              aria-invalid={typeMissing}
+              aria-describedby={typeMissing ? 'travel-type-error' : undefined}
             >
               {TRAVEL_TYPES.map((t) => {
                 const selected = travelType === t;
