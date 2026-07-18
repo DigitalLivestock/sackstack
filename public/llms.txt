@@ -1,8 +1,8 @@
 # Sack Stack
 
-> Free, privacy-focused packing planner. Plan and balance the weight of every bag before a trip — no accounts, no tracking, data stays in your browser.
+> Free bag packing planner with weight tracking. Plan and balance the weight of every bag before a trip — no accounts, no tracking, data stays in your browser.
 
-Sack Stack helps travelers, hikers, and campers organize what goes into each bag, assign bags to carriers (people, dogs, cars, robots), and keep weight balanced. Trips, bags, carriers, and items are stored only in the visitor's browser via localStorage; no server-side accounts or databases.
+Sack Stack is a bag packing planner and weight tracker for travelers, hikers, and campers. It helps you organize what goes into each bag, assign bags to carriers (people, dogs, cars, robots), and keep weight balanced across the group. Trips, bags, carriers, and items are stored only in the visitor's browser via localStorage; no server-side accounts or databases.
 
 ## Pages
 
