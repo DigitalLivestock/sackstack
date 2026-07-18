@@ -36,9 +36,13 @@ function NewTrip() {
   const { types: customTypes } = useCustomTravelTypes();
   const [name, setName] = useState('');
   const [travelType, setTravelType] = useState<string>('');
+  const [triedSubmit, setTriedSubmit] = useState(false);
+  const nameMissing = triedSubmit && !name.trim();
+  const typeMissing = triedSubmit && !travelType;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    setTriedSubmit(true);
     if (!name.trim() || !travelType) return;
     const trip = createTrip(name.trim(), travelType as TravelType);
     navigate({ to: '/trips/$tripId', params: { tripId: trip.id } });
