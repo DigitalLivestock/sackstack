@@ -39,7 +39,7 @@ function NewTrip() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !travelType) return;
     const trip = createTrip(name.trim(), travelType as TravelType);
     navigate({ to: '/trips/$tripId', params: { tripId: trip.id } });
   };
