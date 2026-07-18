@@ -36,9 +36,13 @@ function NewTrip() {
   const { types: customTypes } = useCustomTravelTypes();
   const [name, setName] = useState('');
   const [travelType, setTravelType] = useState<string>('');
+  const [triedSubmit, setTriedSubmit] = useState(false);
+  const nameMissing = triedSubmit && !name.trim();
+  const typeMissing = triedSubmit && !travelType;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    setTriedSubmit(true);
     if (!name.trim() || !travelType) return;
     const trip = createTrip(name.trim(), travelType as TravelType);
     navigate({ to: '/trips/$tripId', params: { tripId: trip.id } });
@@ -61,19 +65,36 @@ function NewTrip() {
       <main className="mx-auto max-w-2xl px-4 py-8">
         <form onSubmit={submit} className="space-y-8">
           <div className="space-y-2">
-            <Label htmlFor="trip-name">Trip name</Label>
+            <Label htmlFor="trip-name">
+              Trip name <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="trip-name"
               autoFocus
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Norway hiking, July"
+              aria-invalid={nameMissing}
+              aria-describedby={nameMissing ? 'trip-name-error' : undefined}
+              className={nameMissing ? 'border-destructive ring-1 ring-destructive' : ''}
             />
+            {nameMissing ? (
+              <p id="trip-name-error" className="text-xs text-destructive">
+                Enter a trip name to continue.
+              </p>
+            ) : null}
           </div>
 
           <div className="space-y-3">
-            <Label>Travel type</Label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <Label>
+              Travel type <span className="text-destructive">*</span>
+            </Label>
+            <div
+              className={`grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl transition-colors ${
+                typeMissing ? 'border border-destructive bg-destructive/5 p-1' : ''
+              }`}
+              aria-describedby={typeMissing ? 'travel-type-error' : undefined}
+            >
               {TRAVEL_TYPES.map((t) => {
                 const selected = travelType === t;
                 return (
@@ -117,6 +138,11 @@ function NewTrip() {
                 );
               })}
             </div>
+            {typeMissing ? (
+              <p id="travel-type-error" className="text-xs text-destructive">
+                Select a travel type to continue.
+              </p>
+            ) : null}
             {customTypes.length === 0 ? (
               <p className="text-xs text-muted-foreground">
                 Need a different setup? Define your own travel type from the button above.
@@ -124,13 +150,18 @@ function NewTrip() {
             ) : null}
           </div>
 
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="ghost" asChild>
-              <Link to="/">Cancel</Link>
-            </Button>
-            <Button type="submit" disabled={!name.trim() || !travelType}>
-              Create trip
-            </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-muted-foreground">
+              <span className="text-destructive">*</span> Required fields
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" asChild>
+                <Link to="/">Cancel</Link>
+              </Button>
+              <Button type="submit">
+                Create trip
+              </Button>
+            </div>
           </div>
         </form>
       </main>
