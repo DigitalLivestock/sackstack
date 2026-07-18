@@ -150,13 +150,18 @@ function NewTrip() {
             ) : null}
           </div>
 
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="ghost" asChild>
-              <Link to="/">Cancel</Link>
-            </Button>
-            <Button type="submit" disabled={!name.trim() || !travelType}>
-              Create trip
-            </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-muted-foreground">
+              <span className="text-destructive">*</span> Required fields
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" asChild>
+                <Link to="/">Cancel</Link>
+              </Button>
+              <Button type="submit" disabled={!name.trim() || !travelType}>
+                Create trip
+              </Button>
+            </div>
           </div>
         </form>
       </main>
