@@ -33,8 +33,8 @@ export const Route = createFileRoute('/trips/$tripId')({
     meta: [
       { title: `Trip ${params.tripId.slice(0, 6)} — Plan packing — Sack Stack` },
       { name: 'description', content: 'Plan and balance the weight of every bag in this trip. Drag items between bags and assign carriers — all stored locally in your browser.' },
-      { property: 'og:title', content: 'Plan packing — Sack Stack' },
-      { property: 'og:description', content: 'Plan and balance the weight of every bag in your trip with Sack Stack.' },
+      { property: 'og:title', content: `Trip ${params.tripId.slice(0, 6)} — Plan packing — Sack Stack` },
+      { property: 'og:description', content: `Plan and balance the weight of every bag in trip ${params.tripId.slice(0, 6)} with Sack Stack.` },
       { name: 'robots', content: 'noindex' },
     ],
   }),

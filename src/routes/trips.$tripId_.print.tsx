@@ -12,8 +12,8 @@ export const Route = createFileRoute('/trips/$tripId_/print')({
     meta: [
       { title: `Print ${params.tripId.slice(0, 6)} — Sack Stack` },
       { name: 'description', content: 'Printable packing list with carriers, bags, and per-bag weight totals — ready for PDF export.' },
-      { property: 'og:title', content: 'Print packing list — Sack Stack' },
-      { property: 'og:description', content: 'Printable packing list with carriers, bags, and per-bag weight totals.' },
+      { property: 'og:title', content: `Print ${params.tripId.slice(0, 6)} — Sack Stack` },
+      { property: 'og:description', content: `Printable packing list for trip ${params.tripId.slice(0, 6)} — carriers, bags, and per-bag weight totals.` },
       { name: 'robots', content: 'noindex' },
     ],
   }),

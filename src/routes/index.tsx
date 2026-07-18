@@ -18,14 +18,16 @@ export const Route = createFileRoute('/')({
       {
         name: 'description',
         content:
-          'Free bag packing planner with weight tracking. Plan items across multiple bags, split weight between carriers, and print your packing list. No tracking, no server storage.',
+          'Free bag packing planner with weight tracking. Split items across bags, balance carrier loads, and print your list. No tracking.',
       },
       { property: 'og:title', content: 'Sack Stack — free bag packing planner & weight tracker' },
       {
         property: 'og:description',
-        content: 'Free bag packing planner with weight tracking. Plan items across multiple bags, split weight between carriers, and print your packing list.',
+        content: 'Free bag packing planner with weight tracking. Split items across bags and balance carrier loads.',
       },
+      { property: 'og:url', content: 'https://sackstack.app/' },
     ],
+    links: [{ rel: 'canonical', href: 'https://sackstack.app/' }],
   }),
   component: TripsIndex,
 });

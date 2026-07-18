@@ -12,8 +12,8 @@ export const Route = createFileRoute('/trips/$tripId_/checklist')({
     meta: [
       { title: `Checklist ${params.tripId.slice(0, 6)} — Sack Stack` },
       { name: 'description', content: 'Tick items off as you pack. Group your packing checklist by bag, carrier, or tag.' },
-      { property: 'og:title', content: 'Packing checklist — Sack Stack' },
-      { property: 'og:description', content: 'Tick items off as you pack — grouped by bag, carrier, or tag.' },
+      { property: 'og:title', content: `Checklist ${params.tripId.slice(0, 6)} — Sack Stack` },
+      { property: 'og:description', content: `Tick items off as you pack trip ${params.tripId.slice(0, 6)} — grouped by bag, carrier, or tag.` },
       { name: 'robots', content: 'noindex' },
     ],
   }),

@@ -19,7 +19,9 @@ export const Route = createFileRoute('/about')({
         property: 'og:description',
         content: 'Free bag packing planner with weight tracking. Plan and balance packing weights for any trip, with any carrier.',
       },
+      { property: 'og:url', content: 'https://sackstack.app/about' },
     ],
+    links: [{ rel: 'canonical', href: 'https://sackstack.app/about' }],
   }),
   component: AboutPage,
 });
