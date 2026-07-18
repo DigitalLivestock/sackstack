@@ -35,7 +35,7 @@ function NewTrip() {
   const { createTrip } = useTrips();
   const { types: customTypes } = useCustomTravelTypes();
   const [name, setName] = useState('');
-  const [travelType, setTravelType] = useState<string>('normal');
+  const [travelType, setTravelType] = useState<string>('');
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
