@@ -138,6 +138,11 @@ function NewTrip() {
                 );
               })}
             </div>
+            {typeMissing ? (
+              <p id="travel-type-error" className="text-xs text-destructive">
+                Select a travel type to continue.
+              </p>
+            ) : null}
             {customTypes.length === 0 ? (
               <p className="text-xs text-muted-foreground">
                 Need a different setup? Define your own travel type from the button above.
