@@ -65,14 +65,24 @@ function NewTrip() {
       <main className="mx-auto max-w-2xl px-4 py-8">
         <form onSubmit={submit} className="space-y-8">
           <div className="space-y-2">
-            <Label htmlFor="trip-name">Trip name</Label>
+            <Label htmlFor="trip-name">
+              Trip name <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="trip-name"
               autoFocus
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Norway hiking, July"
+              aria-invalid={nameMissing}
+              aria-describedby={nameMissing ? 'trip-name-error' : undefined}
+              className={nameMissing ? 'border-destructive ring-1 ring-destructive' : ''}
             />
+            {nameMissing ? (
+              <p id="trip-name-error" className="text-xs text-destructive">
+                Enter a trip name to continue.
+              </p>
+            ) : null}
           </div>
 
           <div className="space-y-3">
