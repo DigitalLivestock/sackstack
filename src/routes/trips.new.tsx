@@ -35,11 +35,11 @@ function NewTrip() {
   const { createTrip } = useTrips();
   const { types: customTypes } = useCustomTravelTypes();
   const [name, setName] = useState('');
-  const [travelType, setTravelType] = useState<string>('normal');
+  const [travelType, setTravelType] = useState<string>('');
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !travelType) return;
     const trip = createTrip(name.trim(), travelType as TravelType);
     navigate({ to: '/trips/$tripId', params: { tripId: trip.id } });
   };
@@ -128,7 +128,7 @@ function NewTrip() {
             <Button type="button" variant="ghost" asChild>
               <Link to="/">Cancel</Link>
             </Button>
-            <Button type="submit" disabled={!name.trim()}>
+            <Button type="submit" disabled={!name.trim() || !travelType}>
               Create trip
             </Button>
           </div>
