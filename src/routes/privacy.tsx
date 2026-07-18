@@ -7,16 +7,16 @@ import { toast, Toaster } from 'sonner';
 export const Route = createFileRoute('/privacy')({
   head: () => ({
     meta: [
-      { title: 'Privacy — Sack Stack' },
+      { title: 'Privacy — Sack Stack | bag packing planner' },
       {
         name: 'description',
         content:
-          'Sack Stack is a free, privacy-focused packing planner. Everything stays in your browser — no accounts, no tracking, no server-side database.',
+          'Sack Stack is a free, privacy-focused bag packing planner with weight tracking. Everything stays in your browser — no accounts, no tracking, no server-side database.',
       },
-      { property: 'og:title', content: 'Privacy — Sack Stack' },
+      { property: 'og:title', content: 'Privacy — Sack Stack | bag packing planner' },
       {
         property: 'og:description',
-        content: 'Free, privacy-focused packing planner. No accounts, no tracking. Your trips live only on your device.',
+        content: 'Free, privacy-focused bag packing planner with weight tracking. No accounts, no tracking. Your trips live only on your device.',
       },
       { property: 'og:url', content: 'https://sackstack.lovable.app/privacy' },
     ],
@@ -55,7 +55,7 @@ function PrivacyPage() {
       <main className="mx-auto max-w-3xl px-4 py-8">
         <article className="prose prose-sm sm:prose-base max-w-none space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm">
           <p className="text-base">
-            Sack Stack is a fully client-side app. It runs entirely in your
+            Sack Stack is a free bag packing planner with weight tracking. It is a fully client-side app that runs entirely in your
             browser — there is <strong>no account, no login, and no server-side
             database</strong>.
           </p>

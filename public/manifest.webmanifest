@@ -1,7 +1,7 @@
 {
   "name": "Sack Stack",
   "short_name": "Sack Stack",
-  "description": "Free packing planner. Plan and balance the weight of your bags before a trip. No account, your data stays on your device.",
+  "description": "Free bag packing planner with weight tracking. Plan and balance the weight of your bags before a trip. No account, your data stays on your device.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -14,16 +14,16 @@ import { ManageCustomTravelTypesDialog } from '@/components/bag-planner/ManageCu
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: 'Sack Stack — free & private packing planner' },
+      { title: 'Sack Stack — free bag packing planner & weight tracker' },
       {
         name: 'description',
         content:
-          'Free, privacy-focused packing planner. No tracking, no server storage. Split items across bags, assign carriers, and never overpack again.',
+          'Free bag packing planner with weight tracking. Plan items across multiple bags, split weight between carriers, and print your packing list. No tracking, no server storage.',
       },
-      { property: 'og:title', content: 'Sack Stack — free & private packing planner' },
+      { property: 'og:title', content: 'Sack Stack — free bag packing planner & weight tracker' },
       {
         property: 'og:description',
-        content: 'Free, privacy-focused packing planner. No tracking, no server storage. Plan any trip with carriers, bags, and item weights.',
+        content: 'Free bag packing planner with weight tracking. Plan items across multiple bags, split weight between carriers, and print your packing list.',
       },
     ],
   }),
@@ -77,7 +77,7 @@ function TripsIndex() {
             <img src={logoSvg} alt="Sack Stack" className="h-14 w-auto object-contain drop-shadow-sm sm:h-20" />
           </Link>
           <p className="hidden min-w-0 flex-1 text-sm text-muted-foreground italic sm:block">
-            Free & privacy-focused. Plan and balance the weight of your bags before a trip.
+            Free bag packing planner with weight tracking. Plan and balance the weight of your bags before a trip.
           </p>
           <div className="flex-1 sm:hidden" />
           <input
@@ -119,7 +119,7 @@ function TripsIndex() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="sr-only">Sack Stack — Free and Private Packing Planner</h1>
+        <h1 className="sr-only">Sack Stack — free bag packing planner with weight tracking</h1>
 
         {!hydrated ? (
           <div className="py-16 text-center text-sm text-muted-foreground">Loading…</div>

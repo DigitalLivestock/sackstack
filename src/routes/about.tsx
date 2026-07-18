@@ -8,16 +8,16 @@ const APP_VERSION = "1.0.0";
 export const Route = createFileRoute('/about')({
   head: () => ({
     meta: [
-      { title: 'About — Sack Stack' },
+      { title: 'About — Sack Stack | bag packing planner & weight tracker' },
       {
         name: 'description',
         content:
-          'Learn what Sack Stack does and how this free packing planner helps you organize any trip.',
+          'Learn what Sack Stack does and how this free bag packing planner with weight tracking helps you organize any trip.',
       },
-      { property: 'og:title', content: 'About — Sack Stack' },
+      { property: 'og:title', content: 'About — Sack Stack | bag packing planner & weight tracker' },
       {
         property: 'og:description',
-        content: 'Free packing planner — plan and balance packing weights for any trip, with any carrier.',
+        content: 'Free bag packing planner with weight tracking. Plan and balance packing weights for any trip, with any carrier.',
       },
     ],
   }),
@@ -49,7 +49,7 @@ function AboutPage() {
           </div>
 
           <p className="text-base leading-relaxed">
-            Sack Stack helps you organize and balance the weight of your bags before any trip.
+            Sack Stack is a free bag packing planner with weight tracking. It helps you organize and balance the weight of your bags before any trip.
             Whether you are hiking, camping, or traveling with checked luggage, you can plan
             exactly what goes where and make sure no single bag — or carrier — ends up overloaded.
           </p>
