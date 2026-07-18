@@ -128,7 +128,7 @@ function NewTrip() {
             <Button type="button" variant="ghost" asChild>
               <Link to="/">Cancel</Link>
             </Button>
-            <Button type="submit" disabled={!name.trim()}>
+            <Button type="submit" disabled={!name.trim() || !travelType}>
               Create trip
             </Button>
           </div>
