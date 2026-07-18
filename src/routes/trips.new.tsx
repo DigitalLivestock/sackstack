@@ -86,8 +86,15 @@ function NewTrip() {
           </div>
 
           <div className="space-y-3">
-            <Label>Travel type</Label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <Label>
+              Travel type <span className="text-destructive">*</span>
+            </Label>
+            <div
+              className={`grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl p-1 transition-colors ${
+                typeMissing ? 'border border-destructive bg-destructive/5' : ''
+              }`}
+              aria-invalid={typeMissing}
+            >
               {TRAVEL_TYPES.map((t) => {
                 const selected = travelType === t;
                 return (
