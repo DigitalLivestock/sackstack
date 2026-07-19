@@ -220,28 +220,18 @@ function TripPlanner() {
                 <span className="hidden md:inline">Checklist</span>
               </Link>
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-8 gap-1.5 px-2"
-              onClick={() => {
-                const url = `${window.location.origin}/trips/${trip.id}/print`;
-                const w = window.open(url, '_blank');
-                if (w) {
-                  const tryPrint = () => {
-                    try {
-                      w.print();
-                    } catch {
-                      /* noop */
-                    }
-                  };
-                  setTimeout(tryPrint, 800);
-                }
-              }}
-              aria-label="Open print view"
-            >
-              <Printer className="h-4 w-4" />
-              <span className="hidden md:inline">Print / PDF</span>
+            <Button asChild size="sm" variant="ghost" className="h-8 gap-1.5 px-2">
+              <Link
+                to="/trips/$tripId/print"
+                params={{ tripId: trip.id }}
+                search={{ auto: true }}
+                target="_blank"
+                rel="noopener"
+                aria-label="Open print view"
+              >
+                <Printer className="h-4 w-4" />
+                <span className="hidden md:inline">Print / PDF</span>
+              </Link>
             </Button>
             <Button
               variant="ghost"
